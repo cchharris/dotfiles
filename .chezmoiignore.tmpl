@@ -1,3 +1,12 @@
 {{ if ne .chezmoi.os "windows" }}
 AppData
+.chezmoiscripts/windows/**
+{{ end }}
+
+{{ if ne .chezmoi.os "linux" }}
+.chezmoiscripts/linux/**
+{{ end }}
+
+{{ if ne .chezmoi.os "darwin" }}
+.chezmoiscripts/darwin/**
 {{ end }}
