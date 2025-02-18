@@ -1,4 +1,5 @@
-local telescope = require('plugins.telescope').setup
+local telescope = require('telescope')
+
 telescope.setup {
   defaults = {
     -- Default configuration for telescope goes here:
