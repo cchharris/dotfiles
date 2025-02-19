@@ -1,0 +1,6 @@
+[cd]
+{{ if ne .chezmoi.os "windows" }}
+command="zsh"
+{{else}}
+command="C:\\Program Files\\PowerShell\\7\\pwsh.exe"
+{{end}}
