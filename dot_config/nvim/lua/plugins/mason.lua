@@ -6,6 +6,7 @@ return {
 		require("mason-lspconfig").setup({
 		ensure_installed = {
 			"bashls",
+			"buf_ls",
 			"clangd",
 			"cmake",
 			"dockerls",
@@ -13,7 +14,6 @@ return {
 			"ts_ls",
 			"lua_ls",
 			"nil_ls",
-			"pylint",
 			"pyright",
 			"ruff",
 			"rust_analyzer",
