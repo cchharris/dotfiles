@@ -9,7 +9,7 @@ telescope.setup {
         -- map actions.which_key to <C-h> (default: <C-/>)
         -- actions.which_key shows the mappings for your picker,
         -- e.g. git_{create, delete, ...}_branch for the git_branches picker
-        ["<C-h>"] = "which_key"
+        ["<C-h>"] = "which_key",
       }
     }
   },
@@ -32,5 +32,7 @@ telescope.setup {
 }
 
 telescope.load_extension('chezmoi')
+telescope.load_extension('live_grep_args')
 vim.keymap.set('n', '<leader>cz', telescope.extensions.chezmoi.find_files, {})
-
+vim.keymap.set('n', '<leader>fg', telescope.extensions.live_grep_args.live_grep_args, {})
+vim.keymap.set('n', '<leader>fb', ":lua require('telescope.builtin').buffers()<CR>", {})
