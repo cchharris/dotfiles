@@ -20,6 +20,7 @@ vim.opt.rtp:prepend(lazypath)
 -- This is also a good place to setup other settings (vim.opt)
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
+vim.env["CODECOMPANION_TOKEN_PATH"] = vim.fn.expand("~/.config")
 
 -- Setup lazy.nvim
 require("lazy").setup({
