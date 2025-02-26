@@ -16,7 +16,7 @@ return {
 			"lua_ls", -- lua
 			"nil_ls", -- nix
 			"pyright", -- python
-			"ruff", -- pytho
+			"ruff", -- python
 			"rust_analyzer", -- rust
 			"bzl", -- bazel/skylark
 			"terraformls", -- terraform
