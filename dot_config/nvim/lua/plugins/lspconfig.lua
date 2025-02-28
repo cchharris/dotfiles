@@ -205,10 +205,10 @@ return {
 	-- configure terraform
 	 lspconfig["tflint"].setup({capabilities=capabilities})
 	end,
-	["harper_ls"] = function()
+	--["harper_ls"] = function()
 	-- configure 
-	 lspconfig["harper_ls"].setup({capabilities=capabilities})
-	end,
+	 --lspconfig["harper_ls"].setup({capabilities=capabilities})
+	--end,
 	["vimls"] = function()
 	-- configure vimscript
 	 lspconfig["vimls"].setup({capabilities=capabilities})
