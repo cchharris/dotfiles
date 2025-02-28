@@ -5,6 +5,14 @@ return {
         -- options go here
     },
     init = function()
-        table.insert(require("cmp").get_config().sources, { name = "git" })
+	local cmp = require('cmp')
+        cmp.setup.filetype('gitcommit', {
+		sources = cmp.config.sources({
+			{ name = 'git'},
+		}, {
+			{ name = 'buffer'},
+		})
+	})
+	require('cmp_git').setup({})
     end
 }
