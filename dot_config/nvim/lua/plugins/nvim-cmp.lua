@@ -134,9 +134,9 @@ return {
   require('lspconfig')['rust_analyzer'].setup {
     capabilities = capabilities
   }
-  require('lspconfig')['harper_ls'].setup {
-    capabilities = capabilities
-  }
+--  require('lspconfig')['harper_ls'].setup {
+ --   capabilities = capabilities
+  --}
   require('lspconfig')['pyright'].setup {
     capabilities = capabilities
   }
