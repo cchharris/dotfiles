@@ -21,7 +21,7 @@ return {
 			"bzl", -- bazel/skylark
 			"terraformls", -- terraform
 			"tflint", -- terraform
-			"harper_ls", -- toml, typescript, rust, ruby, python, markdown, lua, javascript, java, C, C++, C#
+			--"harper_ls", -- toml, typescript, rust, ruby, python, markdown, lua, javascript, java, C, C++, C#
 			"taplo", -- toml
 			"vimls", -- vimscript
 			"yamlls", -- yaml
