@@ -87,6 +87,7 @@ return {
         { name = "vimtex" }, -- tex
         { name = "crates" }, -- rust crates
         { name = "emoji" }, -- unicode emoji
+		{ name = "octo" }, -- octo
       }),
       -- configure lspkind for vscode-like pictograms in completion menu
       formatting = {
