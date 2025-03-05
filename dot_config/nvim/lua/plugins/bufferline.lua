@@ -4,5 +4,14 @@ return {
 	dependencies='nvim-tree/nvim-web-devicons',
 	config = function()
 		require("bufferline").setup({ })
-	end
+	end,
+	keys = {
+		{
+			'<leader>bp',
+			function()
+				require('bufferline').pick_buffer()
+			end,
+			desc = "<Bufferline> Pick buffer",
+		},
+	},
 }
