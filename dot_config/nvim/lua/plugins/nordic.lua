@@ -2,9 +2,20 @@ return {
 	'AlexvZyl/nordic.nvim',
 	lazy = false,
 	priority = 1000,
+	dependencies = {
+		'nvim-lualine/lualine.nvim'
+	},
 	config = function()
 	---@diagnostic disable-next-line: missing-fields
-		require('nordic').load({
+		N = require('nordic')
+		U = require('nordic.utils')
+		MyColors = {
+			darkblack = '#101520',
+			seagreen = {
+			 dim = '#467063'
+			}
+		}
+		N.load({
 		on_palette = function(palette)
 			palette.gray0 = palette.black1 -- bg
 			palette.gray1 = '#3B4252'
@@ -15,10 +26,13 @@ return {
 		after_palette = function(palette)
 			palette.border_fg = palette.gray5
 			palette.fg_popup_border = palette.gray5
-			palette.comment = palette.gray5
+			palette.comment = palette.blue1 --MyColors.seagreen.dim --palette.gray5
 			palette.fg_sidebar = palette.gray5
+			palette.bg_visual = U.blend(palette.yellow.dim, palette.bg, .25)
 		end,
 		on_highlight = function(highlights, palette)
+			highlights.CursorLine.bg = MyColors.darkblack
+			highlights.Delimiter.fg = palette.orange.dim
 			highlights.TelescopeBorder.fg = palette.border_fg
 			highlights.TelescopePromptBorder.fg = palette.border_fg
 			highlights.TelescopeResultsBorder.fg = palette.border_fg
@@ -27,6 +41,11 @@ return {
 			--highlights.CopilotSuggestion.fg = palette.magenta.base
 		end,
 		})
+		require('lualine').setup({
+				options = {
+					theme = 'nordic'
+				}
+			})
 	end
 }
 

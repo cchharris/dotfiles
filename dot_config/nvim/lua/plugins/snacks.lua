@@ -4,14 +4,16 @@ return {
   lazy = false,
   ---@type snacks.Config
   opts = {
-    -- your configuration comes here
+    -- Your configuration comes here
     -- or leave it empty to use the default settings
     -- refer to the configuration section below
     bigfile = { enabled = true },
+	bufdelete = { enabled = true},
     dashboard = { enabled = true },
     explorer = { enabled = true },
     indent = { enabled = true },
     input = { enabled = true },
+	lazygit = { enabled = true },
     notifier = { enabled = true },
     picker = { enabled = true },
     quickfile = { enabled = true },
@@ -20,5 +22,5 @@ return {
     statuscolumn = { enabled = true },
     terminal = { enabled = true },
     words = { enabled = true },
-  },
+  }
 }
