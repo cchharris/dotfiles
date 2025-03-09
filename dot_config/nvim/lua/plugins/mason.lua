@@ -6,6 +6,7 @@ return {
 		require("mason").setup({ })
 		require("mason-lspconfig").setup({
 		ensure_installed = {
+			"basedpyright", -- python
 			"bashls", -- bash
 			"buf_ls", -- protobuf
 			"clangd", -- c, c++
@@ -15,7 +16,6 @@ return {
 			"ts_ls", -- typescript, javascript
 			"lua_ls", -- lua
 			"nil_ls", -- nix
-			"pyright", -- python
 			"ruff", -- python
 			"rust_analyzer", -- rust
 			"bzl", -- bazel/skylark

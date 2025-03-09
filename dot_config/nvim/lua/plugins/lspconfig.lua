@@ -181,9 +181,9 @@ return {
 	-- configure typescript
 	 lspconfig["ts_ls"].setup({capabilities=capabilities})
 	end,
-	["pyright"] = function()
+	["basedpyright"] = function()
 	-- configure python
-	 lspconfig["pyright"].setup({capabilities=capabilities})
+	 lspconfig["basedpyright"].setup({ capabilities=capabilities })
 	end,
 	["ruff"] = function()
 	-- configure python
