@@ -3,10 +3,8 @@ return {
 	requires = {
 	    'AlexvZyl/nordic.nvim',
 	},
-	config = function()
-		require('hardline').setup({
-			bufferline=false,
-			theme='nordic',
-		})
-	end
+	opts = {
+		bufferline=false,
+		theme='nordic',
+	}
 }

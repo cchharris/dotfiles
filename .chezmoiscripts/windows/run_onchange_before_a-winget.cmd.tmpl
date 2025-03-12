@@ -1,3 +1,4 @@
+@echo off
 winget install -e --silent --accept-source-agreements --accept-package-agreements --disable-interactivity Microsoft.PowerShell -s winget
 winget install -e --silent --accept-source-agreements --accept-package-agreements --disable-interactivity Microsoft.WindowsTerminal -s winget
 winget install -e --silent --accept-source-agreements --accept-package-agreements --disable-interactivity JanDeDobbeleer.OhMyPosh -s winget
@@ -14,3 +15,5 @@ winget install -e --silent --accept-source-agreements --accept-package-agreement
 winget install -e --silent --accept-source-agreements --accept-package-agreements --disable-interactivity Git.Git -s winget
 winget install -e --silent --accept-source-agreements --accept-package-agreements --disable-interactivity 7zip.7zip -s winget
 winget install -e --silent --accept-source-agreements --accept-package-agreements --disable-interactivity BurntSushi.ripgrep.MSVC -s winget
+
+exit /b 0

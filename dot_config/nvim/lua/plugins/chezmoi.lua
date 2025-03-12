@@ -2,8 +2,7 @@
 return {
   'xvzc/chezmoi.nvim',
   dependencies = { 'nvim-lua/plenary.nvim' },
-  config = function()
-    require("chezmoi").setup {
+	opts = {
       edit = {
         watch = false,
         force = false,
@@ -16,6 +15,9 @@ return {
       telescope = {
         select = { "<CR>" },
       },
-    }
-  end
+    },
+	cmd = {
+		"ChezmoiEdit",
+		"ChezmoiList"
+	}
 }
