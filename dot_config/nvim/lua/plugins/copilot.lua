@@ -2,8 +2,7 @@ return {
   "zbirenbaum/copilot.lua",
   cmd = "Copilot",
   event = "InsertEnter",
-  config = function()
-    require("copilot").setup({
+	opts = {
 	suggestion = {
 		auto_trigger = true,
 		keymap = {
@@ -14,6 +13,5 @@ return {
 			prev="<c-k>",
 		},
 	}
-})
-  end,
+}
 }

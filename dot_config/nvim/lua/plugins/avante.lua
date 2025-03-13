@@ -1,8 +1,20 @@
 return {
   "yetone/avante.nvim",
 --	enabled=false,
-  event = "VeryLazy",
-  lazy = false,
+  event = { "BufRead", "BufNewFile" },
+	cmd = {
+		'AvanteAsk',
+		'AvanteChat',
+		'AvanteEdit',
+		'AvanteBuild',
+		'AvanteClear',
+		'AvanteFocus',
+		'AvanteToggle',
+		'AvanteRefresh',
+		'AvanteShowRepoMap',
+		'AvanteSwitchProvider',
+		'AvanteSwitchFileSelectorProvider',
+	},
   version = false, -- Set this to "*" to always pull the latest release version, or set it to false to update to the latest code changes.
   opts = {
     -- add any opts here
