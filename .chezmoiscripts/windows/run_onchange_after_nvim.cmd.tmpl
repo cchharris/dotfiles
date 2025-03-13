@@ -1,3 +1,5 @@
-@echo off
-#nvim +":Lazy install" --headless
-#nvim +":MasonInstall" --headless
+echo Install Lazy Packages
+nvim +":Lazy! sync" +qa --headless
+echo Install Mason Tools
+nvim +":MasonUpdate" +qa --headless
+echo Done with nvim installs

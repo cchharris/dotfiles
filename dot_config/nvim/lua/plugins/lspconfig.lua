@@ -157,62 +157,6 @@ return {
           },
         })
       end,
-	["bashls"] = function()
-	-- configure bash
-	 lspconfig["bashls"].setup({
-		capabilities = capabilities, 
-	})
-	end,
-	["clangd"] = function()
-	-- configure C/C++
-	 lspconfig["clangd"].setup({
-		capabilities = capabilities
-	})
-	end,
-	["cmake"] = function()
-	-- configure cmake
-	 lspconfig["cmake"].setup({capabilities = capabilities})
-	end,
-	["dockerls"] = function()
-	-- configure docker
-	 lspconfig["dockerls"].setup({capabilities=capabilities})
-	end,
-	["ts_ls"] = function()
-	-- configure typescript
-	 lspconfig["ts_ls"].setup({capabilities=capabilities})
-	end,
-	["basedpyright"] = function()
-	-- configure python
-	 lspconfig["basedpyright"].setup({ capabilities=capabilities })
-	end,
-	["ruff"] = function()
-	-- configure python
-	 lspconfig["ruff"].setup({capabilities=capabilities})
-	end,
-	["rust_analyzer"] = function()
-	-- configure rust
-	 lspconfig["rust_analyzer"].setup({capabilities=capabilities})
-	end,
-	["bzl"] = function()
-	-- configure bazel
-	 lspconfig["bzl"].setup({capabilities=capabilities})
-	end,
-	["terraformls"] = function()
-	-- configure terraform
-	 lspconfig["terraformls"].setup({capabilities=capabilities})
-	end,
-	["tflint"] = function()
-	-- configure terraform
-	 lspconfig["tflint"].setup({capabilities=capabilities})
-	end,
-	--["harper_ls"] = function()
-	-- configure 
-	 --lspconfig["harper_ls"].setup({capabilities=capabilities})
-	--end,
-	["vimls"] = function()
-	-- configure vimscript
-	 lspconfig["vimls"].setup({capabilities=capabilities})
-	end,
     })
   end,
 }

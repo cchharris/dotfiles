@@ -1,6 +1,7 @@
 -- Lazy.nvim
 return {
   'xvzc/chezmoi.nvim',
+	event = 'VeryLazy',
   dependencies = { 'nvim-lua/plenary.nvim' },
 	opts = {
       edit = {
