@@ -3,7 +3,19 @@ return {
 	version="*",
 	  event = { "BufRead", "BufNewFile" },
 	dependencies='nvim-tree/nvim-web-devicons',
-	opts = {},
+	opts = {
+		options = {
+			offsets = {
+				{
+					filetype = "neo-tree",
+					text = "File Explorer",
+					text_align = "center",
+					highlight = "Directory",
+					separator = true
+				}
+			}
+		}
+	},
 	keys = {
 		{
 			'<leader>bp',

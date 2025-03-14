@@ -10,5 +10,17 @@ opts = {
 			delay = 1000,
 		},
 		numhl=true,
+	},
+keys = {
+		{
+			"]g",
+			"<cmd>Gitsigns next_hunk<cr>",
+			desc = " Go to next git hunk"
+		},
+		{
+			"[g",
+			"<cmd>Gitsigns prev_hunk<cr>",
+			desc = " Go to previous git hunk"
+		},
 	}
 }
