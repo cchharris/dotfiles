@@ -6,7 +6,7 @@ return  {
     -- OR 'ibhagwan/fzf-lua',
     'nvim-tree/nvim-web-devicons',
   },
-	cmd = {
-		'Octo'
-	},
+  cmd = {
+	  'Octo'
+  }
 }

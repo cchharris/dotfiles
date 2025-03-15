@@ -37,7 +37,7 @@ return {
 			highlights.TelescopePromptBorder.fg = palette.border_fg
 			highlights.TelescopeResultsBorder.fg = palette.border_fg
 			highlights.TelescopePreviewBorder.fg = palette.border_fg
-			highlights.TelescopeMatching.fg = palette.blue2
+			highlights.TelescopeMatching.fg = palette.orange.base
 			--highlights.CopilotSuggestion.fg = palette.magenta.base
 		end,
 		})

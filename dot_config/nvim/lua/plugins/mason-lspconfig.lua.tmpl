@@ -15,7 +15,9 @@ return {
 			"html", -- html
 			"ts_ls", -- typescript, javascript
 			"lua_ls", -- lua
+			{{- if ne .chezmoi.os "windows" }}
 			"nil_ls", -- nix
+			{{- end }}
 			"ruff", -- python
 			"rust_analyzer", -- rust
 			"bzl", -- bazel/skylark
