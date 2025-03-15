@@ -4,3 +4,10 @@ command="zsh"
 {{else}}
 command="C:\\Program Files\\PowerShell\\7\\pwsh.exe"
 {{end}}
+
+[edit]
+command="nvim"
+
+[diff]
+command="nvim"
+args = ["-d", "{{ "{{" }} .Destination {{ "}}" }}", "{{ "{{" }} .Target {{ "}}" }}"]
