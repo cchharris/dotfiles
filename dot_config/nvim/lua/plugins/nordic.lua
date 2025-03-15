@@ -25,7 +25,8 @@ return {
 		end,
 		after_palette = function(palette)
 			palette.border_fg = palette.gray5
-			palette.fg_popup_border = palette.gray5
+			palette.fg_float_border = palette.border_fg
+			palette.fg_popup_border = palette.border_fg
 			palette.comment = palette.blue1 --MyColors.seagreen.dim --palette.gray5
 			palette.fg_sidebar = palette.gray5
 			palette.bg_visual = U.blend(palette.yellow.dim, palette.bg, .25)
@@ -38,6 +39,7 @@ return {
 			highlights.TelescopeResultsBorder.fg = palette.border_fg
 			highlights.TelescopePreviewBorder.fg = palette.border_fg
 			highlights.TelescopeMatching.fg = palette.orange.base
+			highlights.WhichKeyBorder.fg = palette.border_fg
 			--highlights.CopilotSuggestion.fg = palette.magenta.base
 		end,
 		})
