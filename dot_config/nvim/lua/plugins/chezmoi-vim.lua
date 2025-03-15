@@ -4,5 +4,4 @@ return {
 	init = function()
 		vim.g['chezmoi#use_tmp_buffer'] = true
 	end,
-	opts = {}
 }

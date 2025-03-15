@@ -3,6 +3,8 @@ return {
   cmd = "Copilot",
   event = "InsertEnter",
 	opts = {
+		-- suggestion = { enabled = false }, -- copilot cmp does this instead
+		-- panel = { enabled = false }, -- copilot cmp does this instead
 	suggestion = {
 		auto_trigger = true,
 		keymap = {
@@ -13,5 +15,5 @@ return {
 			prev="<c-k>",
 		},
 	}
-}
+	}
 }

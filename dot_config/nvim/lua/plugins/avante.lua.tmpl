@@ -27,10 +27,16 @@ return {
 		temperature = 0,
 		max_tokens = 4096,
 	  },
+		behavior = {
+			auto_suggestions = false,
+		},
 	},
   -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
+{{- if ne .chezmoi.os "windows" }}
   build = "make",
-  -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
+{{- else }}
+   build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false", -- for windows
+{{- end }}
   dependencies = {
     "nvim-treesitter/nvim-treesitter",
     "stevearc/dressing.nvim",
