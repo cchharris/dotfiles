@@ -6,54 +6,72 @@ return {
 	'nvim-telescope/telescope-live-grep-args.nvim',
 	},
 	keys = {
-		{'<leader>cz',
+		{'<leader>fcz',
 			function()
 				require('telescope').extensions.chezmoi.find_files()
 			end,
-			'<Telescope> Find files in chezmoi',
+			desc = '<Telescope> Find files in chezmoi',
+		},
+		{'<leader>fca',
+			function()
+				require('telescope.builtin').find_files({
+					cwd = vim.fs.normalize(vim.fs.joinpath("~", ".local", "share", "chezmoi")),
+					hidden = true,
+					no_ignore = true,
+					no_ignore_parent = true
+				})
+			end,
+			desc = '<Telescope> Find files in chezmoi',
+		},
+
+		{'<leader>fcr',
+			function()
+				require('telescope').extensions.live_grep_args.live_grep_args({search_dirs = { vim.fs.normalize(vim.fs.joinpath("~", ".local", "share", "chezmoi"))} })
+			end,
+			desc = '<Telescope> Find in files in chezmoi',
 		},
 		{'<leader>fr',
 			function()
 				require('telescope').extensions.live_grep_args.live_grep_args()
 			end,
-			"<Telescope> Live grep with args"
+			desc = "<Telescope> Live grep with args"
 		},
 		{'<leader>fb',
 			function()
 				require('telescope.builtin').buffers()
 			end,
-			"<Telescope> Buffers"
+			desc = "<Telescope> Buffers"
 		},
 		{'<leader>ff',
 			function()
 				require('telescope.builtin').fd()
 			end,
-			"<Telescope> Find files"
+			desc = "<Telescope> Find files"
 		},
 			-- status, commits, bcommits, branches
 		{'<leader>fgb',
 			function()
 				require('telescope.builtin').git_branches()
 			end,
-			"<Telescope> Git branches"
+			desc = "<Telescope> Git branches"
 		},
 		{'<leader>fgc',
 			function()
 				require('telescope.builtin').git_commits()
 			end,
-			"<Telescope> Git commits"}
+			desc = "<Telescope> Git commits"}
 			,
 		{'<leader>fgs',
 			function()
 				require('telescope.builtin').git_status()
 			end,
-			"<Telescope> Git status"
+			desc = "<Telescope> Git status"
 		},
 		{'<leader>fgf',
 			function()
 				require('telescope.builtin').git_bcommits()
 			end,
-			"<Telescope> Git bcommits"
+			desc = "<Telescope> Git bcommits"
 		},
 	},
 	config = function()
