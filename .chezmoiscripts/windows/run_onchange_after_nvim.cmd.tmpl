@@ -2,4 +2,6 @@ echo Install Lazy Packages
 nvim +":Lazy! sync" +qa --headless
 echo Install Mason Tools
 nvim +":MasonUpdate" +qa --headless
+echo Install Tree-Sitter languages
+nvim +":TSUpdateSync" +qa --headless
 echo Done with nvim installs
