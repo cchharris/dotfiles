@@ -1,6 +1,10 @@
 {{ if ne .chezmoi.os "windows" }}
 AppData
 .chezmoiscripts/windows/**
+readonly_Documents/**
+readonly_OneDrive/**
+Documents
+OneDrive
 {{ end }}
 
 {{ if ne .chezmoi.os "linux" }}
