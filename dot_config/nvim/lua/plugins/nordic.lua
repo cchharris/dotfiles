@@ -33,14 +33,30 @@ return {
 		end,
 		on_highlight = function(highlights, palette)
 			highlights.CursorLine.bg = MyColors.darkblack
+			highlights.CursorLineNr.fg = palette.white1
 			highlights.Delimiter.fg = palette.orange.dim
-			highlights.TelescopeBorder.fg = palette.border_fg
-			highlights.TelescopePromptBorder.fg = palette.border_fg
-			highlights.TelescopeResultsBorder.fg = palette.border_fg
-			highlights.TelescopePreviewBorder.fg = palette.border_fg
-			highlights.TelescopeMatching.fg = palette.orange.base
-			highlights.WhichKeyBorder.fg = palette.border_fg
+
+			--Copilot
 			--highlights.CopilotSuggestion.fg = palette.magenta.base
+
+			--lsp
+			highlights['@parameter'].fg = palette.white0_reduce_blue
+
+			-- WhichKey
+			---@diagnostic disable-next-line: undefined-field
+			highlights.WhichKeyBorder.fg = palette.border_fg
+
+			-- Telescope
+			---@diagnostic disable-next-line: undefined-field
+			highlights.TelescopeBorder.fg = palette.border_fg
+			---@diagnostic disable-next-line: undefined-field
+			highlights.TelescopePromptBorder.fg = palette.border_fg
+			---@diagnostic disable-next-line: undefined-field
+			highlights.TelescopeResultsBorder.fg = palette.border_fg
+			---@diagnostic disable-next-line: undefined-field
+			highlights.TelescopePreviewBorder.fg = palette.border_fg
+			---@diagnostic disable-next-line: undefined-field
+			highlights.TelescopeMatching.fg = palette.orange.base
 		end,
 		})
 		require('lualine').setup({
