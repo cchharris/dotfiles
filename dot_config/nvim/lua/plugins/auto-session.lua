@@ -8,5 +8,7 @@ return {
   opts = {
     suppressed_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
     -- log_level = 'debug',
+	auto_restore = false, -- Restore via dashboard
+	bypass_save_filetypes = { 'snacks_dashboard' },
   }
 }
