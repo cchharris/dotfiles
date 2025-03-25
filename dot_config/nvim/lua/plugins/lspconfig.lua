@@ -3,7 +3,7 @@ return {
   event = { "BufReadPre", "BufNewFile" },
   dependencies = {
     "williamboman/mason.nvim",
-    "hrsh7th/cmp-nvim-lsp",
+    "saghen/blink.cmp",
     { "antosha417/nvim-lsp-file-operations", config = true },
     { "folke/lazydev.nvim", ft = "lua", opts = {} },
     "b0o/schemastore.nvim",
@@ -87,6 +87,7 @@ return {
 
     -- used to enable autocompletion (assign to every lsp server config)
     local capabilities = require("cmp_nvim_lsp").default_capabilities()
+	capabilities = require('blink.cmp').get_lsp_capabilities(capabilities)
     -- enable snippet
     capabilities.textDocument.completion.completionItem.snippetSupport = true
 
