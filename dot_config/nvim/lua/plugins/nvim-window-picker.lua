@@ -2,7 +2,17 @@ return {
     's1n7ax/nvim-window-picker',
     name = 'window-picker',
     version = '2.*',
-	opts = {},
+	opts = {
+		filter_rules = {
+			-- filter using buffer options
+			bo = {
+				-- if the file type is in this list it will be ignored
+				filetype = {'NvimTree', 'neo-tree', 'notify', 'quickfix', 'neominimap'},
+				-- if the buffer type is in this list it will be ignored
+				buftype = {'terminal'},
+			},
+		},
+	},
 	keys = {
 		{
 			'<leader>wp',

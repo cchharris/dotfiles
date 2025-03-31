@@ -21,6 +21,7 @@ return {
 			"javascript",
 			"json",
 			"lua",
+			"objc",
 			"powershell",
 			"printf",
 			"python",
