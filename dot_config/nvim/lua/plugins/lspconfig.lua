@@ -86,8 +86,7 @@ return {
     })
 
     -- used to enable autocompletion (assign to every lsp server config)
-	local capabilities = require('lsp-file-operations').default_capabilities()
-	capabilities = require('blink.cmp').get_lsp_capabilities(capabilities)
+	local capabilities = require('blink.cmp').get_lsp_capabilities(require('lsp-file-operations').default_capabilities())
     -- enable snippet
     capabilities.textDocument.completion.completionItem.snippetSupport = true
 
