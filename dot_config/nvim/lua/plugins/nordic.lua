@@ -46,6 +46,10 @@ return {
 			---@diagnostic disable-next-line: undefined-field
 			highlights.WhichKeyBorder.fg = palette.border_fg
 
+
+			-- blink.cmp
+			-- highlights.BlinkCmpMenuBorder.fg = palette.border_fg
+
 			-- Telescope
 			---@diagnostic disable-next-line: undefined-field
 			highlights.TelescopeBorder.fg = palette.border_fg
