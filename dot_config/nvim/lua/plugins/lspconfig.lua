@@ -114,6 +114,8 @@ return {
           capabilities = capabilities,
         })
       end,
+	  --rustacean takes over
+	  ['rust_analyzer'] = function() end,
       ["html"] = function()
         -- configure html language server
         lspconfig["html"].setup({
