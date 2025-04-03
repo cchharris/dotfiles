@@ -48,6 +48,56 @@ return {
 
 
 			-- blink.cmp
+            BCMP = {}
+            --BCMP.BlinkCmpMenu = {}
+            --BCMP.BlinkCmpMenuBorder = {}
+            --BCMP.BlinkCmpMenuSelection = {}
+            --BCMP.BlinkCmpScrollBarThumb = {}
+            --BCMP.BlinkCmpScrollBarGutter = {}
+            --BCMP.BlinkCmpLabel = {}
+            --BCMP.BlinkCmpLabelDeprecated = {}
+            --BCMP.BlinkCmpLabelMatch = {}
+            --BCMP.BlinkCmpLabelDetail = {}
+            --BCMP.BlinkCmpLabelDescription = {}
+            --BCMP.BlinkCmpKind = {}
+            --BCMP.BlinkCmpKind<kind> = {}
+            BCMP.BlinkCmpKindField = { link = '@field' }
+            BCMP.BlinkCmpKindProperty = { link = '@property' }
+            BCMP.BlinkCmpKindEvent = { link = 'Type' }
+            BCMP.BlinkCmpKindText = { fg = palette.grey4 }
+            BCMP.BlinkCmpKindEnum = { link = 'Type' }
+            BCMP.BlinkCmpKindKeyword = { link = 'Keyword' }
+            BCMP.BlinkCmpKindConstant = { link = 'Constant' }
+            BCMP.BlinkCmpKindConstructor = { link = 'Function' }
+            BCMP.BlinkCmpKindReference = { fg = palette.cyan.base }
+            BCMP.BlinkCmpKindFunction = { link = 'Function' }
+            BCMP.BlinkCmpKindStruct = { link = 'Type' }
+            BCMP.BlinkCmpKindClass = { link = 'Type' }
+            BCMP.BlinkCmpKindModule = { fg = palette.yellow.dim }
+            BCMP.BlinkCmpKindOperator = { link = 'Operator' }
+            BCMP.BlinkCmpKindVariable = { fg = palette.cyan.base }
+            BCMP.BlinkCmpKindFile = { fg = palette.blue1 }
+            BCMP.BlinkCmpKindUnit = { link = 'Constant' }
+            BCMP.BlinkCmpKindSnippet = { fg = palette.blue1 }
+            BCMP.BlinkCmpKindFolder = { fg = palette.yellow.dark }
+            BCMP.BlinkCmpKindMethod = { link = 'Function' }
+            BCMP.BlinkCmpKindValue = { link = 'Constant' }
+            BCMP.BlinkCmpKindEnumMember = { link = 'Type' }
+            BCMP.BlinkCmpKindInterface = { link = 'Type' }
+            BCMP.BlinkCmpKindColor = { link = 'Constant' }
+            BCMP.BlinkCmpKindTypeParameter = { link = 'Type' }
+            BCMP.BlinkCmpKindTabNine = { fg = palette.red.base }
+            BCMP.BlinkCmpKindCopilot = { fg = palette.red.base }
+            --BCMP.BlinkCmpSource = {}
+            --BCMP.BlinkCmpGhostText = {}
+            --BCMP.BlinkCmpDoc = {}
+            --BCMP.BlinkCmpDocBorder = {}
+            --BCMP.BlinkCmpDocSeparator = {}
+            --BCMP.BlinkCmpDocCursorLine = {}
+            --BCMP.BlinkCmpSignatureHelp = {}
+            --BCMP.BlinkCmpSignatureHelpBorder = {}
+            --BCMP.BlinkCmpSignatureHelpActiveParameter = {}
+            U.merge_inplace(highlights, BCMP)
 			-- highlights.BlinkCmpMenuBorder.fg = palette.border_fg
 
 			-- Telescope

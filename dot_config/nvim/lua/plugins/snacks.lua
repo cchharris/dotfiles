@@ -32,7 +32,7 @@ return {
             indent = { enabled = true },
             input = { enabled = true },
             lazygit = { enabled = true },
-            notifier = { enabled = true },
+            notifier = { enabled = false },
             picker = { enabled = true },
             quickfile = { enabled = true },
             scope = { enabled = true },
@@ -42,6 +42,7 @@ return {
             words = { enabled = true },
         });
         ---@type table<number, {token:lsp.ProgressToken, msg:string, done:boolean}[]>
+        --[=[
         local progress = vim.defaulttable()
         vim.api.nvim_create_autocmd("LspProgress", {
           ---@param ev {data: {client_id: integer, params: lsp.ProgressParams}}
@@ -85,5 +86,6 @@ return {
             })
           end,
         })
+        --]=]
     end,
 }

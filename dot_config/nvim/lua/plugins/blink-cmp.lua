@@ -10,6 +10,7 @@ return {
         dependencies = { 'nvim-lua/plenary.nvim' },
         'L3MON4D3/LuaSnip', version = 'v2.*',
         'onsails/lspkind.nvim',
+        "xzbdmw/colorful-menu.nvim",
     },
 
   -- use a release tag to download pre-built binaries
@@ -54,7 +55,7 @@ return {
                 draw = {
                     -- We don't need label_description now because label and label_description are already
                     -- combined together in label by colorful-menu.nvim.
-                    columns = { { "kind_icon", "source", gap = 1 }, { "label", gap = 1 } },
+                    columns = { { "kind_icon", gap = 1 }, { "label", gap = 1 }, { "source", gap = 1 } },
                     components = {
                         kind_icon = {
                             text = function(ctx)
@@ -89,6 +90,14 @@ return {
                         },
 						source = {
                             text = function(ctx)
+                                if ctx.item.source_name == 'LSP' then
+                                    local info = vim.lsp.get_client_by_id(ctx.item.client_id)
+                                    local dev_icon, _ = require("nvim-web-devicons").get_icon(ctx.item.client_name)
+                                    if dev_icon then
+                                        return dev_icon .. ' ' .. ctx.item.client_name .. ctx.icon_gap
+                                    end
+                                    return ctx.item.client_name .. ctx.icon_gap
+                                end
 								return ctx.item.source_name .. ctx.icon_gap
 							  end,
 
@@ -97,6 +106,12 @@ return {
 							  -- keep the highlight groups in sync with the icons.
 							  highlight = function(ctx)
 								local hl = ctx.kind_hl
+                                if ctx.item.source_name == 'LSP' then
+                                    local dev_icon, dev_hl = require("nvim-web-devicons").get_icon(ctx.item.client_name)
+                                    if dev_icon then
+                                        hl = dev_hl
+                                    end
+                                end
 								return hl
 							  end,
 						},
@@ -108,7 +123,7 @@ return {
                                     -- Or you want to add more item to label
                                     return highlights_info.label
                                 else
-                                    return ctx.label
+                                    return ctx.label .. ' ' .. ctx.label_detail
                                 end
                             end,
                             highlight = function(ctx)
@@ -159,6 +174,7 @@ return {
             git = {
                 module = 'blink-cmp-git',
                 name = 'Git',
+                score_offset = -20, -- We'll likely be searching by message/hash
                 opts = {
                 },
             },
