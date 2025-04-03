@@ -11,7 +11,7 @@ return  {
 	'markemmons/neotest-deno',
     'mrcjkb/rustaceanvim',
   },
-	event = 'VeryLazy',
+	cmd = 'Neotest',
 	config = function()
 		require("neotest").setup({
 			adapters = {
