@@ -49,18 +49,18 @@ return {
 
 			-- blink.cmp
             BCMP = {}
-            --BCMP.BlinkCmpMenu = {}
+            BCMP.BlinkCmpMenu = { bg = palette.black2 }
             --BCMP.BlinkCmpMenuBorder = {}
             --BCMP.BlinkCmpMenuSelection = {}
             --BCMP.BlinkCmpScrollBarThumb = {}
             --BCMP.BlinkCmpScrollBarGutter = {}
             --BCMP.BlinkCmpLabel = {}
             --BCMP.BlinkCmpLabelDeprecated = {}
-            --BCMP.BlinkCmpLabelMatch = {}
+            BCMP.BlinkCmpLabelMatch = { fg = palette.orange.base, bold = true } -- Highlight matched text in the label
             --BCMP.BlinkCmpLabelDetail = {}
             --BCMP.BlinkCmpLabelDescription = {}
             --BCMP.BlinkCmpKind = {}
-            --BCMP.BlinkCmpKind<kind> = {}
+            ---[[BCMP.BlinkCmpKind<kind> = {} --]]
             BCMP.BlinkCmpKindField = { link = '@field' }
             BCMP.BlinkCmpKindProperty = { link = '@property' }
             BCMP.BlinkCmpKindEvent = { link = 'Type' }
@@ -87,18 +87,17 @@ return {
             BCMP.BlinkCmpKindColor = { link = 'Constant' }
             BCMP.BlinkCmpKindTypeParameter = { link = 'Type' }
             BCMP.BlinkCmpKindTabNine = { fg = palette.red.base }
-            BCMP.BlinkCmpKindCopilot = { fg = palette.red.base }
+            BCMP.BlinkCmpKindCopilot = { fg = palette.blue2 }
             --BCMP.BlinkCmpSource = {}
             --BCMP.BlinkCmpGhostText = {}
-            --BCMP.BlinkCmpDoc = {}
+            BCMP.BlinkCmpDoc = { bg = palette.black2 }
             --BCMP.BlinkCmpDocBorder = {}
-            --BCMP.BlinkCmpDocSeparator = {}
+            BCMP.BlinkCmpDocSeparator = { bg = palette.black2 }
             --BCMP.BlinkCmpDocCursorLine = {}
-            --BCMP.BlinkCmpSignatureHelp = {}
+            BCMP.BlinkCmpSignatureHelp = { bg = palette.black2 }
             --BCMP.BlinkCmpSignatureHelpBorder = {}
             --BCMP.BlinkCmpSignatureHelpActiveParameter = {}
             U.merge_inplace(highlights, BCMP)
-			-- highlights.BlinkCmpMenuBorder.fg = palette.border_fg
 
 			-- Telescope
 			---@diagnostic disable-next-line: undefined-field
