@@ -11,6 +11,7 @@ return {
 		U = require('nordic.utils')
 		MyColors = {
 			darkblack = '#101520',
+            old_gray0 = '#242933',
 			seagreen = {
 			 dim = '#467063'
 			}
@@ -46,10 +47,11 @@ return {
 			---@diagnostic disable-next-line: undefined-field
 			highlights.WhichKeyBorder.fg = palette.border_fg
 
+            highlights.NormalFloat = { bg = MyColors.old_gray0 }
 
 			-- blink.cmp
             BCMP = {}
-            BCMP.BlinkCmpMenu = { bg = palette.black2 }
+            BCMP.BlinkCmpMenu = { bg = MyColors.old_gray0 }
             --BCMP.BlinkCmpMenuBorder = {}
             --BCMP.BlinkCmpMenuSelection = {}
             --BCMP.BlinkCmpScrollBarThumb = {}
@@ -88,13 +90,34 @@ return {
             BCMP.BlinkCmpKindTypeParameter = { link = 'Type' }
             BCMP.BlinkCmpKindTabNine = { fg = palette.red.base }
             BCMP.BlinkCmpKindCopilot = { fg = palette.blue2 }
+            --
+            --[[
+            'avante',
+            'git',
+            'lsp',
+            'path',
+            'snippets',
+            'buffer',
+            'nerdfont',
+            'ripgrep',
+            'copilot',
+            --]]
+            BCMP.BlinkCmpSourceAvante = { fg = palette.black0, bg = palette.magenta.dim }
+            BCMP.BlinkCmpSourceGit = { fg = palette.black0, bg = palette.green.base}
+            BCMP.BlinkCmpSourceLSP = { fg = palette.black0, bg = palette.green.dim }
+            BCMP.BlinkCmpSourcePath = { fg = palette.black0, bg = palette.blue2 }
+            BCMP.BlinkCmpSourceSnippets = { fg = palette.black0, bg = palette.yellow.dim }
+            BCMP.BlinkCmpSourceBuffer = { fg = palette.black0, bg = palette.orange.dim }
+            BCMP.BlinkCmpSourceNerdfont = { fg = palette.black0, bg = palette.orange.bright }
+            BCMP.BlinkCmpSourceRipgrep = { fg = palette.white0, bg = palette.red.dim }
+            BCMP.BlinkCmpSourceCopilot = { fg = palette.white0, bg = palette.blue0  }
             --BCMP.BlinkCmpSource = {}
             --BCMP.BlinkCmpGhostText = {}
-            BCMP.BlinkCmpDoc = { bg = palette.black2 }
+            BCMP.BlinkCmpDoc = { bg = MyColors.old_gray0 }
             --BCMP.BlinkCmpDocBorder = {}
-            BCMP.BlinkCmpDocSeparator = { bg = palette.black2 }
+            BCMP.BlinkCmpDocSeparator = { bg = MyColors.old_gray0 }
             --BCMP.BlinkCmpDocCursorLine = {}
-            BCMP.BlinkCmpSignatureHelp = { bg = palette.black2 }
+            BCMP.BlinkCmpSignatureHelp = { bg = MyColors.old_gray0 }
             --BCMP.BlinkCmpSignatureHelpBorder = {}
             --BCMP.BlinkCmpSignatureHelpActiveParameter = {}
             U.merge_inplace(highlights, BCMP)

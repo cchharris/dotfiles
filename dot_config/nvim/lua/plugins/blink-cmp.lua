@@ -65,7 +65,7 @@ return {
                     draw = {
                         -- We don't need label_description now because label and label_description are already
                         -- combined together in label by colorful-menu.nvim.
-                        columns = { { "kind_icon", gap = 1 }, { "label", gap = 1 }, { "source", gap = 1 } },
+                        columns = { { "source", gap = 1 }, { "kind_icon", gap = 1 }, { "label", gap = 1 },  },
                         components = {
                             kind_icon = {
                                 text = function(ctx)
@@ -118,6 +118,8 @@ return {
                                   -- keep the highlight groups in sync with the icons.
                                   highlight = function(ctx)
                                     local hl = ctx.kind_hl
+                                    hl = "BlinkCmpSource" .. ctx.item.source_id
+                                    --[[
                                     if ctx.item.source_name == 'LSP' then
                                         local dev_icon, dev_hl = require("nvim-web-devicons").get_icon(ctx.item.client_name)
                                         if dev_icon then
@@ -126,6 +128,7 @@ return {
                                     elseif ctx.item.source_name == "Copilot" then
                                         hl = "BlinkCmpKindCopilot" -- Custom highlight group for Copilot
                                     end
+                                    --]]
                                     return hl
                                   end,
                             },
@@ -133,9 +136,16 @@ return {
                                 width = { fill = true, max = 60 },
                                 text = function(ctx)
                                     local highlights_info = require("colorful-menu").blink_highlights(ctx)
+                                    if ctx.source_id == 'copilot' then
+                                        return '---->'
+                                    end
                                     if highlights_info ~= nil then
                                         -- Or you want to add more item to label
-                                        return highlights_info.label
+                                        local ret = highlights_info.label
+                                        if ctx.label_detail then
+                                            ret = ret ..  ' ' .. ctx.label_detail
+                                        end
+                                        return ret
                                     else
                                         return ctx.label .. ' ' .. ctx.label_detail
                                     end
@@ -146,10 +156,13 @@ return {
                                     if highlights_info ~= nil then
                                         highlights = highlights_info.highlights
                                     end
-                                    for _, idx in ipairs(ctx.label_matched_indices) do
-                                        table.insert(highlights, { idx, idx + 1, group = "BlinkCmpLabelMatch" })
+                                    if ctx.source_id ~= 'copilot' then
+                                        if ctx.label_matched_indices ~= nil then
+                                            for _, idx in ipairs(ctx.label_matched_indices) do
+                                                table.insert(highlights, { idx, idx + 1, group = "BlinkCmpLabelMatch" })
+                                            end
+                                        end
                                     end
-                                    -- Do something else
                                     return highlights
                                 end,
                             },
