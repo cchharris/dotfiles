@@ -1,6 +1,7 @@
 return {
   "folke/noice.nvim",
   event = "VeryLazy",
+    cmd = { 'Noice' },
   opts = {
     lsp = {
         -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
@@ -18,6 +19,18 @@ return {
         inc_rename = false, -- enables an input dialog for inc-rename.nvim
         lsp_doc_border = false, -- add a border to hover docs and signature help
       },
+        views = {
+        },
+        routes = {
+            {
+                filter = {
+                    event = 'msg_show',
+                    kind = '',
+                    find = 'written',
+                },
+                opts = { skip = true },
+            },
+        },
     },
   dependencies = {
     -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries

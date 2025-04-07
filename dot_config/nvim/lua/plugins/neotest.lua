@@ -14,6 +14,9 @@ return  {
 	cmd = 'Neotest',
 	config = function()
 		require("neotest").setup({
+            consumers = {
+                overseer = require('neotest.consumers.overseer'),
+            },
 			adapters = {
 				require('rustaceanvim.neotest'),
 				require('neotest-jest')({

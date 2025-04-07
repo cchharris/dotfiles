@@ -39,8 +39,21 @@ return {
                 ':Bd', function()
                     require('snacks').bufdelete()
                 end,
-                { desc = 'Smart Delete buffer' }
-            }
+                { desc = 'Smart Delete buffer' },
+            },
+            {
+                ':ChezmoiPluginNew [file_name]', function(input)
+                    local filename = ''
+                    if input.fargs and input.fargs[1] then
+                        filename = input.fargs[1]
+                    else
+                        filename = vim.fn.input("Plugin name: ")
+                    end
+                    local path = vim.fs.normalize(vim.fs.joinpath("~", ".local", "share", "chezmoi", 'dot_config', 'nvim', 'lua', 'plugins', filename))
+                    vim.api.nvim_command(':e ' .. path)
+                end,
+                opts = { desc = "Create a new chezmoi plugin", nargs = '?' },
+            },
         },
           -- Initial augroups/autocmds to bind, can also be a function that returns the list
           autocmds = {
