@@ -12,6 +12,7 @@ return {
         'onsails/lspkind.nvim',
         "xzbdmw/colorful-menu.nvim",
         'giuxtaposition/blink-cmp-copilot',
+        'disrupted/blink-cmp-conventional-commits',
     },
 
   -- use a release tag to download pre-built binaries
@@ -96,6 +97,8 @@ return {
                                   end
                                 elseif ctx.source_name == "Copilot" then
                                     hl = "BlinkCmpKindCopilot" -- Custom highlight group for Copilot
+                                elseif ctx.source_name == "conventional_commits" then
+                                    hl = "BlinkCmpKindConventional_Commits" -- Custom highlight group for Copilot
                                 end
                                 return hl
                               end,
@@ -184,6 +187,7 @@ return {
             'nerdfont',
             'ripgrep',
             'copilot',
+            'conventional_commits',
             },
             providers = {
                 lsp = {
@@ -233,6 +237,20 @@ return {
                     opts = {
                     },
                 },
+                conventional_commits = {
+                    module = 'blink-cmp-conventional-commits',
+                    name = 'ConCom',
+                    enabled = function()
+                        return vim.bo.filetype == 'gitcommit'
+                    end,
+                    transform_items = function(_, items)
+                        for _, item in ipairs(items) do
+                            item.kind_icon = '󰊢'
+                        end
+                        return items
+                    end,
+                    opts = { },
+                }
             },
         },
 

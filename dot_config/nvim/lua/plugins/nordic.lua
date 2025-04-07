@@ -90,6 +90,7 @@ return {
             BCMP.BlinkCmpKindTypeParameter = { link = 'Type' }
             BCMP.BlinkCmpKindTabNine = { fg = palette.red.base }
             BCMP.BlinkCmpKindCopilot = { fg = palette.blue2 }
+            BCMP.BlinkCmpKindConventional_Commits = { fg = palette.yellow.base }
             --
             --[[
             'avante',
@@ -111,6 +112,7 @@ return {
             BCMP.BlinkCmpSourceNerdfont = { fg = palette.black0, bg = palette.orange.bright }
             BCMP.BlinkCmpSourceRipgrep = { fg = palette.white0, bg = palette.red.dim }
             BCMP.BlinkCmpSourceCopilot = { fg = palette.white0, bg = palette.blue0  }
+            BCMP.BlinkCmpSourceConventional_Commits = { fg = palette.black0, bg = palette.yellow.base  }
             --BCMP.BlinkCmpSource = {}
             --BCMP.BlinkCmpGhostText = {}
             BCMP.BlinkCmpDoc = { bg = MyColors.old_gray0 }
