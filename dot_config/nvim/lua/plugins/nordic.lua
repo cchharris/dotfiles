@@ -124,6 +124,29 @@ return {
             --BCMP.BlinkCmpSignatureHelpActiveParameter = {}
             U.merge_inplace(highlights, BCMP)
 
+            NOTIFY = {}
+            NOTIFY.NotifyERRORBorder = { fg = palette.black0, bg = palette.black0 }
+            NOTIFY.NotifyWARNBorder = { fg = palette.black0, bg = palette.black0 }
+            NOTIFY.NotifyINFOBorder = { fg = palette.black0, bg = palette.black0 }
+            NOTIFY.NotifyDEBUGBorder = { fg = palette.black0, bg = palette.black0 }
+            NOTIFY.NotifyTraceBorder = { fg = palette.black0, bg = palette.black0 }
+            NOTIFY.NotifyERRORIcon = { fg = palette.white0, bg = '#F70067' }
+            NOTIFY.NotifyWARNIcon = { fg = palette.black0, bg = '#F79000' }
+            NOTIFY.NotifyINFOIcon = { fg = palette.black0, bg = '#A9FF68' }
+            NOTIFY.NotifyDEBUGIcon = { fg = palette.black0, bg = '#8B8B8B' }
+            NOTIFY.NotifyTraceIcon = { fg = palette.black0, bg = '#D484FF' }
+            NOTIFY.NotifyERRORTitle = { fg = palette.white0, bg = '#F70067' }
+            NOTIFY.NotifyWARNTitle = { fg = palette.black0, bg = '#F79000' }
+            NOTIFY.NotifyINFOTitle = { fg = palette.black0, bg = '#A9FF68' }
+            NOTIFY.NotifyDEBUGTitle = { fg = palette.black0, bg = '#8B8B8B' }
+            NOTIFY.NotifyTraceTitle = { fg = palette.black0, bg = '#D484FF' }
+            NOTIFY.NotifyERRORBody = { bg = palette.gray1 }
+            NOTIFY.NotifyWARNBody = { bg = palette.gray1 }
+            NOTIFY.NotifyINFOBody = { bg = palette.gray1 }
+            NOTIFY.NotifyDEBUGBody = { bg = palette.gray1 }
+            NOTIFY.NotifyTraceBody = { bg = palette.gray1 }
+            U.merge_inplace(highlights, NOTIFY)
+
 			-- Telescope
 			---@diagnostic disable-next-line: undefined-field
 			highlights.TelescopeBorder.fg = palette.border_fg
