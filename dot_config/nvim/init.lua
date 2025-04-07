@@ -1,7 +1,4 @@
 require("config.lazy")
-require("config.chezmoi")
-
-require('config.keymaps')
 
 --vim.cmd [[colorscheme habamax]]
 vim.cmd [[set relativenumber]]

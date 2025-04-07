@@ -194,6 +194,7 @@ return {
                     name = 'LSP',
                     module = 'blink.cmp.sources.lsp',
                     score_offset = 15,
+                    fallbacks = { 'buffer' },
                     opts = {
                     },
                 },
@@ -206,6 +207,7 @@ return {
                 git = {
                     module = 'blink-cmp-git',
                     name = 'Git',
+                    max_items = 5,
                     score_offset = -20, -- We'll likely be searching by message/hash
                     opts = {
                     },
