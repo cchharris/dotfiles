@@ -37,9 +37,10 @@ return {
         opts.desc = "Show LSP type definitions"
         keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts)
 
+        -- Taken over by aznhe21/actions-preview.nvim
         -- see available code actions
-        opts.desc = "Show available code actions"
-        keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
+        -- opts.desc = "Show available code actions"
+        -- keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
 
         -- smart rename
         opts.desc = "Smart rename"

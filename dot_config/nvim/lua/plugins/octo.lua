@@ -9,5 +9,12 @@ return  {
   opts = {},
   cmd = {
 	  'Octo'
-  }
+     },
+    keys = {
+        {
+            '<leader>ghr',
+            '<cmd>Octo pr search involves:@me<cr>',
+            desc = '<Octo> Find Open PRs involving:@me state:open'
+        }
+    },
 }
