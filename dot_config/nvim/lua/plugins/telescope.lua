@@ -4,6 +4,11 @@ return {
       dependencies = {
 	'nvim-lua/plenary.nvim',
 	'nvim-telescope/telescope-live-grep-args.nvim',
+    "isak102/telescope-git-file-history.nvim",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "tpope/vim-fugitive"
+        }
 	},
 	keys = {
 		{'<leader>fcz',
@@ -67,15 +72,16 @@ return {
 			end,
 			desc = "<Telescope> Git status"
 		},
-		{'<leader>fgf',
+		{'<leader>fgh',
 			function()
-				require('telescope.builtin').git_bcommits()
-			end,
-			desc = "<Telescope> Git bcommits"
+                require("telescope").extensions.git_file_history.git_file_history()
+            end,
+			desc = "<Telescope> Git file history"
 		},
 	},
 	config = function()
 		local telescope = require('telescope')
+        local gfh_actions = require('telescope').extensions.git_file_history.actions
 
 		telescope.setup {
 		  defaults = {
@@ -105,7 +111,21 @@ return {
 		    --   extension_config_key = value,
 		    -- }
 		    -- please take a look at the readme of the extension you want to configure
-		  }
+            git_file_history = {
+                -- Keymaps inside the picker
+                mappings = {
+                    i = {
+                        ["<C-g>"] = gfh_actions.open_in_browser,
+                    },
+                    n = {
+                        ["<C-g>"] = gfh_actions.open_in_browser,
+                    },
+                },
+
+                -- The command to use for opening the browser (nil or string)
+                -- If nil, it will check if xdg-open, open, start, wslview are available, in that order.
+                browser_command = nil,		  }
+            }
 		}
 
 		telescope.load_extension('chezmoi')
@@ -113,5 +133,6 @@ return {
 		telescope.load_extension('neoclip')
         telescope.load_extension('package_info')
         telescope.load_extension('noice')
+        telescope.load_extension('git_file_history')
 	end
     }

@@ -64,7 +64,7 @@ return {
 
         -- show documentation for what is under cursor
         opts.desc = "Show documentation for what is under cursor"
-        keymap.set("n", "K", vim.lsp.buf.hover, opts)
+        keymap.set("n", "K", function() require("pretty_hover").hover() end, opts)
 
         -- mapping to restart lsp if necessary
         opts.desc = "Restart LSP"
