@@ -1,5 +1,5 @@
 return {
-  'stevearc/overseer.nvim',
+    'stevearc/overseer.nvim',
     cmd = {
         'OverseerBuild',
         'OverseerClearCache',
@@ -16,10 +16,12 @@ return {
         'OverseerTaskAction',
         'OverseerToggle',
     },
-  opts = {
+    opts = {
         dap = false,
         strategy = {
             "toggleterm",
+            open_on_start = false,
+            close_on_exit = 'success',
         },
     },
 }

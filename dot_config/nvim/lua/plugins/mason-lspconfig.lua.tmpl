@@ -9,29 +9,29 @@ return {
 			"basedpyright", -- python
 			"bashls", -- bash
 			"buf_ls", -- protobuf
+			"bzl", -- bazel/skylark
 			"clangd", -- c, c++
 			"cmake", -- cmake
 			"dockerls", -- docker
+			"grammarly", -- text, markdown
 			"html", -- html
-			"ts_ls", -- typescript, javascript
+			"jsonls", -- json
 			"lua_ls", -- lua
 			{{- if ne .chezmoi.os "windows" }}
 			"nil_ls", -- nix
 			{{- end }}
+			"powershell_es", -- powershell
 			"ruff", -- python
 			"rust_analyzer", -- rust
-			"bzl", -- bazel/skylark
+			"tailwindcss", -- css
+			"taplo", -- toml
 			"terraformls", -- terraform
 			"tflint", -- terraform
-			--"harper_ls", -- toml, typescript, rust, ruby, python, markdown, lua, javascript, java, C, C++, C#
-			"taplo", -- toml
+			"ts_ls", -- typescript, javascript
 			"vimls", -- vimscript
 			"yamlls", -- yaml
 			"zls", -- zig
-			"grammarly", -- text, markdown
-			"powershell_es", -- powershell
-			"jsonls", -- json
-			"tailwindcss", -- css
+			--"harper_ls", -- toml, typescript, rust, ruby, python, markdown, lua, javascript, java, C, C++, C#
 		}
 	}
 }

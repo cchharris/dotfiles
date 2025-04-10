@@ -1,5 +1,12 @@
 return {
     'saecki/crates.nvim',
     event = { "BufRead Cargo.toml" },
-    opts = {},
+    opts = {
+        lsp = {
+            actions = true,
+            enabled = true,
+            completion = true,
+            hover = true,
+        },
+    },
 }
