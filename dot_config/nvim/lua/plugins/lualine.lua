@@ -38,6 +38,20 @@ local function neotest()
     return table.concat(result, ' ')
 end
 
+local function recordingStatus()
+    if package.loaded["recorder"] == nil then
+        return ''
+    end
+    return require("recorder").recordingStatus()
+end
+
+local function displaySlots()
+    if package.loaded["recorder"] == nil then
+        return ''
+    end
+    return require("recorder").displaySlots()
+end
+
 return {
     'nvim-lualine/lualine.nvim',
     dependencies = {
@@ -50,8 +64,8 @@ return {
             lualine_b = { 'branch', 'diff', 'diagnostics' },
             lualine_c = { { 'filename', path = 1 } },
             lualine_x = { 'searchcount', 'selectioncount', neotest, 'overseer', 'lsp_status', 'encoding', 'fileformat', 'filetype' },
-            lualine_y = { 'progress' },
-            lualine_z = { 'location' }
+            lualine_y = { recordingStatus, 'progress' },
+            lualine_z = { displaySlots, 'location' }
         },
         inactive_sections = {
             lualine_a = {},
