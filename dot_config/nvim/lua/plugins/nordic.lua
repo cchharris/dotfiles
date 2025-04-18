@@ -1,98 +1,110 @@
 return {
-	'AlexvZyl/nordic.nvim',
-	lazy = false,
-	priority = 1000,
-	dependencies = {
-		'nvim-lualine/lualine.nvim'
-	},
-	config = function()
-	---@diagnostic disable-next-line: missing-fields
-		N = require('nordic')
-		U = require('nordic.utils')
-		MyColors = {
-			darkblack = '#101520',
+    'AlexvZyl/nordic.nvim',
+    lazy = false,
+    priority = 1000,
+    dependencies = {
+        'nvim-lualine/lualine.nvim'
+    },
+    config = function()
+        ---@diagnostic disable-next-line: missing-fields
+        N = require('nordic')
+        U = require('nordic.utils')
+        MyColors = {
+            darkblack = '#101520',
             old_gray0 = '#242933',
-			seagreen = {
-			 dim = '#467063'
-			}
-		}
-		N.load({
-		on_palette = function(palette)
-			palette.gray0 = palette.black1 -- bg
-			palette.gray1 = '#3B4252'
-			palette.gray2 = '#434C5E'
-			palette.gray3 = '#4C566A'
-			palette.gray4 = '#5c6880'
-		end,
-		after_palette = function(palette)
-			palette.border_fg = palette.gray5
-			palette.fg_float_border = palette.border_fg
-			palette.fg_popup_border = palette.border_fg
-			palette.comment = palette.blue1 --MyColors.seagreen.dim --palette.gray5
-			palette.fg_sidebar = palette.gray5
-			palette.bg_visual = U.blend(palette.yellow.dim, palette.bg, .25)
-		end,
-		on_highlight = function(highlights, palette)
-			highlights.CursorLine.bg = MyColors.darkblack
-			highlights.CursorLineNr.fg = palette.white1
-			highlights.Delimiter.fg = palette.orange.dim
+            seagreen = {
+                dim = '#467063'
+            }
+        }
+        N.load({
+            on_palette = function(palette)
+                palette.gray0 = palette.black1 -- bg
+                palette.gray1 = '#3B4252'
+                palette.gray2 = '#434C5E'
+                palette.gray3 = '#4C566A'
+                palette.gray4 = '#5c6880'
+            end,
+            after_palette = function(palette)
+                palette.border_fg = palette.gray5
+                palette.fg_float_border = palette.border_fg
+                palette.fg_popup_border = palette.border_fg
+                palette.comment = palette.blue1 --MyColors.seagreen.dim --palette.gray5
+                palette.fg_sidebar = palette.gray5
+                palette.bg_visual = U.blend(palette.yellow.dim, palette.bg, .25)
+            end,
+            on_highlight = function(highlights, palette)
+                highlights.CursorLine.bg = MyColors.darkblack
+                highlights.CursorLineNr.fg = palette.white1
+                highlights.Delimiter.fg = palette.orange.dim
 
-			--Copilot
-			--highlights.CopilotSuggestion.fg = palette.magenta.base
+                U.merge_inplace(highlights, { FoldColumn = { bg = palette.gray0 } })
+                U.merge_inplace(highlights, { FoldLine = { bg = palette.gray0 } })
+                U.merge_inplace(highlights, { FoldLineCurrent = { fg = palette.yellow.base, bg = palette.gray0 } })
 
-			--lsp
-			highlights['@parameter'].fg = palette.white0_reduce_blue
+                --ufo
+                UFO = {}
+                -- UFO.UfoFoldedFg = { bg = palette.gray1 }
+                -- UFO.UfoFoldedBg = { bg = palette.gray1 }
+                -- UFO.UfoFoldedEllipses = { bg = palette.gray1 }
+                U.merge_inplace(highlights, UFO)
 
-			-- WhichKey
-			---@diagnostic disable-next-line: undefined-field
-			highlights.WhichKeyBorder.fg = palette.border_fg
 
-            highlights.NormalFloat = { bg = MyColors.old_gray0 }
+                --Copilot
+                --highlights.CopilotSuggestion.fg = palette.magenta.base
 
-			-- blink.cmp
-            BCMP = {}
-            BCMP.BlinkCmpMenu = { bg = MyColors.old_gray0 }
-            --BCMP.BlinkCmpMenuBorder = {}
-            --BCMP.BlinkCmpMenuSelection = {}
-            --BCMP.BlinkCmpScrollBarThumb = {}
-            --BCMP.BlinkCmpScrollBarGutter = {}
-            --BCMP.BlinkCmpLabel = {}
-            --BCMP.BlinkCmpLabelDeprecated = {}
-            BCMP.BlinkCmpLabelMatch = { fg = palette.orange.base, bold = true } -- Highlight matched text in the label
-            --BCMP.BlinkCmpLabelDetail = {}
-            --BCMP.BlinkCmpLabelDescription = {}
-            --BCMP.BlinkCmpKind = {}
-            ---[[BCMP.BlinkCmpKind<kind> = {} --]]
-            BCMP.BlinkCmpKindField = { link = '@field' }
-            BCMP.BlinkCmpKindProperty = { link = '@property' }
-            BCMP.BlinkCmpKindEvent = { link = 'Type' }
-            BCMP.BlinkCmpKindText = { fg = palette.grey4 }
-            BCMP.BlinkCmpKindEnum = { link = 'Type' }
-            BCMP.BlinkCmpKindKeyword = { link = 'Keyword' }
-            BCMP.BlinkCmpKindConstant = { link = 'Constant' }
-            BCMP.BlinkCmpKindConstructor = { link = 'Function' }
-            BCMP.BlinkCmpKindReference = { fg = palette.cyan.base }
-            BCMP.BlinkCmpKindFunction = { link = 'Function' }
-            BCMP.BlinkCmpKindStruct = { link = 'Type' }
-            BCMP.BlinkCmpKindClass = { link = 'Type' }
-            BCMP.BlinkCmpKindModule = { fg = palette.yellow.dim }
-            BCMP.BlinkCmpKindOperator = { link = 'Operator' }
-            BCMP.BlinkCmpKindVariable = { fg = palette.cyan.base }
-            BCMP.BlinkCmpKindFile = { fg = palette.blue1 }
-            BCMP.BlinkCmpKindUnit = { link = 'Constant' }
-            BCMP.BlinkCmpKindSnippet = { fg = palette.blue1 }
-            BCMP.BlinkCmpKindFolder = { fg = palette.yellow.dark }
-            BCMP.BlinkCmpKindMethod = { link = 'Function' }
-            BCMP.BlinkCmpKindValue = { link = 'Constant' }
-            BCMP.BlinkCmpKindEnumMember = { link = 'Type' }
-            BCMP.BlinkCmpKindInterface = { link = 'Type' }
-            BCMP.BlinkCmpKindColor = { link = 'Constant' }
-            BCMP.BlinkCmpKindTypeParameter = { link = 'Type' }
-            BCMP.BlinkCmpKindTabNine = { fg = palette.red.base }
-            BCMP.BlinkCmpKindCopilot = { fg = palette.blue2 }
-            BCMP.BlinkCmpKindConventional_Commits = { fg = palette.yellow.base }
-            --
-            --[[
+                --lsp
+                highlights['@parameter'].fg = palette.white0_reduce_blue
+
+                -- WhichKey
+                ---@diagnostic disable-next-line: undefined-field
+                highlights.WhichKeyBorder.fg = palette.border_fg
+
+                highlights.NormalFloat = { bg = MyColors.old_gray0 }
+
+                -- blink.cmp
+                BCMP = {}
+                BCMP.BlinkCmpMenu = { bg = MyColors.old_gray0 }
+                --BCMP.BlinkCmpMenuBorder = {}
+                --BCMP.BlinkCmpMenuSelection = {}
+                --BCMP.BlinkCmpScrollBarThumb = {}
+                --BCMP.BlinkCmpScrollBarGutter = {}
+                --BCMP.BlinkCmpLabel = {}
+                --BCMP.BlinkCmpLabelDeprecated = {}
+                BCMP.BlinkCmpLabelMatch = { fg = palette.orange.base, bold = true } -- Highlight matched text in the label
+                --BCMP.BlinkCmpLabelDetail = {}
+                --BCMP.BlinkCmpLabelDescription = {}
+                --BCMP.BlinkCmpKind = {}
+                ---[[BCMP.BlinkCmpKind<kind> = {} --]]
+                BCMP.BlinkCmpKindField = { link = '@field' }
+                BCMP.BlinkCmpKindProperty = { link = '@property' }
+                BCMP.BlinkCmpKindEvent = { link = 'Type' }
+                BCMP.BlinkCmpKindText = { fg = palette.grey4 }
+                BCMP.BlinkCmpKindEnum = { link = 'Type' }
+                BCMP.BlinkCmpKindKeyword = { link = 'Keyword' }
+                BCMP.BlinkCmpKindConstant = { link = 'Constant' }
+                BCMP.BlinkCmpKindConstructor = { link = 'Function' }
+                BCMP.BlinkCmpKindReference = { fg = palette.cyan.base }
+                BCMP.BlinkCmpKindFunction = { link = 'Function' }
+                BCMP.BlinkCmpKindStruct = { link = 'Type' }
+                BCMP.BlinkCmpKindClass = { link = 'Type' }
+                BCMP.BlinkCmpKindModule = { fg = palette.yellow.dim }
+                BCMP.BlinkCmpKindOperator = { link = 'Operator' }
+                BCMP.BlinkCmpKindVariable = { fg = palette.cyan.base }
+                BCMP.BlinkCmpKindFile = { fg = palette.blue1 }
+                BCMP.BlinkCmpKindUnit = { link = 'Constant' }
+                BCMP.BlinkCmpKindSnippet = { fg = palette.blue1 }
+                BCMP.BlinkCmpKindFolder = { fg = palette.yellow.dark }
+                BCMP.BlinkCmpKindMethod = { link = 'Function' }
+                BCMP.BlinkCmpKindValue = { link = 'Constant' }
+                BCMP.BlinkCmpKindEnumMember = { link = 'Type' }
+                BCMP.BlinkCmpKindInterface = { link = 'Type' }
+                BCMP.BlinkCmpKindColor = { link = 'Constant' }
+                BCMP.BlinkCmpKindTypeParameter = { link = 'Type' }
+                BCMP.BlinkCmpKindTabNine = { fg = palette.red.base }
+                BCMP.BlinkCmpKindCopilot = { fg = palette.blue2 }
+                BCMP.BlinkCmpKindConventional_Commits = { fg = palette.yellow.base }
+                --
+                --[[
             'avante',
             'git',
             'lsp',
@@ -103,69 +115,69 @@ return {
             'ripgrep',
             'copilot',
             --]]
-            BCMP.BlinkCmpSourceAvante = { fg = palette.black0, bg = palette.magenta.dim }
-            BCMP.BlinkCmpSourceGit = { fg = palette.black0, bg = palette.green.base}
-            BCMP.BlinkCmpSourceLSP = { fg = palette.black0, bg = palette.green.dim }
-            BCMP.BlinkCmpSourcePath = { fg = palette.black0, bg = palette.blue2 }
-            BCMP.BlinkCmpSourceSnippets = { fg = palette.black0, bg = palette.yellow.dim }
-            BCMP.BlinkCmpSourceBuffer = { fg = palette.black0, bg = palette.orange.dim }
-            BCMP.BlinkCmpSourceNerdfont = { fg = palette.black0, bg = palette.orange.bright }
-            BCMP.BlinkCmpSourceRipgrep = { fg = palette.white0, bg = palette.red.dim }
-            BCMP.BlinkCmpSourceCopilot = { fg = palette.white0, bg = palette.blue0  }
-            BCMP.BlinkCmpSourceConventional_Commits = { fg = palette.black0, bg = palette.yellow.base  }
-            --BCMP.BlinkCmpSource = {}
-            --BCMP.BlinkCmpGhostText = {}
-            BCMP.BlinkCmpDoc = { bg = MyColors.old_gray0 }
-            --BCMP.BlinkCmpDocBorder = {}
-            BCMP.BlinkCmpDocSeparator = { bg = MyColors.old_gray0 }
-            --BCMP.BlinkCmpDocCursorLine = {}
-            BCMP.BlinkCmpSignatureHelp = { bg = MyColors.old_gray0 }
-            --BCMP.BlinkCmpSignatureHelpBorder = {}
-            --BCMP.BlinkCmpSignatureHelpActiveParameter = {}
-            U.merge_inplace(highlights, BCMP)
+                BCMP.BlinkCmpSourceAvante = { fg = palette.black0, bg = palette.magenta.dim }
+                BCMP.BlinkCmpSourceGit = { fg = palette.black0, bg = palette.green.base }
+                BCMP.BlinkCmpSourceLSP = { fg = palette.black0, bg = palette.green.dim }
+                BCMP.BlinkCmpSourcePath = { fg = palette.black0, bg = palette.blue2 }
+                BCMP.BlinkCmpSourceSnippets = { fg = palette.black0, bg = palette.yellow.dim }
+                BCMP.BlinkCmpSourceBuffer = { fg = palette.black0, bg = palette.orange.dim }
+                BCMP.BlinkCmpSourceNerdfont = { fg = palette.black0, bg = palette.orange.bright }
+                BCMP.BlinkCmpSourceRipgrep = { fg = palette.white0, bg = palette.red.dim }
+                BCMP.BlinkCmpSourceCopilot = { fg = palette.white0, bg = palette.blue0 }
+                BCMP.BlinkCmpSourceConventional_Commits = { fg = palette.black0, bg = palette.yellow.base }
+                --BCMP.BlinkCmpSource = {}
+                --BCMP.BlinkCmpGhostText = {}
+                BCMP.BlinkCmpDoc = { bg = MyColors.old_gray0 }
+                --BCMP.BlinkCmpDocBorder = {}
+                BCMP.BlinkCmpDocSeparator = { bg = MyColors.old_gray0 }
+                --BCMP.BlinkCmpDocCursorLine = {}
+                BCMP.BlinkCmpSignatureHelp = { bg = MyColors.old_gray0 }
+                --BCMP.BlinkCmpSignatureHelpBorder = {}
+                --BCMP.BlinkCmpSignatureHelpActiveParameter = {}
+                U.merge_inplace(highlights, BCMP)
 
-            NOTIFY = {}
-            NOTIFY.NotifyERRORBorder = { fg = palette.black0, bg = palette.black0 }
-            NOTIFY.NotifyWARNBorder = { fg = palette.black0, bg = palette.black0 }
-            NOTIFY.NotifyINFOBorder = { fg = palette.black0, bg = palette.black0 }
-            NOTIFY.NotifyDEBUGBorder = { fg = palette.black0, bg = palette.black0 }
-            NOTIFY.NotifyTraceBorder = { fg = palette.black0, bg = palette.black0 }
-            NOTIFY.NotifyERRORIcon = { fg = palette.white0, bg = '#F70067' }
-            NOTIFY.NotifyWARNIcon = { fg = palette.black0, bg = '#F79000' }
-            NOTIFY.NotifyINFOIcon = { fg = palette.black0, bg = '#A9FF68' }
-            NOTIFY.NotifyDEBUGIcon = { fg = palette.black0, bg = '#8B8B8B' }
-            NOTIFY.NotifyTraceIcon = { fg = palette.black0, bg = '#D484FF' }
-            NOTIFY.NotifyERRORTitle = { fg = palette.white0, bg = '#F70067' }
-            NOTIFY.NotifyWARNTitle = { fg = palette.black0, bg = '#F79000' }
-            NOTIFY.NotifyINFOTitle = { fg = palette.black0, bg = '#A9FF68' }
-            NOTIFY.NotifyDEBUGTitle = { fg = palette.black0, bg = '#8B8B8B' }
-            NOTIFY.NotifyTraceTitle = { fg = palette.black0, bg = '#D484FF' }
-            NOTIFY.NotifyERRORBody = { bg = palette.gray1 }
-            NOTIFY.NotifyWARNBody = { bg = palette.gray1 }
-            NOTIFY.NotifyINFOBody = { bg = palette.gray1 }
-            NOTIFY.NotifyDEBUGBody = { bg = palette.gray1 }
-            NOTIFY.NotifyTraceBody = { bg = palette.gray1 }
-            U.merge_inplace(highlights, NOTIFY)
+                NOTIFY = {}
+                NOTIFY.NotifyERRORBorder = { fg = palette.black0, bg = palette.black0 }
+                NOTIFY.NotifyWARNBorder = { fg = palette.black0, bg = palette.black0 }
+                NOTIFY.NotifyINFOBorder = { fg = palette.black0, bg = palette.black0 }
+                NOTIFY.NotifyDEBUGBorder = { fg = palette.black0, bg = palette.black0 }
+                NOTIFY.NotifyTraceBorder = { fg = palette.black0, bg = palette.black0 }
+                NOTIFY.NotifyERRORIcon = { fg = palette.white0, bg = '#F70067' }
+                NOTIFY.NotifyWARNIcon = { fg = palette.black0, bg = '#F79000' }
+                NOTIFY.NotifyINFOIcon = { fg = palette.black0, bg = '#A9FF68' }
+                NOTIFY.NotifyDEBUGIcon = { fg = palette.black0, bg = '#8B8B8B' }
+                NOTIFY.NotifyTraceIcon = { fg = palette.black0, bg = '#D484FF' }
+                NOTIFY.NotifyERRORTitle = { fg = palette.white0, bg = '#F70067' }
+                NOTIFY.NotifyWARNTitle = { fg = palette.black0, bg = '#F79000' }
+                NOTIFY.NotifyINFOTitle = { fg = palette.black0, bg = '#A9FF68' }
+                NOTIFY.NotifyDEBUGTitle = { fg = palette.black0, bg = '#8B8B8B' }
+                NOTIFY.NotifyTraceTitle = { fg = palette.black0, bg = '#D484FF' }
+                NOTIFY.NotifyERRORBody = { bg = palette.gray1 }
+                NOTIFY.NotifyWARNBody = { bg = palette.gray1 }
+                NOTIFY.NotifyINFOBody = { bg = palette.gray1 }
+                NOTIFY.NotifyDEBUGBody = { bg = palette.gray1 }
+                NOTIFY.NotifyTraceBody = { bg = palette.gray1 }
+                U.merge_inplace(highlights, NOTIFY)
 
-			-- Telescope
-			---@diagnostic disable-next-line: undefined-field
-			highlights.TelescopeBorder.fg = palette.border_fg
-			---@diagnostic disable-next-line: undefined-field
-			highlights.TelescopePromptBorder.fg = palette.border_fg
-			---@diagnostic disable-next-line: undefined-field
-			highlights.TelescopeResultsBorder.fg = palette.border_fg
-			---@diagnostic disable-next-line: undefined-field
-			highlights.TelescopePreviewBorder.fg = palette.border_fg
-			---@diagnostic disable-next-line: undefined-field
-			highlights.TelescopeMatching.fg = palette.orange.base
-		end,
-		})
-		require('lualine').setup({
-				options = {
-					theme = 'nordic'
-				}
-			})
-	end
+                -- Telescope
+                ---@diagnostic disable-next-line: undefined-field
+                highlights.TelescopeBorder.fg = palette.border_fg
+                ---@diagnostic disable-next-line: undefined-field
+                highlights.TelescopePromptBorder.fg = palette.border_fg
+                ---@diagnostic disable-next-line: undefined-field
+                highlights.TelescopeResultsBorder.fg = palette.border_fg
+                ---@diagnostic disable-next-line: undefined-field
+                highlights.TelescopePreviewBorder.fg = palette.border_fg
+                ---@diagnostic disable-next-line: undefined-field
+                highlights.TelescopeMatching.fg = palette.orange.base
+            end,
+        })
+        require('lualine').setup({
+            options = {
+                theme = 'nordic'
+            }
+        })
+    end
 }
 
 --[[#region-- The Nord palette: https://www.nordtheme.com/.
@@ -246,5 +258,4 @@ local palette = {
 		bright = '#BE9DB8',
 		dim = '#A97EA1',
 	},
-}]]--
-
+}]] --

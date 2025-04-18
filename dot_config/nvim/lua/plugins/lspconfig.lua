@@ -64,11 +64,14 @@ return {
 
                 -- show documentation for what is under cursor
                 opts.desc = "Show documentation for what is under cursor"
-                keymap.set("n", "K",  --function()
+                keymap.set("n", "K", function()
                     --local function pretty_hover() require("pretty_hover").hover() end
-                    vim.lsp.buf.hover --()
-                    --end
-                    , opts)
+                    local winid = require('ufo').peekFoldedLinesUnderCursor()
+                    if not winid then
+                        vim.lsp.buf.hover() --()
+                    end
+                end
+                , opts)
 
                 -- mapping to restart lsp if necessary
                 opts.desc = "Restart LSP"
@@ -95,7 +98,10 @@ return {
             .default_capabilities())
         -- enable snippet
         capabilities.textDocument.completion.completionItem.snippetSupport = true
-
+        capabilities.textDocument.foldingRange = {
+            dynamicRegistration = false,
+            lineFoldingOnly = true
+        }
         -- change diagnostic symbols in the sign column (gutter)
         local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
         for type, icon in pairs(signs) do
