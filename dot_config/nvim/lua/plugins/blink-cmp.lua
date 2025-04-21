@@ -208,6 +208,9 @@ return {
                         opts = { insert = true },
                     },
                     git = {
+                        enabled = function()
+                            return vim.tbl_contains({ 'octo', 'gitcommit', 'markdown' }, vim.bo.filetype)
+                        end,
                         module = 'blink-cmp-git',
                         name = 'Git',
                         max_items = 5,

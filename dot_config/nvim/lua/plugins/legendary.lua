@@ -61,31 +61,31 @@ return {
         },
         -- Initial augroups/autocmds to bind, can also be a function that returns the list
         autocmds = {
-            {
-                'BufWritePre',
-                function(ev)
-                    local clients = vim.lsp.get_clients({ bufnr = ev.buf, method = 'textDocument/formatting' })
-                    if clients == nil or #clients == 0 then
-                        vim.notify('No LSP clients attached to buffer', vim.log.levels.TRACE,
-                            { title = 'LSP' })
-                        return
-                    end
-                    local function supportsFilter(client)
-                        return client.supports_method('textDocument/formatting', ev.buf)
-                    end
-                    vim.notify(
-                        'Formatting clients:' .. '\n' ..
-                        table.concat(vim.tbl_map(function(t) return '- ' .. t.name end, clients), '\n'),
-                        vim.log.levels.INFO, { title = 'LSP' })
-                    vim.lsp.buf.format({
-                        async = false,
-                        bufnr = ev.buf,
-                        filter = supportsFilter
-                    })
-                    vim.notify('Formatted buffer', vim.log.levels.INFO, { title = 'LSP' })
-                end,
-                description = 'Format on save'
-            },
+            -- {
+            -- 'BufWritePre',
+            -- function(ev)
+            --     local clients = vim.lsp.get_clients({ bufnr = ev.buf, method = 'textDocument/formatting' })
+            --     if clients == nil or #clients == 0 then
+            --         vim.notify('No LSP clients attached to buffer', vim.log.levels.TRACE,
+            --             { title = 'LSP' })
+            --         return
+            --     end
+            --     local function supportsFilter(client)
+            --         return client.supports_method('textDocument/formatting', ev.buf)
+            --     end
+            --     vim.notify(
+            --         'Formatting clients:' .. '\n' ..
+            --         table.concat(vim.tbl_map(function(t) return '- ' .. t.name end, clients), '\n'),
+            --         vim.log.levels.INFO, { title = 'LSP' })
+            --     vim.lsp.buf.format({
+            --         async = false,
+            --         bufnr = ev.buf,
+            --         filter = supportsFilter
+            --     })
+            --     vim.notify('Formatted buffer', vim.log.levels.INFO, { title = 'LSP' })
+            -- end,
+            -- description = 'Format on save'
+            -- },
             {
                 { "BufRead", "BufNewFile" },
                 function(ev)
