@@ -66,10 +66,7 @@ return {
                 opts.desc = "Show documentation for what is under cursor"
                 keymap.set("n", "K", function()
                     --local function pretty_hover() require("pretty_hover").hover() end
-                    local winid = require('ufo').peekFoldedLinesUnderCursor()
-                    if not winid then
-                        vim.lsp.buf.hover() --()
-                    end
+                    vim.lsp.buf.hover() --()
                 end
                 , opts)
 
