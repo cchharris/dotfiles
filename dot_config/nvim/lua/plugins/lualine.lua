@@ -71,7 +71,7 @@ return {
             lualine_a = {},
             lualine_b = {},
             lualine_c = { { 'filename', path = 1 } },
-            lualine_x = { 'location' },
+            lualine_x = { function() return require('action-hints').statusline() end, 'location' },
             lualine_y = {},
             lualine_z = {}
         },
