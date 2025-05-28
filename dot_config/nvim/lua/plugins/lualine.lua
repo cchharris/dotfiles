@@ -29,6 +29,7 @@ local function neotest()
         end
     end
 
+    counts.total = counts.total - (counts.passed + counts.failed + counts.skipped + counts.running)
     local result = {}
     for status, count in pairs(counts) do
         if count > 0 then
