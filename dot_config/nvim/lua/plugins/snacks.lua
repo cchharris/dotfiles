@@ -7,7 +7,7 @@ local dashboard = {
     { icon = " ", key = "c", desc = "Config", action = ":lua require('telescope.builtin').fd({cwd = vim.fn.stdpath('config')})" },
     { icon = " ", key = "C", desc = "Chezmoi", action = ":lua require('telescope').extensions.chezmoi.find_files()" },
     { icon = " ", key = "s", desc = "Restore Session", enabled = function() return require('auto-session')
-        .session_exists_for_cwd() end, action = ":lua require('auto-session').RestoreSession()" },
+        .session_exists_for_cwd() end, action = ":lua require('auto-session').restore_session()" },
     { icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
     { icon = " ", key = "q", desc = "Quit", action = ":qa" },
 }

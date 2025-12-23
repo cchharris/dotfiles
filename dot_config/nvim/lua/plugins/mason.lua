@@ -1,6 +1,6 @@
--- See https://github.com/williamboman/mason-lspconfig.nvim
+-- See https://github.com/mason-org/mason-lspconfig.nvim
 return {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     dependencies = {
         {
             "WhoIsSethDaniel/mason-tool-installer.nvim",

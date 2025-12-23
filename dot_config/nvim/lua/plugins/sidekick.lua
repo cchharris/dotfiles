@@ -5,6 +5,7 @@ return {
         cli = {
         },
     },
+    event = { "BufReadPre", "BufNewFile" },
     cmd = {
         'Sidekick'
     },
