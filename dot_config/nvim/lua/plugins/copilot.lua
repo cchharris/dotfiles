@@ -17,13 +17,13 @@ return {
                 prev = "<c-k>",
             },
         },
-        nes = {
-            enabled = true,
-            keymap = {
-                accept_and_goto = "<tab>",
-                accept = false,
-                dismiss = "<Esc>",
-            },
-        },
+        -- nes = {
+        --     enabled = true,
+        --     keymap = {
+        --         accept_and_goto = "<tab>",
+        --         accept = false,
+        --         dismiss = "<Esc>",
+        --     },
+        -- },
     }
 }
