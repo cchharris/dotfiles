@@ -1,5 +1,8 @@
 require("config.lazy")
 
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 --vim.cmd [[colorscheme habamax]]
 vim.cmd [[set relativenumber]]
 vim.cmd [[set number]]
@@ -47,7 +50,7 @@ end
 vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(args)
         local client = vim.lsp.get_client_by_id(args.data.client_id)
-        if client:supports_method('textDocument/foldingRange') then
+        if client ~= nil and client:supports_method('textDocument/foldingRange') then
             local win = vim.api.nvim_get_current_win()
             vim.wo[win][0].foldexpr = 'v:lua.vim.lsp.foldexpr()'
         end
