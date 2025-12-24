@@ -48,8 +48,12 @@ return {
                         return require("sidekick").nes_jump_or_apply()
                     end,
                     function() -- if you are using Neovim's native inline completions
-                        return vim.lsp.inline_completion.get()
+                        if vim.lsp.inline_completion ~= nil then
+                            return vim.lsp.inline_completion.get()
+                        end
+                        return false
                     end,
+                    'select_and_accept',
                     "fallback",
                 },
             },
@@ -288,19 +292,19 @@ return {
             -- See the fuzzy documentation for more information
             fuzzy = { implementation = "prefer_rust_with_warning" },
         })
-        vim.api.nvim_create_autocmd('User', {
-            pattern = 'BlinkCmpMenuOpen',
-            callback = function()
-                require("copilot.suggestion").dismiss()
-                vim.b.copilot_suggestion_hidden = true
-            end,
-        })
-        vim.api.nvim_create_autocmd('User', {
-            pattern = 'BlinkCmpMenuClose',
-            callback = function()
-                vim.b.copilot_suggestion_hidden = false
-            end,
-        })
+        -- vim.api.nvim_create_autocmd('User', {
+        --     pattern = 'BlinkCmpMenuOpen',
+        --     callback = function()
+        --         require("copilot.suggestion").dismiss()
+        --         vim.b.copilot_suggestion_hidden = true
+        --     end,
+        -- })
+        -- vim.api.nvim_create_autocmd('User', {
+        --     pattern = 'BlinkCmpMenuClose',
+        --     callback = function()
+        --         vim.b.copilot_suggestion_hidden = false
+        --     end,
+        -- })
     end,
     opts_extend = { "sources.default" }
 }

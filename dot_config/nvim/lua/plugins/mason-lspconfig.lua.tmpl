@@ -45,6 +45,9 @@ return {
             callback = function(ev)
                 -- buffer local mappings
                 local opts = { buffer = ev.buf, silent = true }
+                if vim.lsp.inline_compleiton ~= nil then
+                    vim.lsp.inline_completion.enable(true);
+                end
 
                 -- set keybinds
                 -- show definition, references
@@ -135,6 +138,7 @@ return {
             vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
         end
 
+        -- inline completion
         -- enable inlay hint
         vim.lsp.inlay_hint.enable(true, { 0 })
 
