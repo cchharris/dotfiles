@@ -30,7 +30,7 @@ return {
             { '<leader>/',
                 function()
                     vim.api.nvim_command(':let @/ = ""')
-                    require('neominimap').Refresh()
+                    require('neominimap.api').refresh()
                 end
             }
         },
