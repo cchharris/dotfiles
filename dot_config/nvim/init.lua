@@ -12,6 +12,10 @@ vim.cmd [[set tabstop=4]]
 vim.cmd [[set shiftwidth=4]]
 vim.cmd [[set clipboard+=unnamedplus]]
 
+vim.diagnostic.config({
+    virtual_text = true
+})
+
 vim.o.foldcolumn = '1'
 vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
 vim.o.foldlevelstart = 99

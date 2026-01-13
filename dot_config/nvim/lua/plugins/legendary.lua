@@ -32,7 +32,15 @@ return {
                     vim.api.nvim_command(':let @/ = ""')
                     require('neominimap.api').refresh()
                 end
-            }
+            },
+            {
+                'gK',
+                function()
+                    local new_config = not vim.diagnostic.config().virtual_lines
+                    vim.diagnostic.config({ virtual_lines = new_config })
+                end,
+                description = "Toggle diagnostic virtual_lines"
+            },
         },
         -- Initial commands to bind, can also be a function that returns the list
         commands = {
