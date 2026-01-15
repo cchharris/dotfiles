@@ -6,12 +6,11 @@ return {
         "neovim/nvim-lspconfig",
 	},
     config = function()
-        require("mason").setup()
+        require("mason").setup({PATH = "append"})
         require("mason-lspconfig").setup({
             ensure_installed = {
                 "bashls", -- bash
                 "buf_ls", -- protobuf
-                "bzl", -- bazel/skylark
                 "clangd", -- c, c++
                 "cmake", -- cmake
                 "dockerls", -- docker
@@ -25,7 +24,8 @@ return {
                 "prettierd",
                 "prettier",
                 "ruff", -- python
-                "rust_analyzer", -- rust
+                --"rust_analyzer", -- rust -- May conflict with rustaceanvim
+                "starpls",
                 "tailwindcss", -- css
                 "taplo", -- toml
                 "terraformls", -- terraform

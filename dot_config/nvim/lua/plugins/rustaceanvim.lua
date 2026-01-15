@@ -17,7 +17,7 @@ vim.g.rustaceanvim = {
         },
     },
     lsp = {
-        load_vscode_settings = false,
+        load_vscode_settings = true,
     },
 };
 
