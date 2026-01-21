@@ -23,7 +23,7 @@ vim.g.rustaceanvim = {
 
 return {
     'mrcjkb/rustaceanvim',
-    version = '^6', -- Recommended
+    version = '^7', -- Recommended
     lazy = false,
     --dependencies = {
     --'nvim-neotest/neotest',  -- TestAdapter looks for 'neotest' being loaded
