@@ -64,7 +64,7 @@ return {
             lualine_a = { 'mode' },
             lualine_b = { 'branch', 'diff', 'diagnostics' },
             lualine_c = { { 'filename', path = 1 } },
-            lualine_x = { 'searchcount', 'selectioncount', neotest, 'overseer', 'lsp_status', 'encoding', 'fileformat', 'filetype' },
+            lualine_x = { 'searchcount', 'selectioncount', neotest, 'overseer', { 'copilot', show_colors = true }, { 'lsp_status', ignore_lsp = { 'copilot' } }, 'encoding', 'fileformat', 'filetype' },
             lualine_y = { recordingStatus, 'progress' },
             lualine_z = { displaySlots, 'location' }
         },
