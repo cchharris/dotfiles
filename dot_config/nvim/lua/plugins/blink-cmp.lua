@@ -9,7 +9,6 @@ return {
         'mikavilpas/blink-ripgrep.nvim',
         dependencies = { 'nvim-lua/plenary.nvim' },
         'L3MON4D3/LuaSnip',
-        version = 'v2.*',
         'onsails/lspkind.nvim',
         "xzbdmw/colorful-menu.nvim",
         'giuxtaposition/blink-cmp-copilot',
