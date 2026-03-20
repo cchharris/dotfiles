@@ -8,8 +8,12 @@ return {
                 ensureInstalled = {
                     "prettierd",
                     "prettier",
-                    "stylua",    -- lua formatter
-                    "tflint",    -- terraform linter
+                    "stylua",      -- lua formatter
+                    "eslint_d",    -- js/ts linter
+                    "hadolint",    -- dockerfile linter
+                    "shellcheck",  -- bash/sh linter
+                    "tflint",      -- terraform linter
+                    "yamllint",    -- yaml linter
                 },
             },
         },
