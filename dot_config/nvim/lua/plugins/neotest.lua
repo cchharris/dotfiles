@@ -1,5 +1,3 @@
-local count = 0
-
 return {
     "nvim-neotest/neotest",
     dependencies = {
@@ -8,9 +6,6 @@ return {
         "antoinemadec/FixCursorHold.nvim", -- Still necessary ?
         "nvim-treesitter/nvim-treesitter",
         'nvim-neotest/neotest-jest',
-        'nvim-neotest/neotest-python',
-        'jfpedroza/neotest-elixir',
-        'markemmons/neotest-deno',
         'stevearc/overseer.nvim',
     },
     cmd = 'Neotest',
