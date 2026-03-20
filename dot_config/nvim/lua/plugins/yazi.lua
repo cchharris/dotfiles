@@ -1,6 +1,7 @@
 ---@type LazySpec
 return {
     "mikavilpas/yazi.nvim",
+    cond = vim.fn.has('win32') == 0,
     version = "*", -- use the latest stable version
     event = "VeryLazy",
     dependencies = {
