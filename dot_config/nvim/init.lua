@@ -16,7 +16,7 @@ vim.diagnostic.config({
     virtual_text = true
 })
 
-vim.o.foldcolumn = '1'
+vim.o.foldcolumn = '0'
 vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
 vim.o.foldlevelstart = 99
 vim.o.foldenable = true
@@ -50,13 +50,27 @@ else
     vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 end
 
--- Prefer LSP folding if client supports it
+-- Prefer LSP folding if client supports it, but cap fold level to
+-- indent level to prevent fold_line bars rendering over unindented text.
+function LspFoldexpr()
+    local result = vim.lsp.foldexpr()
+    local n = tonumber(result)
+    if n and n > 1 then
+        local sw = vim.bo.shiftwidth
+        if sw > 0 then
+            local max_level = math.floor(vim.fn.indent(vim.v.lnum) / sw) + 1
+            if n > max_level then return tostring(max_level) end
+        end
+    end
+    return result
+end
+
 vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(args)
         local client = vim.lsp.get_client_by_id(args.data.client_id)
         if client ~= nil and client:supports_method('textDocument/foldingRange') then
             local win = vim.api.nvim_get_current_win()
-            vim.wo[win][0].foldexpr = 'v:lua.vim.lsp.foldexpr()'
+            vim.wo[win][0].foldexpr = 'v:lua.LspFoldexpr()'
         end
     end,
 })
