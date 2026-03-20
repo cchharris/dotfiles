@@ -8,6 +8,7 @@ return {
                 ensureInstalled = {
                     "prettierd",
                     "prettier",
+                    "stylua",    -- lua formatter
                     "tflint",    -- terraform linter
                 },
             },
