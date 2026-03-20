@@ -6,8 +6,9 @@ return {
             "WhoIsSethDaniel/mason-tool-installer.nvim",
             opts = {
                 ensureInstalled = {
-                    "prettierd", -- prettier
+                    "prettierd",
                     "prettier",
+                    "tflint",    -- terraform linter
                 },
             },
         },
