@@ -3,6 +3,13 @@ return {
     opts = {
         -- add any options here
         cli = {
+{{ if eq .chezmoi.os "windows" }}
+            -- On Windows, use pwsh directly so jobstart takes the exe-path (array) branch,
+            -- bypassing cmd.exe / bash shell wrapping that causes spurious "$@" on startup.
+            claude = {
+                cmd = { "pwsh", "-NoProfile", "-Command", "claude" },
+            },
+{{ end }}
         },
     },
     event = { "BufReadPre", "BufNewFile" },
