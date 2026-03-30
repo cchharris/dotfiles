@@ -7,6 +7,7 @@ return {
         "nvim-treesitter/nvim-treesitter",
         'nvim-neotest/neotest-jest',
         'stevearc/overseer.nvim',
+        'nvim-neotest/neotest-python',
     },
     cmd = 'Neotest',
     -- Indexing tests can take awhile, we should start before we explicitly request it
@@ -28,7 +29,7 @@ return {
                         return vim.fn.getcwd()
                     end,
                 }),
-                --require('neotest-python'),
+                require('neotest-python'),
                 --require('neotest-elixir'),
                 --require('neotest-deno'),
             },
