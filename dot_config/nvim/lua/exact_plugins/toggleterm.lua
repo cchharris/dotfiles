@@ -16,6 +16,29 @@ return {
     },
     keys = {
         {
+            '<leader>Tn',
+            function()
+                local Terminal = require('toggleterm.terminal').Terminal
+                local focused = require('toggleterm.terminal').get_focused_terminal()
+                local direction = focused and focused.direction or 'horizontal'
+                Terminal:new({ direction = direction }):toggle()
+            end,
+            mode = { 'n' },
+            desc = '<ToggleTerm>  New terminal (same direction)',
+        },
+        {
+            '<C-t>',
+            function()
+                local Terminal = require('toggleterm.terminal').Terminal
+                local focused = require('toggleterm.terminal').get_focused_terminal()
+                local direction = focused and focused.direction or 'horizontal'
+                Terminal:new({ direction = direction }):toggle()
+            end,
+            buffer = 0,
+            mode = { 't' },
+            desc = '<ToggleTerm>  New terminal (same direction)',
+        },
+        {
             '<esc>', [[<C-\><C-n>]], buffer = 0,
             mode = { 't' },
             desc = "<ToggleTerm>  Exit terminal mode",

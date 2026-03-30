@@ -1,6 +1,6 @@
 return {
 	'ojroques/nvim-hardline',
-	requires = {
+	dependencies = {
 	    'AlexvZyl/nordic.nvim',
 	},
 	opts = {
