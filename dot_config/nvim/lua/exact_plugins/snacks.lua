@@ -18,12 +18,12 @@ local sections = {
                 icon = "󰘛 ",
                 title = "My Open PRs",
                 section = "terminal",
-                cmd = "gh search prs --author @me --state open --archived=false --limit 8 2>/dev/null || echo '  (none)'",
+                cmd = "total=$(gh search prs --author @me --state open --archived=false --limit 100 --json number 2>/dev/null | jq 'length // 0' 2>/dev/null || echo 0); shown=$([ \"$total\" -gt 8 ] && echo 8 || echo \"$total\"); printf \"  \\033[2mShowing %s of %s open pull requests\\033[0m\\n\\n\" \"$shown\" \"$total\"; gh search prs --author @me --state open --archived=false --limit 8 --json number,title,repository,state,updatedAt --template '{{tablerow \"REPO\" \"NUMBER\" \"TITLE\" \"STATE\" \"UPDATED\"}}{{range .}}{{tablerow .repository.nameWithOwner (printf \"#%v\" .number) .title .state (timeago .updatedAt)}}{{end}}{{tablerender}}' 2>/dev/null | awk 'NR==1{printf \"\\033[4m%s\\033[0m\\n\", $0} NR>1{print}' || echo '  (none)'",
                 key = "P",
                 action = function()
                     vim.schedule(function() vim.cmd("Octo pr search author:@me is:open") end)
                 end,
-                height = 10,
+                height = 12,
                 padding = 1,
                 ttl = 300,
                 indent = 3,
@@ -33,12 +33,12 @@ local sections = {
                 icon = "󰀄 ",
                 title = "Involves @me",
                 section = "terminal",
-                cmd = "gh search prs --involves @me --state open --archived=false --limit 8 2>/dev/null || echo '  (none)'",
+                cmd = "total=$(gh search prs --involves @me --state open --archived=false --limit 100 --json number 2>/dev/null | jq 'length // 0' 2>/dev/null || echo 0); shown=$([ \"$total\" -gt 8 ] && echo 8 || echo \"$total\"); printf \"  \\033[2mShowing %s of %s open pull requests\\033[0m\\n\\n\" \"$shown\" \"$total\"; gh search prs --involves @me --state open --archived=false --limit 8 --json number,title,author,repository,state,updatedAt --template '{{tablerow \"REPO\" \"NUMBER\" \"TITLE\" \"AUTHOR\" \"STATE\" \"UPDATED\"}}{{range .}}{{tablerow .repository.nameWithOwner (printf \"#%v\" .number) .title (printf \"@%v\" .author.login) .state (timeago .updatedAt)}}{{end}}{{tablerender}}' 2>/dev/null | awk 'NR==1{printf \"\\033[4m%s\\033[0m\\n\", $0} NR>1{print}' || echo '  (none)'",
                 key = "I",
                 action = function()
                     vim.schedule(function() vim.cmd("Octo pr search involves:@me is:open") end)
                 end,
-                height = 10,
+                height = 12,
                 padding = 1,
                 ttl = 300,
                 indent = 3,
