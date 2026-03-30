@@ -18,10 +18,10 @@ local sections = {
                 icon = "󰘛 ",
                 title = "My Open PRs",
                 section = "terminal",
-                cmd = "gh search prs --author @me --state open --limit 8 2>/dev/null || echo '  (none)'",
+                cmd = "gh search prs --author @me --state open --archived=false --limit 8 2>/dev/null || echo '  (none)'",
                 key = "P",
                 action = function()
-                    vim.fn.jobstart("gh search prs --author @me --state open --web", { detach = true })
+                    vim.schedule(function() vim.cmd("Octo pr search author:@me is:open") end)
                 end,
                 height = 10,
                 padding = 1,
@@ -33,10 +33,10 @@ local sections = {
                 icon = "󰀄 ",
                 title = "Involves @me",
                 section = "terminal",
-                cmd = "gh search prs --involves @me --state open --limit 8 2>/dev/null || echo '  (none)'",
+                cmd = "gh search prs --involves @me --state open --archived=false --limit 8 2>/dev/null || echo '  (none)'",
                 key = "I",
                 action = function()
-                    vim.fn.jobstart("gh search prs --involves @me --state open --web", { detach = true })
+                    vim.schedule(function() vim.cmd("Octo pr search involves:@me is:open") end)
                 end,
                 height = 10,
                 padding = 1,
@@ -48,7 +48,7 @@ local sections = {
                 icon = " ",
                 title = "Git Status",
                 section = "terminal",
-                cmd = "git --no-pager diff --stat -B -M -C",
+                cmd = "branch=$(git branch --show-current 2>/dev/null || git rev-parse --short HEAD 2>/dev/null); echo \"  on $branch\"; echo; out=$(git --no-pager -c color.ui=always diff --stat -B -M -C 2>/dev/null); [ -n \"$out\" ] && echo \"$out\" || echo '  No opened files'",
                 key = "g",
                 action = function()
                     Snacks.lazygit()

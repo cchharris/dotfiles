@@ -9,42 +9,42 @@ return {
             function()
                 require('goto-preview').goto_preview_declaration()
             end,
-            desc = 'Preview declaration',
+            desc = '<GotoPreview>  Preview declaration',
         },
         {
             'gpt',
             function()
                 require('goto-preview').goto_preview_type_definition()
             end,
-            desc = 'Preview type definition',
+            desc = '<GotoPreview>  Preview type definition',
         },
         {
             'gpi',
             function()
                 require('goto-preview').goto_preview_implementation()
             end,
-            desc = 'Preview implementation',
+            desc = '<GotoPreview>  Preview implementation',
         },
         {
             'gpD',
             function()
                 require('goto-preview').goto_preview_declaration()
             end,
-            desc = 'Preview declaration',
+            desc = '<GotoPreview>  Preview declaration (split)',
         },
         {
             'gP',
             function()
                 require('goto-preview').close_all_win()
             end,
-            desc = 'Close all preview windows',
+            desc = '<GotoPreview>  Close all preview windows',
         },
         {
             'gpr',
             function()
                 require('goto-preview').goto_preview_references()
             end,
-            desc = 'Preview references',
+            desc = '<GotoPreview>  Preview references',
         },
     },
 }

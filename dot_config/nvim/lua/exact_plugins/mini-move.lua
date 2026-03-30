@@ -9,9 +9,9 @@ return {
         }
     },
     keys = {
-        { "<C-h>", mode = { "n", "v" } },
-        { "<C-j>", mode = { "n", "v" } },
-        { "<C-k>", mode = { "n", "v" } },
-        { "<C-l>", mode = { "n", "v" } },
+        { "<C-h>", mode = { "n", "v" }, desc = "<MiniMove>  Move selection left" },
+        { "<C-j>", mode = { "n", "v" }, desc = "<MiniMove>  Move selection down" },
+        { "<C-k>", mode = { "n", "v" }, desc = "<MiniMove>  Move selection up" },
+        { "<C-l>", mode = { "n", "v" }, desc = "<MiniMove>  Move selection right" },
     },
 }

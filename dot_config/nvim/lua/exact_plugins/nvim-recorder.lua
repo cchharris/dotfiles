@@ -3,8 +3,8 @@ return {
     dependencies = "rcarriga/nvim-notify",
     keys = {
         -- these must match the keys in the mapping config below
-        { "q", desc = " Start Recording" },
-        { "Q", desc = " Play Recording" },
+        { "q", desc = "<Recorder>  Start/stop recording macro" },
+        { "Q", desc = "<Recorder>  Play macro" },
     },
     opts = {
         mapping = {

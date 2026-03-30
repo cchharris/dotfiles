@@ -14,22 +14,22 @@ return {
                 function()
                     require("neo-tree.command").execute({ toggle = true, dir = vim.uv.cwd() })
                 end,
-                desc = "Explorer NeoTree (cwd)",
+                desc = "<NeoTree> 󰙅 Explorer (cwd)",
             },
-            { "<leader>E", "<leader>fE", desc = "Explorer NeoTree (cwd)", remap = true },
+            { "<leader>E", "<leader>fE", desc = "<NeoTree> 󰙅 Explorer (cwd)", remap = true },
             {
                 "<leader>ge",
                 function()
                     require("neo-tree.command").execute({ source = "git_status", toggle = true })
                 end,
-                desc = "Git Explorer",
+                desc = "<NeoTree>  Git explorer",
             },
             {
                 "<leader>be",
                 function()
                     require("neo-tree.command").execute({ source = "buffers", toggle = true })
                 end,
-                desc = "Buffer Explorer",
+                desc = "<NeoTree>  Buffer explorer",
             },
         },
         deactivate = function()
@@ -86,8 +86,8 @@ return {
             default_component_configs = {
                 indent = {
                     with_expanders = true, -- if nil and file nesting is enabled, will enable expanders
-                    expander_collapsed = "",
-                    expander_expanded = "",
+                    expander_collapsed = "",
+                    expander_expanded = "",
                     expander_highlight = "NeoTreeExpander",
                 },
                 git_status = {

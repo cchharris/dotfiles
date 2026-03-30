@@ -6,7 +6,7 @@ return {
             function()
                 require('actions-preview').code_actions()
             end,
-            desc = 'Show code actions with preview',
+            desc = '<ActionsPreview>  Show code actions with preview',
         },
     },
 }

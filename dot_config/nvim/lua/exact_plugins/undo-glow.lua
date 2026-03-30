@@ -41,7 +41,7 @@ return {
                 require("undo-glow").undo()
             end,
             mode = "n",
-            desc = "Undo with highlight",
+            desc = "<UndoGlow>  Undo with highlight",
             noremap = true,
         },
         {
@@ -50,7 +50,7 @@ return {
                 require("undo-glow").redo()
             end,
             mode = "n",
-            desc = "Redo with highlight",
+            desc = "<UndoGlow>  Redo with highlight",
             noremap = true,
         },
         {
@@ -59,7 +59,7 @@ return {
                 require("undo-glow").paste_below()
             end,
             mode = "n",
-            desc = "Paste below with highlight",
+            desc = "<UndoGlow>  Paste below with highlight",
             noremap = true,
         },
         {
@@ -68,7 +68,7 @@ return {
                 require("undo-glow").paste_above()
             end,
             mode = "n",
-            desc = "Paste above with highlight",
+            desc = "<UndoGlow>  Paste above with highlight",
             noremap = true,
         },
         {
@@ -81,7 +81,7 @@ return {
                 })
             end,
             mode = "n",
-            desc = "Search next with highlight",
+            desc = "<UndoGlow>  Search next with highlight",
             noremap = true,
         },
         {
@@ -94,7 +94,7 @@ return {
                 })
             end,
             mode = "n",
-            desc = "Search prev with highlight",
+            desc = "<UndoGlow>  Search prev with highlight",
             noremap = true,
         },
         {
@@ -107,7 +107,7 @@ return {
                 })
             end,
             mode = "n",
-            desc = "Search star with highlight",
+            desc = "<UndoGlow>  Search word under cursor with highlight",
             noremap = true,
         },
         {
@@ -120,7 +120,7 @@ return {
                 })
             end,
             mode = "n",
-            desc = "Search hash with highlight",
+            desc = "<UndoGlow>  Search word backwards with highlight",
             noremap = true,
         },
         -- {

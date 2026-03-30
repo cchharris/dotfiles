@@ -30,17 +30,17 @@ return {
             function()
                 require('overseer').toggle()
             end,
-            desc = 'Overseer Toggle Task List',
+            desc = '<Overseer>  Toggle task list',
         },
         {
             '<leader>or',
             '<cmd>OverseerRun<cr>',
-            desc = 'Overseer Run Command Template',
+            desc = '<Overseer>  Run task template',
         },
         {
             '<leader>os',
             '<cmd>OverseerRunCmd<cr>',
-            desc = 'Overseer Run Command Template',
+            desc = '<Overseer>  Run shell command',
         },
         {
             '<leader>ob',
@@ -48,7 +48,7 @@ return {
                 local o = require('overseer')
                 o.run_template({ tags = { o.TAG.BUILD } })
             end,
-            desc = 'Overseer Build Template',
+            desc = '<Overseer>  Build',
         }
     },
 }

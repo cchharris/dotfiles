@@ -11,8 +11,8 @@ return {
     },
     cmd = { "Neogit", "NeogitCommit", "NeogitLogCurrent", "NeogitResetState" },
     keys = {
-        { "<leader>gg", "<cmd>Neogit<cr>", desc = "󰊢 Open Neogit" },
-        { "<leader>gc", "<cmd>NeogitCommit<cr>", desc = " Neogit Commit" },
+        { "<leader>gg", "<cmd>Neogit<cr>", desc = "<Neogit> 󰊢 Open Neogit" },
+        { "<leader>gc", "<cmd>NeogitCommit<cr>", desc = "<Neogit>  Commit" },
     },
     config = true
 }

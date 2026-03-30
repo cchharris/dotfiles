@@ -15,37 +15,37 @@ return {
         {
             "]g",
             "<cmd>Gitsigns next_hunk<cr>",
-            desc = " Go to next git hunk"
+            desc = "<Gitsigns>  Go to next git hunk"
         },
         {
             "[g",
             "<cmd>Gitsigns prev_hunk<cr>",
-            desc = " Go to previous git hunk"
+            desc = "<Gitsigns>  Go to previous git hunk"
         },
         {
             "<leader>gb",
             "<cmd>Gitsigns blame_line<cr>",
-            desc = " Open git blame"
+            desc = "<Gitsigns>  Open git blame"
         },
         {
             "<leader>gB",
             "<cmd>Gitsigns blame<cr>",
-            desc = " Open git blame for buffer"
+            desc = "<Gitsigns>  Open git blame for buffer"
         },
         {
             "<leader>gd",
             "<cmd>Gitsigns diffthis<cr>",
-            desc = " Open diff"
+            desc = "<Gitsigns>  Open diff"
         },
         {
             "<leader>gp",
             "<cmd>Gitsigns preview_hunk<cr>",
-            desc = " Preview hunk"
+            desc = "<Gitsigns>  Preview hunk"
         },
         {
             "<leader>gP",
             "<cmd>Gitsigns preview_hunk_inline<cr>",
-            desc = " Preview hunk inline"
+            desc = "<Gitsigns>  Preview hunk inline"
         },
     }
 }

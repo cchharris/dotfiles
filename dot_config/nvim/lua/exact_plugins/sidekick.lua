@@ -19,59 +19,59 @@ return {
                 end
             end,
             expr = true,
-            desc = "Goto/Apply Next Edit Suggestion",
+            desc = "<Sidekick>  Goto/Apply next edit suggestion",
         },
         {
             "<c-.>",
             function() require("sidekick.cli").toggle() end,
-            desc = "Sidekick Toggle",
+            desc = "<Sidekick>  Toggle",
             mode = { "n", "t", "i", "x" },
         },
         {
             "<leader>sa",
             function() require("sidekick.cli").toggle() end,
-            desc = "Sidekick Toggle CLI",
+            desc = "<Sidekick>  Toggle CLI",
         },
         {
             "<leader>ss",
             function() require("sidekick.cli").select() end,
             -- Or to select only installed tools:
             -- require("sidekick.cli").select({ filter = { installed = true } })
-            desc = "Select CLI",
+            desc = "<Sidekick>  Select CLI tool",
         },
         {
             "<leader>sd",
             function() require("sidekick.cli").close() end,
-            desc = "Detach a CLI Session",
+            desc = "<Sidekick>  Detach CLI session",
         },
         {
             "<leader>st",
             function() require("sidekick.cli").send({ msg = "{this}" }) end,
             mode = { "x", "n" },
-            desc = "Send This",
+            desc = "<Sidekick>  Send this to CLI",
         },
         {
             "<leader>sf",
             function() require("sidekick.cli").send({ msg = "{file}" }) end,
-            desc = "Send File",
+            desc = "<Sidekick>  Send file to CLI",
         },
         {
             "<leader>sv",
             function() require("sidekick.cli").send({ msg = "{selection}" }) end,
             mode = { "x" },
-            desc = "Send Visual Selection",
+            desc = "<Sidekick>  Send visual selection to CLI",
         },
         {
             "<leader>sp",
             function() require("sidekick.cli").prompt() end,
             mode = { "n", "x" },
-            desc = "Sidekick Select Prompt",
+            desc = "<Sidekick>  Select prompt",
         },
         -- Example of a keybinding to open Claude directly
         {
             "<leader>sc",
             function() require("sidekick.cli").toggle({ name = "claude", focus = true }) end,
-            desc = "Sidekick Toggle Claude",
+            desc = "<Sidekick>  Toggle Claude",
         },
     },
 }

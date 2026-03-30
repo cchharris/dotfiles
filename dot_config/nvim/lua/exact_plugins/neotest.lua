@@ -45,35 +45,35 @@ return {
             function()
                 require("neotest").run.run()
             end,
-            desc = "󰙨 Run Neotest",
+            desc = "<Neotest> 󰙨 Run nearest test",
         },
         {
             "<leader>tf",
             function()
                 require("neotest").run.run(vim.fn.expand("%"))
             end,
-            desc = "󰙨󰧮 Run Neotest File",
+            desc = "<Neotest> 󰙨 Run test file",
         },
         {
             "<leader>ts",
             function()
                 require("neotest").summary.toggle()
             end,
-            desc = "󰙨 Toggle Neotest Summary",
+            desc = "<Neotest> 󰙨 Toggle test summary",
         },
         {
             "<leader>tc",
             function()
                 require("neotest").run.stop()
             end,
-            desc = "󰤒 Stop Neotest",
+            desc = "<Neotest> 󰤒 Stop test run",
         },
         {
             "<leader>ta",
             function()
                 require("neotest").run.attach()
             end,
-            desc = "󰙨 Run and Attach Neotest",
+            desc = "<Neotest> 󰙨 Run and attach to test",
         },
     }
 

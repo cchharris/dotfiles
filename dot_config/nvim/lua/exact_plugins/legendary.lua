@@ -21,17 +21,18 @@ return {
         },
         -- Initial keymaps to bind, can also be a function that returns the list
         keymaps = {
-            { '<leader>wh', "<C-w>h",         description = "Move to left window" },
-            { '<leader>wj', "<C-w>j",         description = "Move to bottom window" },
-            { '<leader>wk', "<C-w>k",         description = "Move to top window" },
-            { '<leader>wl', "<C-w>l",         description = "Move to right window" },
-            { ']b',         ':bnext<Cr>',     description = "Next buffer" },
-            { '[b',         ':bprevious<Cr>', description = "Previous buffer" },
+            { '<leader>wh', "<C-w>h",         description = " Move to left window" },
+            { '<leader>wj', "<C-w>j",         description = " Move to bottom window" },
+            { '<leader>wk', "<C-w>k",         description = " Move to top window" },
+            { '<leader>wl', "<C-w>l",         description = " Move to right window" },
+            { ']b',         ':bnext<Cr>',     description = " Next buffer" },
+            { '[b',         ':bprevious<Cr>', description = " Previous buffer" },
             { '<leader>/',
                 function()
                     vim.api.nvim_command(':let @/ = ""')
                     require('neominimap.api').refresh()
-                end
+                end,
+                description = "<Neominimap> 󰍉 Clear search & refresh minimap",
             },
             {
                 'gK',
@@ -39,7 +40,7 @@ return {
                     local new_config = not vim.diagnostic.config().virtual_lines
                     vim.diagnostic.config({ virtual_lines = new_config })
                 end,
-                description = "Toggle diagnostic virtual_lines"
+                description = "<LSP>  Toggle diagnostic virtual lines"
             },
         },
         -- Initial commands to bind, can also be a function that returns the list
@@ -49,7 +50,7 @@ return {
                 function()
                     require('snacks').bufdelete()
                 end,
-                { desc = 'Smart Delete buffer' },
+                { desc = '<Snacks> 󰖝 Smart delete buffer' },
             },
             {
                 ':ChezmoiPluginNew [file_name]',
@@ -64,7 +65,7 @@ return {
                         'lua', 'plugins', filename))
                     vim.api.nvim_command(':e ' .. path)
                 end,
-                opts = { desc = "Create a new chezmoi plugin", nargs = '?' },
+                opts = { desc = "<Chezmoi> 󰊄 Create a new plugin file", nargs = '?' },
             },
         },
         -- Initial augroups/autocmds to bind, can also be a function that returns the list

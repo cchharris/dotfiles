@@ -5,7 +5,7 @@ return {
         {
             '<leader>gm',
             '<cmd>GitMessenger<cr>',
-            desc = 'See git commit message'
+            desc = '<GitMessenger>  See git commit message'
         },
     },
 }
