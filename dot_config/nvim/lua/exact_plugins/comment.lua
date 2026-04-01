@@ -1,5 +1,6 @@
 return {
     'numToStr/Comment.nvim',
+    event = "BufReadPost",
     opts = {
         --[[
             CommentCtx                                            *comment.utils.CommentCtx*

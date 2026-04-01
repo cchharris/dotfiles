@@ -13,6 +13,7 @@ return {
         'giuxtaposition/blink-cmp-copilot',
         'disrupted/blink-cmp-conventional-commits',
     },
+    event = { "InsertEnter", "CmdlineEnter" },
     cond = not vim.g.vscode,
 
     -- use a release tag to download pre-built binaries

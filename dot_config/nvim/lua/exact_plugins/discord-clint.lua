@@ -12,6 +12,7 @@ end
 return {
     -- "discord/discord-clint.nvim",
     name = "discord-clint.nvim",
+    event = { "BufReadPre", "BufNewFile" },
     dir = vim.fs.joinpath(discord_root, "misc", "users", "chrisharris", "discord-clint.nvim"),
     config = function()
         -- `main` calls setup() which errors if missing; explicitly require instead.
