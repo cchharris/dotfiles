@@ -53,18 +53,42 @@ local function displaySlots()
     return require("recorder").displaySlots()
 end
 
+local function sidekick()
+    if package.loaded["sidekick"] == nil then
+        return ''
+    end
+    local status = require("sidekick.status")
+    local parts = {}
+    local lsp = status.get()
+    if lsp then
+        local kind_icons = { Normal = '', Error = '', Warning = '', Inactive = '󰒲' }
+        local icon = lsp.busy and '' or (kind_icons[lsp.kind] or '')
+        table.insert(parts, icon)
+    end
+    local sessions = status.cli()
+    if #sessions > 0 then
+        local tools = {}
+        for _, s in ipairs(sessions) do
+            table.insert(tools, s.tool)
+        end
+        table.insert(parts, '󱙋 ' .. table.concat(tools, ','))
+    end
+    return table.concat(parts, ' ')
+end
+
 return {
     'nvim-lualine/lualine.nvim',
     dependencies = {
         'nvim-tree/nvim-web-devicons',
         'AndreM222/copilot-lualine',
+        'folke/sidekick.nvim',
     },
     opts = {
         sections = {
             lualine_a = { 'mode' },
             lualine_b = { 'branch', 'diff', 'diagnostics' },
             lualine_c = { { 'filename', path = 1 } },
-            lualine_x = { 'searchcount', 'selectioncount', neotest, 'overseer', { 'copilot', show_colors = true }, { 'lsp_status', ignore_lsp = { 'copilot' } }, 'encoding', 'fileformat', 'filetype' },
+            lualine_x = { 'searchcount', 'selectioncount', neotest, 'overseer', sidekick, { 'copilot', show_colors = true }, { 'lsp_status', ignore_lsp = { 'copilot' } }, 'encoding', 'fileformat', 'filetype' },
             lualine_y = { recordingStatus, 'progress' },
             lualine_z = { displaySlots, 'location' }
         },

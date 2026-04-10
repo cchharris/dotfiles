@@ -2,6 +2,10 @@ return {
   "folke/which-key.nvim",
   event = "VeryLazy",
   opts = {
+    triggers = {
+      { "<auto>", mode = "nixsotc" },
+      { "\\", mode = "t" },
+    },
     spec = {
       { "<leader>b",  group = "Buffers",        icon = "󰓩" },
       { "<leader>c",  group = "Code",            icon = "" },
@@ -17,6 +21,7 @@ return {
       { "<leader>nw", group = "Window minimap",  icon = "󰍉" },
       { "<leader>o",  group = "Overseer",        icon = "󰑮" },
       { "<leader>s",  group = "Sidekick",        icon = "" },
+      { "\\",         group = "Claude shortcuts", mode = "t", icon = "" },
       { "<leader>t",  group = "Test",            icon = "" },
       { "<leader>T",  group = "Terminal",        icon = "" },
       { "<leader>w",  group = "Window",          icon = "󱂬" },

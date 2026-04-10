@@ -80,5 +80,51 @@ return {
             function() require("sidekick.cli").toggle({ name = "claude", focus = true }) end,
             desc = "<Sidekick>  Toggle Claude",
         },
+        -- Terminal-mode keybindings: \ prefix to forward Claude Code shortcuts
+        -- that neovim/terminal intercepts before they reach the Claude process.
+        {
+            "\\e",
+            function() vim.fn.chansend(vim.b.terminal_job_id, "\x1b") end,
+            mode = "t",
+            desc = "<Sidekick>  [Claude] Esc",
+        },
+        {
+            "\\ee",
+            function() vim.fn.chansend(vim.b.terminal_job_id, "\x1b\x1b") end,
+            mode = "t",
+            desc = "<Sidekick>  [Claude] Esc Esc (rewind)",
+        },
+        {
+            "\\<Tab>",
+            function() vim.fn.chansend(vim.b.terminal_job_id, "\x1b[Z") end,
+            mode = "t",
+            desc = "<Sidekick>  [Claude] Shift+Tab (toggle permission mode)",
+        },
+        {
+            "\\<CR>",
+            function() vim.fn.chansend(vim.b.terminal_job_id, "\x1b\r") end,
+            mode = "t",
+            desc = "<Sidekick>  [Claude] Alt+Enter (new line / multiline)",
+        },
+        {
+            "\\p",
+            function() vim.fn.chansend(vim.b.terminal_job_id, "\x1bp") end,
+            mode = "t",
+            desc = "<Sidekick>  [Claude] Alt+P (switch model)",
+        },
+        {
+            "\\t",
+            function() vim.fn.chansend(vim.b.terminal_job_id, "\x1bt") end,
+            mode = "t",
+            desc = "<Sidekick>  [Claude] Alt+T (toggle extended thinking)",
+        },
+{{ if eq .chezmoi.os "windows" }}
+        {
+            "\\m",
+            function() vim.fn.chansend(vim.b.terminal_job_id, "\x1bm") end,
+            mode = "t",
+            desc = "<Sidekick>  [Claude] Alt+m",
+        },
+{{ end }}
     },
 }

@@ -14,6 +14,7 @@ return {
                     "shellcheck",  -- bash/sh linter
                     "tflint",      -- terraform linter
                     "yamllint",    -- yaml linter
+                    "gn-language-server",
                 },
             },
         },
