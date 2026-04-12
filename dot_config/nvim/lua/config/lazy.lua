@@ -22,13 +22,20 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 vim.env["CODECOMPANION_TOKEN_PATH"] = vim.fn.expand("~/.config")
 
+local is_windows = vim.fn.has("win32") == 1
+
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
     -- import your plugins
     { import = "plugins" },
   },
-  -- Configure any other settings here. See the documentation for more details.
+  -- On non-Windows, nix provides plugins via packpath — preserve it so
+  -- nix-managed plugins (e.g. nvim-treesitter grammars) remain in rtp.
+  performance = {
+    reset_packpath = is_windows,
+    rtp = { reset = is_windows },
+  },
   -- colorscheme that will be used when installing plugins.
   install = { colorscheme = { "nordic" } },
   -- automatically check for plugin updates

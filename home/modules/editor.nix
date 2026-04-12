@@ -15,6 +15,9 @@ in {
       viAlias = true;
       vimAlias = true;
       withNodeJs = true;
+      plugins = with pkgs.vimPlugins; [
+        nvim-treesitter.withAllGrammars
+      ];
     };
 
     # Deploy the full nvim config from dotfiles.
@@ -50,7 +53,6 @@ in {
       eslint                        # JS/TS linter
       tflint                        # Terraform linter
       gnumake
-      tree-sitter
     ];
   };
 }
