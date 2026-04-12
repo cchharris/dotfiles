@@ -5,7 +5,7 @@ let
   cfg = config.cchharris.nixos.gaming;
 
   nonSteamLaunchers = pkgs.writeShellScriptBin "non-steam-launchers" ''
-    export PATH="${pkgs.lib.makeBinPath [ pkgs.zenity pkgs.curl pkgs.bash ]}:$PATH"
+    export PATH="${pkgs.lib.makeBinPath [ pkgs.zenity pkgs.curl pkgs.bash pkgs.jq ]}:$PATH"
     exec ${pkgs.bash}/bin/bash ${pkgs.fetchurl {
       url = "https://raw.githubusercontent.com/moraroy/NonSteamLaunchers-On-Steam-Deck/main/NonSteamLaunchers.sh";
       hash = "sha256-ILJl6aRRuvpq1Mu/284SaD+PPnbuZz80jR0TihhbTi8=";
