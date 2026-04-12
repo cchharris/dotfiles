@@ -39,7 +39,7 @@ in {
       shellcheck
       hadolint
       yamllint
-      nodePackages.prettier
+      prettier
     ];
   };
 }
