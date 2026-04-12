@@ -50,6 +50,7 @@ in {
       eslint                        # JS/TS linter
       tflint                        # Terraform linter
       gnumake
+      tree-sitter
     ];
   };
 }
