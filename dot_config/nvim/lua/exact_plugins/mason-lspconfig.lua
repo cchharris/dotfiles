@@ -12,35 +12,37 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     config = function()
         require("mason").setup()
-        require("mason-lspconfig").setup({
-            ensure_installed = {
-                "bashls",        -- bash
-                "buf_ls",        -- protobuf
-                "clangd",        -- c, c++
-                "cmake",         -- cmake
-                "dockerls",      -- docker
-                "html",          -- html
-                "jsonls",        -- json
-                "lua_ls",        -- lua
-                {{- if ne .chezmoi.os "windows" }}
-                "nil_ls",        -- nix
-                {{- end }}
-                "powershell_es", -- powershell
-                "ruff",          -- python
-                --"rust_analyzer", -- rust -- May conflict with rustaceanvim
-                "starpls",
-                "tailwindcss",   -- css
-                "taplo",         -- toml
-                "terraformls",   -- terraform
-                "tsgo",          -- typescript, javascript
-                "ty",            -- python
-                "pyrefly",       -- python
-                "vimls",         -- vimscript
-                "yamlls",        -- yaml
-                "zls",           -- zig
-                --"harper_ls",   -- toml, typescript, rust, ruby, python, markdown, lua, javascript, java, C, C++, C#
-            }
-        })
+
+        local ensure_installed = {
+            "bashls",        -- bash
+            "buf_ls",        -- protobuf
+            "clangd",        -- c, c++
+            "cmake",         -- cmake
+            "dockerls",      -- docker
+            "html",          -- html
+            "jsonls",        -- json
+            "lua_ls",        -- lua
+            "powershell_es", -- powershell
+            "ruff",          -- python
+            --"rust_analyzer", -- rust -- May conflict with rustaceanvim
+            "starpls",
+            "tailwindcss",   -- css
+            "taplo",         -- toml
+            "terraformls",   -- terraform
+            "tsgo",          -- typescript, javascript
+            "ty",            -- python
+            "pyrefly",       -- python
+            "vimls",         -- vimscript
+            "yamlls",        -- yaml
+            "zls",           -- zig
+            --"harper_ls",   -- toml, typescript, rust, ruby, python, markdown, lua, javascript, java, C, C++, C#
+        }
+
+        if vim.fn.has("win32") == 0 then
+            table.insert(ensure_installed, "nil_ls") -- nix
+        end
+
+        require("mason-lspconfig").setup({ ensure_installed = ensure_installed })
 
         local keymap = vim.keymap
 
