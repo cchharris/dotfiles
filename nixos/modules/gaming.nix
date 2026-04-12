@@ -12,7 +12,7 @@ let
   deps = pkgs.lib.makeBinPath [
     pkgs.bash pkgs.curl pkgs.wget pkgs.jq
     pkgs.zenity pkgs.unzip pkgs.p7zip pkgs.rsync
-    pkgs.python3 pkgs.winetricks pkgs.cabextract
+    (pkgs.python3.withPackages (ps: [ ps.pygobject3 ])) pkgs.winetricks pkgs.cabextract
     pkgs.gnused pkgs.gawk pkgs.coreutils pkgs.findutils
   ];
 
