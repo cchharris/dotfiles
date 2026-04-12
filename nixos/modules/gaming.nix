@@ -8,7 +8,7 @@ let
     name = "non-steam-launchers";
     src = pkgs.fetchurl {
       url = "https://raw.githubusercontent.com/moraroy/NonSteamLaunchers-On-Steam-Deck/main/NonSteamLaunchers.sh";
-      hash = "sha256-0bsfbcc8l4qxils3yrzffqz8ygv82b7dpgybsimgmfjilklnbci0=";
+      hash = "sha256-ILJl6aRRuvpq1Mu/284SaD+PPnbuZz80jR0TihhbTi8=";
     };
     dontUnpack = true;
     buildInputs = [ pkgs.steam ];
