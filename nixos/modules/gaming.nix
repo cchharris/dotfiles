@@ -4,18 +4,13 @@
 let
   cfg = config.cchharris.nixos.gaming;
 
-  nonSteamLaunchers = pkgs.stdenvNoCC.mkDerivation {
-    name = "non-steam-launchers";
-    src = pkgs.fetchurl {
+  nonSteamLaunchers = pkgs.writeShellScriptBin "non-steam-launchers" ''
+    export PATH="${pkgs.lib.makeBinPath [ pkgs.zenity pkgs.curl pkgs.bash ]}:$PATH"
+    exec ${pkgs.bash}/bin/bash ${pkgs.fetchurl {
       url = "https://raw.githubusercontent.com/moraroy/NonSteamLaunchers-On-Steam-Deck/main/NonSteamLaunchers.sh";
       hash = "sha256-ILJl6aRRuvpq1Mu/284SaD+PPnbuZz80jR0TihhbTi8=";
-    };
-    dontUnpack = true;
-    buildInputs = [ pkgs.steam ];
-    installPhase = ''
-      install -Dm755 $src $out/bin/non-steam-launchers
-    '';
-  };
+    }} "$@"
+  '';
 in {
   options.cchharris.nixos.gaming = {
     enable = lib.mkEnableOption "gaming support (Steam, Proton)";
