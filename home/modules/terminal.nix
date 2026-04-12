@@ -30,7 +30,8 @@ in {
       # Scrollback
       scrollback-limit = 10000
 
-      # Shell integration
+      # Shell
+      command = ${pkgs.zsh}/bin/zsh
       shell-integration = zsh
 
       # Keybindings
