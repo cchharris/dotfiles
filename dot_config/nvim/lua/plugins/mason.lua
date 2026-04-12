@@ -5,7 +5,9 @@ return {
         {
             "WhoIsSethDaniel/mason-tool-installer.nvim",
             opts = {
-                ensureInstalled = {
+                -- On non-Windows, nix provides formatters/linters — Mason must not
+                -- try to install them (pre-compiled binaries don't work on NixOS).
+                ensureInstalled = vim.fn.has("win32") == 1 and {
                     "prettierd",
                     "prettier",
                     "stylua",      -- lua formatter
@@ -15,7 +17,7 @@ return {
                     "tflint",      -- terraform linter
                     "yamllint",    -- yaml linter
                     "gn-language-server",
-                },
+                } or {},
             },
         },
     },

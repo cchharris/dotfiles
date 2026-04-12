@@ -22,17 +22,24 @@ in {
     xdg.configFile."nvim".source = ../../dot_config/nvim;
 
     home.packages = with pkgs; [
-      # LSP servers (supplements Mason — nix-provided servers take priority on PATH)
+      # LSP servers — nix provides these so Mason doesn't try to install on NixOS
       nil                           # Nix
       lua-language-server           # Lua
       bash-language-server          # Bash
-      typescript-language-server    # TypeScript / JavaScript
-      vscode-langservers-extracted  # HTML, CSS, JSON
+      typescript-language-server    # TypeScript / JavaScript (tsserver)
+      typescript-go                 # tsgo — Microsoft's Go-based TS server
+      vscode-langservers-extracted  # HTML, CSS, JSON, ESLint
       yaml-language-server          # YAML
       terraform-ls                  # Terraform
       taplo                         # TOML
       clang-tools                   # C / C++
       cmake-language-server         # CMake
+      ruff                          # Python (linter + LSP)
+      tailwindcss-language-server   # Tailwind CSS
+      dockerfile-language-server-nodejs # Docker
+      vim-language-server           # Vimscript
+      buf                           # Protobuf (buf_ls)
+      zls                           # Zig
 
       # Formatters / linters
       stylua
@@ -40,6 +47,8 @@ in {
       hadolint
       yamllint
       prettier
+      eslint                        # JS/TS linter
+      tflint                        # Terraform linter
       gnumake
     ];
   };

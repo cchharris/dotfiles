@@ -13,7 +13,9 @@ return {
     config = function()
         require("mason").setup()
 
-        local ensure_installed = {
+        -- On non-Windows, nix provides all LSP servers on PATH — Mason must not
+        -- try to install them (pre-compiled binaries don't work on NixOS).
+        local ensure_installed = vim.fn.has("win32") == 1 and {
             "bashls",        -- bash
             "buf_ls",        -- protobuf
             "clangd",        -- c, c++
@@ -22,6 +24,7 @@ return {
             "html",          -- html
             "jsonls",        -- json
             "lua_ls",        -- lua
+            "nil_ls",        -- nix
             "powershell_es", -- powershell
             "ruff",          -- python
             --"rust_analyzer", -- rust -- May conflict with rustaceanvim
@@ -36,11 +39,7 @@ return {
             "yamlls",        -- yaml
             "zls",           -- zig
             --"harper_ls",   -- toml, typescript, rust, ruby, python, markdown, lua, javascript, java, C, C++, C#
-        }
-
-        if vim.fn.has("win32") == 0 then
-            table.insert(ensure_installed, "nil_ls") -- nix
-        end
+        } or {}
 
         require("mason-lspconfig").setup({ ensure_installed = ensure_installed })
 
