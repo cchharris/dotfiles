@@ -40,6 +40,7 @@ in {
       hadolint
       yamllint
       prettier
+      gnumake
     ];
   };
 }
