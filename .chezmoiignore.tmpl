@@ -14,3 +14,14 @@ OneDrive
 {{ if ne .chezmoi.os "darwin" }}
 .chezmoiscripts/darwin/**
 {{ end }}
+
+{{- if eq .chezmoi.os "linux" }}
+dot_zshrc
+dot_config
+{{- end }}
+
+{{- if eq .chezmoi.os "darwin" }}
+dot_zshrc
+dot_config
+private_Library
+{{- end }}
