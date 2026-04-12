@@ -29,17 +29,26 @@ let
       EOF
       chmod +x $out/bin/non-steam-launchers
 
-      # Desktop entry
+      # Desktop entry (metadata from official .desktop, Exec points to nix wrapper)
       mkdir -p $out/share/applications
       cat > $out/share/applications/non-steam-launchers.desktop << EOF
       [Desktop Entry]
       Name=NonSteamLaunchers
-      Comment=Install and manage non-Steam game launchers
+      Name[en_US]=NonSteamLaunchers
+      GenericName=
+      GenericName[en_US]=
+      Comment=
+      Comment[en_US]=
       Exec=$out/bin/non-steam-launchers
-      Icon=steam
+      Icon=uav
       Terminal=false
       Type=Application
       Categories=Game;
+      StartupNotify=true
+      X-DBUS-ServiceName=
+      X-DBUS-StartupType=
+      X-KDE-SubstituteUID=false
+      X-KDE-Username=
       EOF
     '';
   };
