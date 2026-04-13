@@ -52,6 +52,7 @@ in {
           "__GLX_VENDOR_LIBRARY_NAME,nvidia"
           "NVD_BACKEND,direct"
           "GBM_BACKEND,nvidia-drm"
+          "SSH_AUTH_SOCK,$HOME/.1password/agent.sock"
         ];
 
         exec-once = [
@@ -59,6 +60,7 @@ in {
           "wl-clipboard-history -t"
           "wl-paste --watch cliphist store"
           "rm \"$HOME/.cache/cliphist/db\""
+          "1password --silent"
         ];
 
         "$mod" = "SUPER";
@@ -118,6 +120,11 @@ in {
         cursor = {
           no_hardware_cursors = true;
         };
+
+        windowrulev2 = [
+          # 1Password unlock/auth modals render too small without a minimum size
+          "minsize 600 400, class:^(1Password)$, floating:1"
+        ];
       };
     };
 
