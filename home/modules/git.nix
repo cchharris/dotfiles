@@ -3,14 +3,13 @@
 
 let
   cfg = config.cchharris.home.git;
-  # 1Password SSH agent socket differs by platform.
-  # macOS path contains a space ("Group Containers") so it needs quoting for SSH config.
-  opAgentSock = if pkgs.stdenv.isDarwin
-    then "\"~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock\""
-    else "~/.1password/agent.sock";
-  opAgentSockEnv = if pkgs.stdenv.isDarwin
-    then "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
-    else "$HOME/.1password/agent.sock";
+  # 1Password SSH agent socket path.
+  # On macOS, the real socket is at ~/Library/Group Containers/.../agent.sock (path with space).
+  # A space-free symlink is created at ~/.1password/agent.sock on each macOS machine (one-time
+  # manual step: mkdir -p ~/.1password && ln -sf "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock" ~/.1password/agent.sock).
+  # This lets us use the same path on Linux and macOS.
+  opAgentSock = "~/.1password/agent.sock";
+  opAgentSockEnv = "$HOME/.1password/agent.sock";
 in {
   options.cchharris.home.git = {
     enable = lib.mkEnableOption "git configuration";
@@ -55,9 +54,6 @@ in {
         pull.rebase = true;
         push.autoSetupRemote = true;
         core.editor = "nvim";
-        core.sshCommand = if pkgs.stdenv.isDarwin
-          then "ssh -o IdentityAgent='~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock'"
-          else "ssh -o IdentityAgent=~/.1password/agent.sock";
         diff.colorMoved = "default";
         merge.conflictstyle = "diff3";
         alias = {
