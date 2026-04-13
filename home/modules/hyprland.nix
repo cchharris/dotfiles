@@ -35,7 +35,7 @@ in {
       };
 
       settings = {
-        "$terminal" = "kitty";
+        "$terminal" = "ghostty";
         "$menu" = "wofi --gtk-dark --allow-images --allow-markup --show drun";
 
         exec-once = [

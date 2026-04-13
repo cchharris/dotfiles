@@ -37,7 +37,7 @@ in {
 
     # Hyprland-specific packages
     environment.systemPackages = with pkgs; [
-      kitty
+      ghostty
       hyprlock
     ];
   };
