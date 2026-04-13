@@ -31,6 +31,9 @@ in {
       ForceDarkModeEnabled = true;
     };
 
+    # Bluetooth manager (used by hyprpanel bluetooth widget)
+    services.blueman.enable = true;
+
     # Common desktop packages
     environment.systemPackages = with pkgs; [
       microsoft-edge
