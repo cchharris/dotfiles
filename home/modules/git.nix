@@ -3,9 +3,10 @@
 
 let
   cfg = config.cchharris.home.git;
-  # 1Password SSH agent socket differs by platform
+  # 1Password SSH agent socket differs by platform.
+  # macOS path contains a space ("Group Containers") so it needs quoting for SSH config.
   opAgentSock = if pkgs.stdenv.isDarwin
-    then "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+    then "\"~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock\""
     else "~/.1password/agent.sock";
   opAgentSockEnv = if pkgs.stdenv.isDarwin
     then "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
