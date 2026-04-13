@@ -25,6 +25,7 @@ return {
             "jsonls",        -- json
             "lua_ls",        -- lua
             "nil_ls",        -- nix
+            "omnisharp",     -- c# (unity, .NET)
             "powershell_es", -- powershell
             "ruff",          -- python
             --"rust_analyzer", -- rust -- May conflict with rustaceanvim

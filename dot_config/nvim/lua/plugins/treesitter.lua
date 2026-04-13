@@ -10,7 +10,7 @@ return {
     config = function()
         if is_windows then
             require("nvim-treesitter").install({
-                "bash", "c", "cmake", "cpp", "css", "elixir",
+                "bash", "c", "c_sharp", "cmake", "cpp", "css", "elixir",
                 "git_config", "git_rebase", "gitattributes", "gitcommit", "gitignore",
                 "gn", "html", "javascript", "json", "json5", "lua", "nix", "objc",
                 "powershell", "printf", "python", "query", "requirements", "rust",
