@@ -40,6 +40,7 @@
     wget
     ripgrep
     git
+    fzf
   ];
 
   # User account
