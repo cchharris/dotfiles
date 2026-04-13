@@ -3,6 +3,13 @@
 
 let
   cfg = config.cchharris.home.git;
+  # 1Password SSH agent socket differs by platform
+  opAgentSock = if pkgs.stdenv.isDarwin
+    then "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+    else "~/.1password/agent.sock";
+  opAgentSockEnv = if pkgs.stdenv.isDarwin
+    then "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+    else "$HOME/.1password/agent.sock";
 in {
   options.cchharris.home.git = {
     enable = lib.mkEnableOption "git configuration";
@@ -26,13 +33,13 @@ in {
       enable = true;
       enableDefaultConfig = false;
       matchBlocks."*" = {
-        extraOptions.IdentityAgent = "~/.1password/agent.sock";
+        extraOptions.IdentityAgent = opAgentSock;
       };
     };
 
     # Set SSH_AUTH_SOCK for 1Password
     home.sessionVariables = {
-      SSH_AUTH_SOCK = "$HOME/.1password/agent.sock";
+      SSH_AUTH_SOCK = opAgentSockEnv;
     };
 
     programs.git = {
@@ -47,7 +54,9 @@ in {
         pull.rebase = true;
         push.autoSetupRemote = true;
         core.editor = "nvim";
-        core.sshCommand = "ssh -o IdentityAgent=~/.1password/agent.sock";
+        core.sshCommand = if pkgs.stdenv.isDarwin
+          then "ssh -o IdentityAgent='~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock'"
+          else "ssh -o IdentityAgent=~/.1password/agent.sock";
         diff.colorMoved = "default";
         merge.conflictstyle = "diff3";
         alias = {
