@@ -93,5 +93,14 @@
       extraSpecialArgs = { inherit inputs; };
       modules = [ ./home/work-mac.nix ];
     };
+
+    # work-linux: standalone home-manager for non-NixOS work machines.
+    # Apply with: home-manager switch --flake ~/dotfiles#work-linux --impure
+    # (--impure is required so builtins.getEnv "USER" resolves at build time)
+    homeConfigurations."work-linux" = home-manager.lib.homeManagerConfiguration {
+      pkgs = mkPkgs "x86_64-linux";
+      extraSpecialArgs = { inherit inputs; };
+      modules = [ ./home/work-linux.nix ];
+    };
   };
 }

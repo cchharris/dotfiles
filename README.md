@@ -41,6 +41,22 @@ darwin-rebuild switch --flake github:cchharris/dotfiles#mac
 > **Note:** The `#mac` hostname is a placeholder. Update `darwinConfigurations.mac` in
 > `flake.nix` to match your machine's hostname (`scutil --get LocalHostName`).
 
+## Work Linux (non-NixOS / Ubuntu)
+
+Bootstrap a fresh machine with one command:
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/cchharris/dotfiles/main/scripts/bootstrap-work-linux.sh)
+```
+
+This installs Nix (via Determinate Nix Installer), clones the dotfiles to `~/dotfiles`, and applies the home-manager config for your current user.
+
+After first setup, update with:
+
+```bash
+hm   # or: home-manager switch --flake ~/dotfiles#work-linux --impure
+```
+
 ## Windows
 
 Install [chezmoi](https://www.chezmoi.io/install/) and apply:
