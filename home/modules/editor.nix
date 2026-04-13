@@ -24,7 +24,12 @@ in {
 
     # Deploy the full nvim config from dotfiles.
     # Plugins are managed by lazy.nvim at runtime; LSP servers are provided by nix below.
-    xdg.configFile."nvim".source = ../../dot_config/nvim;
+    # recursive = true creates individual symlinks (not a dir symlink) so lazy.nvim
+    # can write lazy-lock.json alongside the managed files.
+    xdg.configFile."nvim" = {
+      source = ../../dot_config/nvim;
+      recursive = true;
+    };
 
     home.packages = with pkgs; [
       # LSP servers — nix provides these so Mason doesn't try to install on NixOS
