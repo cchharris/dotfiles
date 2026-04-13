@@ -23,8 +23,16 @@ in {
     # Hint to electron apps to use wayland
     environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
-    # GDM for login manager (compatible with Hyprland)
-    services.displayManager.gdm.enable = true;
+    # greetd with gtkgreet for login manager
+    services.greetd = {
+      enable = true;
+      settings = {
+        default_session = {
+          command = "${pkgs.cage}/bin/cage -s -- ${pkgs.greetd.gtkgreet}/bin/gtkgreet";
+          user = "greeter";
+        };
+      };
+    };
 
     # X11 config for keyboard (still used by some apps)
     services.xserver.xkb = {

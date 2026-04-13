@@ -26,6 +26,11 @@ in {
     # Common desktop applications
     programs.firefox.enable = true;
 
+    # Force Microsoft Edge to use dark theme via managed policy
+    environment.etc."opt/edge/policies/managed/dark-theme.json".text = builtins.toJSON {
+      ForceDarkModeEnabled = true;
+    };
+
     # Common desktop packages
     environment.systemPackages = with pkgs; [
       microsoft-edge
