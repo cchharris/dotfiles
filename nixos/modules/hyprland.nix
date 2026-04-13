@@ -28,11 +28,60 @@ in {
       enable = true;
       settings = {
         default_session = {
-          command = "${pkgs.cage}/bin/cage -s -- ${pkgs.greetd.gtkgreet}/bin/gtkgreet";
+          command = "${pkgs.cage}/bin/cage -s -- ${pkgs.greetd.gtkgreet}/bin/gtkgreet -s /etc/greetd/gtkgreet.css";
           user = "greeter";
         };
       };
     };
+
+    environment.etc."greetd/environments".text = ''
+      ${pkgs.hyprland}/bin/start-hyprland
+    '';
+
+    environment.etc."greetd/gtkgreet.css".text = ''
+      * {
+        background: #1e1e2e;
+        color: #cdd6f4;
+      }
+      window {
+        background-image: none;
+        background-color: #1e1e2e;
+      }
+      box#body {
+        background-color: #181825;
+        border-radius: 12px;
+        padding: 32px;
+        margin: 16px;
+      }
+      label {
+        color: #cdd6f4;
+      }
+      entry {
+        background-color: #313244;
+        color: #cdd6f4;
+        border: 1px solid #45475a;
+        border-radius: 6px;
+        padding: 8px;
+      }
+      entry:focus {
+        border-color: #89b4fa;
+      }
+      button {
+        background-color: #89b4fa;
+        color: #1e1e2e;
+        border: none;
+        border-radius: 6px;
+        padding: 8px 16px;
+        font-weight: bold;
+      }
+      button:hover {
+        background-color: #b4befe;
+      }
+      combobox button {
+        background-color: #313244;
+        color: #cdd6f4;
+      }
+    '';
 
     # X11 config for keyboard (still used by some apps)
     services.xserver.xkb = {

@@ -16,7 +16,7 @@ in {
       font-size = 12
 
       # Theme
-      theme = TokyoNight
+      theme = Catppuccin Mocha
 
       # Window settings
       window-padding-x = 10
