@@ -24,10 +24,10 @@ in {
     # SSH configuration for 1Password agent
     programs.ssh = {
       enable = true;
-      extraConfig = ''
-        Host *
-          IdentityAgent ~/.1password/agent.sock
-      '';
+      enableDefaultConfig = false;
+      matchBlocks."*" = {
+        extraOptions.IdentityAgent = "~/.1password/agent.sock";
+      };
     };
 
     # Set SSH_AUTH_SOCK for 1Password

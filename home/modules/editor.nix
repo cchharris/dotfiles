@@ -15,6 +15,8 @@ in {
       viAlias = true;
       vimAlias = true;
       withNodeJs = true;
+      withRuby = false;
+      withPython3 = false;
       plugins = with pkgs.vimPlugins; [
         nvim-treesitter.withAllGrammars
       ];
@@ -39,7 +41,7 @@ in {
       cmake-language-server         # CMake
       ruff                          # Python (linter + LSP)
       tailwindcss-language-server   # Tailwind CSS
-      dockerfile-language-server-nodejs # Docker
+      dockerfile-language-server        # Docker
       vim-language-server           # Vimscript
       buf                           # Protobuf (buf_ls)
       zls                           # Zig
