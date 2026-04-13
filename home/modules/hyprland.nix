@@ -35,8 +35,24 @@ in {
       };
 
       settings = {
+        # Monitor config: connector,resolution@refresh,position,scale
+        # Run `hyprctl monitors` or check /sys/class/drm/ for connector name.
+        # Use "preferred" to let the driver negotiate — replace once stable.
+        monitor = [
+          ",preferred,auto,1"
+        ];
+
         "$terminal" = "ghostty";
         "$menu" = "wofi --gtk-dark --allow-images --allow-markup --show drun";
+
+        # NVIDIA-required environment variables (Aquamarine-compatible, not wlroots-era)
+        env = [
+          "LIBVA_DRIVER_NAME,nvidia"
+          "XDG_SESSION_TYPE,wayland"
+          "__GLX_VENDOR_LIBRARY_NAME,nvidia"
+          "NVD_BACKEND,direct"
+          "GBM_BACKEND,nvidia-drm"
+        ];
 
         exec-once = [
           "hyprpanel"
@@ -96,6 +112,11 @@ in {
 
         xwayland = {
           force_zero_scaling = true;
+        };
+
+        # GTX 1080 (Pascal) has hardware cursor issues under Wayland/Hyprland
+        cursor = {
+          no_hardware_cursors = true;
         };
       };
     };

@@ -11,6 +11,8 @@
       enable = true;
       openDrivers = false;  # Using proprietary drivers
       optimus.enable = false;  # Single NVIDIA GPU, no Optimus
+      # GTX 1080 (Pascal) dropped from 595.x+ drivers; needs legacy_580
+      package = pkgs.linuxPackages.nvidiaPackages.legacy_580;
     };
     hyprland.enable = true;
     tailscale.enable = true;

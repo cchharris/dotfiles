@@ -30,10 +30,20 @@ in {
       default = true;
       description = "Use open-source NVIDIA drivers (for RTX 20+ series)";
     };
+
+    package = lib.mkOption {
+      type = lib.types.nullOr lib.types.package;
+      default = null;
+      description = "Override the NVIDIA driver package (e.g. for legacy GPUs). Null uses the default.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
     services.xserver.videoDrivers = [ "nvidia" ];
+
+    # Load nvidia modules early so the DRM device is available before the
+    # display manager starts. Required for Wayland/Hyprland with NVIDIA.
+    boot.initrd.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
 
     hardware.nvidia = {
       powerManagement.enable = true;
@@ -48,7 +58,7 @@ in {
         nvidiaBusId = cfg.optimus.nvidiaBusId;
         intelBusId = cfg.optimus.intelBusId;
       };
-    };
+    } // lib.optionalAttrs (cfg.package != null) { package = cfg.package; };
 
     hardware.graphics = {
       enable = true;
