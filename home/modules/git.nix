@@ -32,6 +32,10 @@ in {
     programs.ssh = {
       enable = true;
       enableDefaultConfig = false;
+      # Include 1Password's generated config which maps specific keys to hosts.
+      # 1Password writes this file automatically; it's what routes the correct
+      # key to each host (e.g. personal key for github.com vs work key).
+      includes = lib.optionals pkgs.stdenv.isDarwin [ "~/.ssh/1Password/config" ];
       matchBlocks."*" = {
         extraOptions.IdentityAgent = opAgentSock;
       };
