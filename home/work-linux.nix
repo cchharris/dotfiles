@@ -24,8 +24,8 @@ in {
 
   # Override aliases from shell.nix for standalone home-manager on non-NixOS
   programs.zsh.shellAliases = {
-    update = lib.mkForce "home-manager switch --flake ~/dotfiles#work-linux --impure";
-    hm     = lib.mkForce "home-manager switch --flake ~/dotfiles#work-linux --impure";
+    update = lib.mkForce "home-manager switch -b backup --flake ~/dotfiles#work-linux --impure";
+    hm     = lib.mkForce "home-manager switch -b backup --flake ~/dotfiles#work-linux --impure";
   };
 
   programs.home-manager.enable = true;

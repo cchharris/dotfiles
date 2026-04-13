@@ -95,7 +95,7 @@
     };
 
     # work-linux: standalone home-manager for non-NixOS work machines.
-    # Apply with: home-manager switch --flake ~/dotfiles#work-linux --impure
+    # Apply with: nix run github:nix-community/home-manager/master -- switch --flake ~/dotfiles#work-linux --impure
     # (--impure is required so builtins.getEnv "USER" resolves at build time)
     homeConfigurations."work-linux" = home-manager.lib.homeManagerConfiguration {
       pkgs = mkPkgs "x86_64-linux";

@@ -31,7 +31,7 @@ fi
 
 # ── 3. Apply home-manager config ──────────────────────────────────────────────
 echo "==> Applying home-manager config for $USER..."
-nix run home-manager/master -- switch --flake "$FLAKE_TARGET" --impure
+nix run github:nix-community/home-manager/master -- switch -b backup --flake "$FLAKE_TARGET" --impure
 
 # ── 4. Done ───────────────────────────────────────────────────────────────────
 echo ""
