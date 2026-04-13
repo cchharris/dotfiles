@@ -120,11 +120,6 @@ in {
         cursor = {
           no_hardware_cursors = true;
         };
-
-        windowrule = [
-          # 1Password unlock/auth modals: force size so buttons aren't clipped
-          "size 700 500, class:^(1Password)$"
-        ];
       };
     };
 
