@@ -7,9 +7,13 @@
 
   # Enable all features for this machine
   cchharris.nixos = {
-    nvidia.enable = true;
+    nvidia = {
+      enable = true;
+      openDrivers = true;  # Open drivers for newer GPU
+      optimus.enable = true;  # Dual GPU laptop
+    };
     gaming.enable = true;
-    desktop.enable = true;
+    gnome.enable = true;
     razer.enable = true;
   };
 

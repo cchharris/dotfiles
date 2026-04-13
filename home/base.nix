@@ -7,7 +7,7 @@
     ./modules/editor.nix
     ./modules/terminal.nix
     ./modules/git.nix
-    ./modules/desktop.nix
+    ./modules/gnome.nix
   ];
 
   home.username = "cchharris";
@@ -20,7 +20,7 @@
     editor.enable = true;
     terminal.enable = true;
     git.enable = true;
-    desktop.enable = true;
+    gnome.enable = true;
   };
 
   # Let Home Manager manage itself

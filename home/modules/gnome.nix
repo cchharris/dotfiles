@@ -1,11 +1,11 @@
-# Desktop configuration (GNOME tweaks, extensions, dconf)
+# GNOME desktop configuration (extensions, dconf, GTK theme)
 { config, lib, pkgs, ... }:
 
 let
-  cfg = config.cchharris.home.desktop;
+  cfg = config.cchharris.home.gnome;
 in {
-  options.cchharris.home.desktop = {
-    enable = lib.mkEnableOption "desktop configuration (GNOME tweaks)";
+  options.cchharris.home.gnome = {
+    enable = lib.mkEnableOption "GNOME desktop configuration";
   };
 
   config = lib.mkIf cfg.enable {
