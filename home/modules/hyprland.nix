@@ -21,6 +21,8 @@ in {
       nautilus
       wl-clipboard
       wofi
+      pavucontrol   # volume mixer (hyprpanel volume widget → open mixer)
+      playerctl     # MPRIS media control (hyprpanel media widget)
     ];
 
     # Hyprland configuration
