@@ -7,6 +7,15 @@ Documents
 OneDrive
 {{ end }}
 
+# Nix flake files — not dotfiles, managed as part of the repo itself
+flake.nix
+flake.lock
+home
+nixos
+darwin
+hardware
+README.md
+
 {{ if ne .chezmoi.os "linux" }}
 .chezmoiscripts/linux/**
 {{ end }}
