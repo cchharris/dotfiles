@@ -34,6 +34,13 @@ in {
     # Bluetooth manager (used by hyprpanel bluetooth widget)
     services.blueman.enable = true;
 
+    # 1Password GUI + SSH agent (polkit integration required for system unlock)
+    programs._1password.enable = true;
+    programs._1password-gui = {
+      enable = true;
+      polkitPolicyOwners = [ "cchharris" ];
+    };
+
     # Common desktop packages
     environment.systemPackages = with pkgs; [
       microsoft-edge
