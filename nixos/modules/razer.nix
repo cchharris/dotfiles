@@ -14,6 +14,7 @@ in {
 
     environment.systemPackages = with pkgs; [
       openrazer-daemon
+      polychromatic   # GUI for RGB lighting, battery conservation, DPI
       iio-sensor-proxy  # ambient light sensor — lets GNOME auto-adjust brightness
     ];
 
