@@ -16,6 +16,7 @@ in {
       gnomeExtensions.dash-to-dock
       gnomeExtensions.blur-my-shell
       gnomeExtensions.caffeine
+      gnomeExtensions.gsconnect
     ];
 
     # dconf settings for GNOME
@@ -27,6 +28,7 @@ in {
           "dash-to-dock@micxgx.gmail.com"
           "blur-my-shell@aunetx"
           "caffeine@pataber.com"
+          "gsconnect@andyholmes.github.io"
         ];
         favorite-apps = [
           "microsoft-edge.desktop"

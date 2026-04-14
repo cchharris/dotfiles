@@ -17,6 +17,21 @@
     razer.enable = true;
   };
 
+  # CPU frequency scaling for better battery life
+  services.auto-cpufreq = {
+    enable = true;
+    settings = {
+      battery = {
+        governor = "powersave";
+        turbo = "auto";
+      };
+      charger = {
+        governor = "performance";
+        turbo = "auto";
+      };
+    };
+  };
+
   # ExpressVPN (host-specific service)
   services.expressvpn.enable = true;
   environment.systemPackages = with pkgs; [

@@ -11,6 +11,7 @@ in {
   config = lib.mkIf cfg.enable {
     hardware.openrazer.enable = true;
     services.thermald.enable = true;
+    services.iio-sensor-proxy.enable = true;
 
     environment.systemPackages = with pkgs; [
       openrazer-daemon
