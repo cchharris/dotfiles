@@ -18,7 +18,7 @@ in {
       shellAliases = {
         ll = "ls -la";
         update = "sudo nixos-rebuild switch --flake ~/dotfiles#$(hostname)";
-        hm = "home-manager switch --flake ~/dotfiles#cchharris";
+        hm = "sudo nixos-rebuild switch --flake ~/dotfiles#$(hostname)";
       };
 
       history = {
