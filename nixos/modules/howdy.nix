@@ -48,7 +48,7 @@ in {
       settings = {
         core = {
           abort_if_ssh = true;
-          abort_if_lid_closed = true;
+          abort_if_lid_closed = false;
         };
         video = {
           device_path = cfg.videoDevice;
