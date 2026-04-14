@@ -15,6 +15,7 @@
     gaming.enable = true;
     gnome.enable = true;
     razer.enable = true;
+    tailscale.enable = true;
   };
 
   # CPU frequency scaling for better battery life
