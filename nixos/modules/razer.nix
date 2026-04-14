@@ -18,5 +18,13 @@ in {
 
     # Add user to openrazer group
     users.users.cchharris.extraGroups = [ "openrazer" ];
+
+    # Windows Hello-style facial recognition via IR camera
+    # IR camera is on /dev/video2 (USB interface 02, separate from RGB on interface 00)
+    cchharris.nixos.howdy = {
+      enable = true;
+      videoDevice = "/dev/video2";
+      irEmitter = true;
+    };
   };
 }

@@ -29,6 +29,7 @@
         ./nixos/modules/gaming.nix
         ./nixos/modules/gnome.nix
         ./nixos/modules/razer.nix
+        ./nixos/modules/howdy.nix
         ./nixos/hosts/razer-blade.nix
         home-manager.nixosModules.home-manager
         {
