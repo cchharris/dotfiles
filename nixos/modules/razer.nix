@@ -11,7 +11,10 @@ in {
   config = lib.mkIf cfg.enable {
     hardware.openrazer.enable = true;
     services.thermald.enable = true;
-    services.iio-sensor-proxy.enable = true;
+
+    # Ambient light sensor proxy — lets GNOME auto-adjust brightness
+    environment.systemPackages = [ pkgs.iio-sensor-proxy ];
+    systemd.packages = [ pkgs.iio-sensor-proxy ];
 
     environment.systemPackages = with pkgs; [
       openrazer-daemon
