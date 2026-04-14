@@ -12,13 +12,13 @@ in {
     hardware.openrazer.enable = true;
     services.thermald.enable = true;
 
-    # Ambient light sensor proxy — lets GNOME auto-adjust brightness
-    environment.systemPackages = [ pkgs.iio-sensor-proxy ];
-    systemd.packages = [ pkgs.iio-sensor-proxy ];
-
     environment.systemPackages = with pkgs; [
       openrazer-daemon
+      iio-sensor-proxy  # ambient light sensor — lets GNOME auto-adjust brightness
     ];
+
+    # Include iio-sensor-proxy systemd service units
+    systemd.packages = [ pkgs.iio-sensor-proxy ];
 
     # Add user to openrazer group
     users.users.cchharris.extraGroups = [ "openrazer" ];
