@@ -60,19 +60,19 @@ Write ISO to USB from another machine, boot the Razer Blade from it.
 ### Step 2: Partition the drives
 
 ```sh
-# Main drive — keep same sizes, change LUKS type codes
-gdisk /dev/nvme0n1
-# Delete all partitions (d), then create:
-#   p1:  +1G       type EF00  (EFI System)
-#   p2:  +918G     type 8309  (Linux LUKS — root)
-#   p3:  remaining type 8309  (Linux LUKS — swap, ~34G)
-# Write (w)
+# Main drive — wipe and recreate partitions
+sgdisk --zap-all /dev/nvme0n1
+sgdisk --new=1:0:+1G   --typecode=1:EF00 --change-name=1:BOOT /dev/nvme0n1
+sgdisk --new=2:0:+919G --typecode=2:8309 --change-name=2:root /dev/nvme0n1
+sgdisk --new=3:0:0     --typecode=3:8309 --change-name=3:swap /dev/nvme0n1
 
-# Data drive
-gdisk /dev/nvme1n1
-# Delete all partitions (d), then create:
-#   p1:  remaining type 8309  (Linux LUKS — data)
-# Write (w)
+# Data drive — wipe and recreate
+sgdisk --zap-all /dev/nvme1n1
+sgdisk --new=1:0:0     --typecode=1:8309 --change-name=1:data /dev/nvme1n1
+
+# Verify before continuing
+sgdisk --print /dev/nvme0n1
+sgdisk --print /dev/nvme1n1
 ```
 
 ### Step 3: Format + open LUKS volumes
