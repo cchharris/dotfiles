@@ -10,45 +10,46 @@
   boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "vmd" "nvme" "usb_storage" "usbhid" "sd_mod" "rtsx_pci_sdmmc" ];
   boot.initrd.kernelModules = [ ];
   boot.initrd.luks.devices = {
-root = { device = "/dev/disk/by-uuid/41074c9f-8bb3-46a2-8082-b2d5ded6b501"; };
-swap = { device = "/dev/disk/by-uuid/203b84fd-bde2-4e14-95c4-08691e019647"; };
-data = { device = "/dev/disk/by-uuid/c554397a-9e86-4f9a-8f14-ca6760e5887b"; };
-
-};
+    root = { device = "/dev/disk/by-uuid/ad032932-3f84-455a-8f1e-e165c12f9e27"; };
+    swap = { device = "/dev/disk/by-uuid/12f17d05-001e-46e9-b6ce-072d592fdf13"; };
+    data = { device = "/dev/disk/by-uuid/772b86e5-61e0-45b2-97db-f53a5a5931c9"; };
+  };
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
     { device = "/dev/mapper/root";
       fsType = "btrfs";
-	options = ["subvol=@" "compress=zstd" "noatime"];
+      options = [ "subvol=/@" "compress=zstd" "noatime" "ssd" "space_cache=v2" ];
     };
 
   fileSystems."/nix" =
     { device = "/dev/mapper/root";
       fsType = "btrfs";
-	options = ["subvol=@nix" "compress=zstd" "noatime"];
+      options = [ "subvol=/@nix" "compress=zstd" "noatime" "ssd" "space_cache=v2" ];
     };
+
   fileSystems."/home" =
     { device = "/dev/mapper/root";
       fsType = "btrfs";
-	options = ["subvol=@home" "compress=zstd" "noatime"];
+      options = [ "subvol=/@home" "compress=zstd" "noatime" "ssd" "space_cache=v2" ];
     };
+
   fileSystems."/var/log" =
     { device = "/dev/mapper/root";
       fsType = "btrfs";
-	options = ["subvol=@log" "compress=zstd" "noatime"];
-	neededForBoot = true; # ensures logs are available for early boot
+      options = [ "subvol=/@log" "compress=zstd" "noatime" "ssd" "space_cache=v2" ];
+      neededForBoot = true;
     };
+
   fileSystems."/tmp" =
     { device = "/dev/mapper/root";
       fsType = "btrfs";
-	options = ["subvol=@tmp" "compress=zstd" "noatime"];
+      options = [ "subvol=/@tmp" "compress=zstd" "noatime" "ssd" "space_cache=v2" ];
     };
 
-
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/5924-6CF2";
+    { device = "/dev/disk/by-uuid/7C97-A5EE";
       fsType = "vfat";
       options = [ "fmask=0077" "dmask=0077" ];
     };
@@ -56,7 +57,7 @@ data = { device = "/dev/disk/by-uuid/c554397a-9e86-4f9a-8f14-ca6760e5887b"; };
   fileSystems."/mnt/data" =
     { device = "/dev/mapper/data";
       fsType = "btrfs";
-	options = [ "compress=zstd" "noatime"];
+      options = [ "compress=zstd" "noatime" "ssd" "space_cache=v2" ];
     };
 
   swapDevices =
