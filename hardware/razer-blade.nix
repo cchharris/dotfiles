@@ -9,13 +9,43 @@
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "vmd" "nvme" "usb_storage" "usbhid" "sd_mod" "rtsx_pci_sdmmc" ];
   boot.initrd.kernelModules = [ ];
+  boot.initrd.luks.devices = {
+root = { device = "/dev/disk/by-uuid/41074c9f-8bb3-46a2-8082-b2d5ded6b501"; };
+swap = { device = "/dev/disk/by-uuid/203b84fd-bde2-4e14-95c4-08691e019647"; };
+data = { device = "/dev/disk/by-uuid/c554397a-9e86-4f9a-8f14-ca6760e5887b"; };
+
+};
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/41074c9f-8bb3-46a2-8082-b2d5ded6b501";
-      fsType = "ext4";
+    { device = "/dev/mapper/root";
+      fsType = "btrfs";
+	options = ["subvol=@" "compress=zstd" "noatime"];
     };
+
+  fileSystems."/nix" =
+    { device = "/dev/mapper/root";
+      fsType = "btrfs";
+	options = ["subvol=@nix" "compress=zstd" "noatime"];
+    };
+  fileSystems."/home" =
+    { device = "/dev/mapper/root";
+      fsType = "btrfs";
+	options = ["subvol=@home" "compress=zstd" "noatime"];
+    };
+  fileSystems."/var/log" =
+    { device = "/dev/mapper/root";
+      fsType = "btrfs";
+	options = ["subvol=@log" "compress=zstd" "noatime"];
+	neededForBoot = true; # ensures logs are available for early boot
+    };
+  fileSystems."/tmp" =
+    { device = "/dev/mapper/root";
+      fsType = "btrfs";
+	options = ["subvol=@tmp" "compress=zstd" "noatime"];
+    };
+
 
   fileSystems."/boot" =
     { device = "/dev/disk/by-uuid/5924-6CF2";
@@ -24,12 +54,13 @@
     };
 
   fileSystems."/mnt/data" =
-    { device = "/dev/disk/by-uuid/c554397a-9e86-4f9a-8f14-ca6760e5887b";
-      fsType = "ext4";
+    { device = "/dev/mapper/data";
+      fsType = "btrfs";
+	options = [ "compress=zstd" "noatime"];
     };
 
   swapDevices =
-    [ { device = "/dev/disk/by-uuid/203b84fd-bde2-4e14-95c4-08691e019647"; }
+    [ { device = "/dev/mapper/swap"; }
     ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
