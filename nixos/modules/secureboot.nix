@@ -11,7 +11,7 @@ in {
 
     pkiBundle = lib.mkOption {
       type = lib.types.str;
-      default = "/etc/secureboot";
+      default = "/var/lib/sbctl";
       description = "Path to the Secure Boot key bundle (sbctl keys).";
     };
 
