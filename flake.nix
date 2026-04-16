@@ -11,9 +11,13 @@
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v0.4.1";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, nix-darwin, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nix-darwin, lanzaboote, ... }@inputs:
   let
     mkPkgs = system: import nixpkgs { inherit system; config.allowUnfree = true; };
   in {
@@ -22,6 +26,7 @@
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
       modules = [
+        inputs.lanzaboote.nixosModules.lanzaboote
         ./hardware/razer-blade.nix
         ./nixos/modules/defaults.nix
         ./nixos/modules/desktop-common.nix
@@ -31,6 +36,7 @@
         ./nixos/modules/razer.nix
         ./nixos/modules/howdy.nix
         ./nixos/modules/tailscale.nix
+        ./nixos/modules/secureboot.nix
         ./nixos/hosts/razer-blade.nix
         home-manager.nixosModules.home-manager
         {
