@@ -7,6 +7,7 @@
 
   # Enable all features for this machine
   cchharris.nixos = {
+    secureboot.enable = true;
     nvidia = {
       enable = true;
       openDrivers = true;  # Open drivers for newer GPU
