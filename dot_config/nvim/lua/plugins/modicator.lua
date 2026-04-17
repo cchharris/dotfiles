@@ -1,7 +1,7 @@
 return {
     'mawkler/modicator.nvim',
     event = "VeryLazy",
-    dependencies = 'mawkler/onedark.nvim', -- Add your colorscheme plugin here
+    dependencies = 'AlexvZyl/nordic.nvim',
     init = function()
         -- These are required for Modicator to work
         vim.o.cursorline = true

@@ -43,8 +43,11 @@ in {
     '';
 
     # Install Nerd Font for terminal icons
+    # ghostty-bin provides pre-built macOS binaries (pkgs.ghostty is broken on darwin)
     home.packages = with pkgs; [
       nerd-fonts.jetbrains-mono
+    ] ++ lib.optionals pkgs.stdenv.isDarwin [
+      ghostty-bin
     ];
 
     # Font configuration

@@ -21,8 +21,8 @@
 
   # Override Linux-specific aliases from shell.nix
   programs.zsh.shellAliases = {
-    update = lib.mkForce "home-manager switch --flake ~/.local/share/chezmoi#christopherharris";
-    hm = lib.mkForce "home-manager switch --flake ~/.local/share/chezmoi#christopherharris";
+    update = lib.mkForce "home-manager switch --flake ~/dotfiles#work-mac";
+    hm = lib.mkForce "home-manager switch --flake ~/dotfiles#work-mac";
   };
 
   programs.home-manager.enable = true;

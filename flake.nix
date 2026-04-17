@@ -96,7 +96,7 @@
       modules = [ ./home/base.nix ];
     };
 
-    homeConfigurations."christopherharris" = home-manager.lib.homeManagerConfiguration {
+    homeConfigurations."work-mac" = home-manager.lib.homeManagerConfiguration {
       pkgs = mkPkgs "aarch64-darwin";
       extraSpecialArgs = { inherit inputs; };
       modules = [ ./home/work-mac.nix ];

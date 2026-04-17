@@ -1,13 +1,13 @@
 local is_windows = vim.fn.has('win32') == 1
 
-local sections = {
+local sections = vim.tbl_filter(function(v) return v ~= nil end, {
     { section = "header" },
     { pane = 1, icon = "󰍉 ", key = "f", desc = "Find File",       action = ":lua require('telescope.builtin').fd()" },
     { pane = 1, icon = "󰈔 ", key = "n", desc = "New File",        action = ":ene | startinsert" },
     { pane = 1, icon = "󰊄 ", key = "r", desc = "Find Text",       action = ":lua require('telescope').extensions.live_grep_args.live_grep_args()" },
     { pane = 1, icon = "󰋚 ", key = "o", desc = "Recent Files",    action = ":lua require('telescope.builtin').oldfiles()" },
     { pane = 1, icon = "󰒓 ", key = "c", desc = "Config",          action = ":lua require('telescope.builtin').fd({cwd = vim.fn.stdpath('config')})" },
-    { pane = 1, icon = "󰚝 ", key = "z", desc = "Chezmoi",         action = ":lua require('telescope').extensions.chezmoi.find_files()" },
+    is_windows and { pane = 1, icon = "󰚝 ", key = "z", desc = "Chezmoi", action = ":lua require('telescope').extensions.chezmoi.find_files()" } or nil,
     { pane = 1, icon = "󰦛 ", key = "s", desc = "Restore Session", action = ":lua require('auto-session').restore_session()",
       enabled = function() return require('auto-session').session_exists_for_cwd() end },
     { pane = 1, icon = "󰒲 ", key = "L", desc = "Lazy",            action = ":Lazy", enabled = package.loaded.lazy ~= nil },
@@ -69,7 +69,7 @@ local sections = {
             },
         }
     end,
-}
+})
 
 return {
     "folke/snacks.nvim",

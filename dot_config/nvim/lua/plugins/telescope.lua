@@ -10,34 +10,40 @@ return {
             "tpope/vim-fugitive"
         }
     },
-    keys = {
-        {
-            '<leader>fcz',
-            function()
-                require('telescope').extensions.chezmoi.find_files()
-            end,
-            desc = '<Telescope> Find files in chezmoi',
-        },
-        {
-            '<leader>fca',
-            function()
-                require('telescope.builtin').find_files({
-                    cwd = vim.fs.normalize(vim.fs.joinpath("~", ".local", "share", "chezmoi")),
-                    hidden = true,
-                    no_ignore = true,
-                    no_ignore_parent = true
-                })
-            end,
-            desc = '<Telescope> Find files in chezmoi',
-        },
-
-        {
-            '<leader>fcr',
-            function()
-                require('telescope').extensions.live_grep_args.live_grep_args({ search_dirs = { vim.fs.normalize(vim.fs.joinpath("~", ".local", "share", "chezmoi")) } })
-            end,
-            desc = '<Telescope> Find in files in chezmoi',
-        },
+    keys = (function()
+        local is_windows = vim.fn.has('win32') == 1
+        local keys = {}
+        if is_windows then
+            vim.list_extend(keys, {
+                {
+                    '<leader>fcz',
+                    function()
+                        require('telescope').extensions.chezmoi.find_files()
+                    end,
+                    desc = '<Telescope> Find files in chezmoi',
+                },
+                {
+                    '<leader>fca',
+                    function()
+                        require('telescope.builtin').find_files({
+                            cwd = vim.fs.normalize(vim.fs.joinpath("~", ".local", "share", "chezmoi")),
+                            hidden = true,
+                            no_ignore = true,
+                            no_ignore_parent = true
+                        })
+                    end,
+                    desc = '<Telescope> Find files in chezmoi',
+                },
+                {
+                    '<leader>fcr',
+                    function()
+                        require('telescope').extensions.live_grep_args.live_grep_args({ search_dirs = { vim.fs.normalize(vim.fs.joinpath("~", ".local", "share", "chezmoi")) } })
+                    end,
+                    desc = '<Telescope> Find in files in chezmoi',
+                },
+            })
+        end
+        vim.list_extend(keys, {
         {
             '<leader>fr',
             function()
@@ -89,7 +95,9 @@ return {
             end,
             desc = "<Telescope> Git file history"
         },
-    },
+        })
+        return keys
+    end)(),
     config = function()
         local telescope = require('telescope')
         local gfh_actions = require('telescope').extensions.git_file_history.actions
@@ -139,7 +147,9 @@ return {
             }
         }
 
-        telescope.load_extension('chezmoi')
+        if vim.fn.has('win32') == 1 then
+            telescope.load_extension('chezmoi')
+        end
         telescope.load_extension('live_grep_args')
         telescope.load_extension('neoclip')
         telescope.load_extension('package_info')

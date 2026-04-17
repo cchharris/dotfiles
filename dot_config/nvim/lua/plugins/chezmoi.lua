@@ -1,6 +1,7 @@
 -- Lazy.nvim
 return {
   'xvzc/chezmoi.nvim',
+  cond = vim.fn.has('win32') == 1,
 	event = 'VeryLazy',
   dependencies = { 'nvim-lua/plenary.nvim' },
 	opts = {

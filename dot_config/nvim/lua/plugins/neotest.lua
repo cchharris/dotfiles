@@ -4,7 +4,6 @@ return {
         "nvim-neotest/nvim-nio",
         "nvim-lua/plenary.nvim",
         "antoinemadec/FixCursorHold.nvim", -- Still necessary ?
-        "nvim-treesitter/nvim-treesitter",
         'nvim-neotest/neotest-jest',
         'stevearc/overseer.nvim',
         'nvim-neotest/neotest-python',

@@ -20,13 +20,19 @@ vim.opt.foldlevel = 99 -- Using ufo provider need a large value, feel free to de
 vim.opt.foldlevelstart = 99
 vim.opt.foldenable = true
 vim.opt.foldmethod = 'expr'
+vim.opt.foldexpr = "v:lua.require'config.folds'.foldexpr()"
 
--- Default to treesitter folding
-if vim.fn.has("nvim-0.10") == 1 then
-    vim.opt.foldexpr = "v:lua.require'config.folds'.foldexpr()"
-else
-    vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
-end
+-- Enable treesitter highlighting for all filetypes.
+-- On non-Windows, parsers are provided by nix (nvim-treesitter.withAllGrammars).
+-- On Windows, the nvim-treesitter plugin installs parsers.
+vim.api.nvim_create_autocmd("FileType", {
+    group = vim.api.nvim_create_augroup("EnableTreesitterHighlighting", { clear = true }),
+    desc = "Enable tree-sitter syntax highlighting",
+    pattern = '*',
+    callback = function()
+        pcall(function() vim.treesitter.start() end)
+    end
+})
 
 -- Prefer LSP folding if client supports it
 vim.api.nvim_create_autocmd('LspAttach', {

@@ -1,3 +1,51 @@
+local is_windows = vim.fn.has('win32') == 1
+
+local commands = {
+    {
+        ':Bd',
+        function()
+            require('snacks').bufdelete()
+        end,
+        { desc = '<Snacks> 󰖝 Smart delete buffer' },
+    },
+}
+
+if is_windows then
+    table.insert(commands, {
+        ':ChezmoiPluginNew [file_name]',
+        function(input)
+            local filename = ''
+            if input.fargs and input.fargs[1] then
+                filename = input.fargs[1]
+            else
+                filename = vim.fn.input("Plugin name: ")
+            end
+            local path = vim.fs.normalize(vim.fs.joinpath("~", ".local", "share", "chezmoi", 'dot_config', 'nvim',
+                'lua', 'plugins', filename))
+            vim.api.nvim_command(':e ' .. path)
+        end,
+        opts = { desc = "<Chezmoi> 󰊄 Create a new plugin file", nargs = '?' },
+    })
+end
+
+local autocmds = {}
+
+if is_windows then
+    table.insert(autocmds, {
+        { "BufRead", "BufNewFile" },
+        function(ev)
+            local bufnr = ev.buf
+            local edit_watch = function()
+                require("chezmoi.commands.__edit").watch(bufnr)
+            end
+            vim.schedule(edit_watch)
+        end,
+        opts = {
+            pattern = { vim.fs.normalize(vim.fs.joinpath("~", ".local", "share", "chezmoi", "*")) },
+        },
+    })
+end
+
 return {
     'mrjones2014/legendary.nvim',
     -- since legendary.nvim handles all your keymaps/commands,
@@ -44,71 +92,9 @@ return {
             },
         },
         -- Initial commands to bind, can also be a function that returns the list
-        commands = {
-            {
-                ':Bd',
-                function()
-                    require('snacks').bufdelete()
-                end,
-                { desc = '<Snacks> 󰖝 Smart delete buffer' },
-            },
-            {
-                ':ChezmoiPluginNew [file_name]',
-                function(input)
-                    local filename = ''
-                    if input.fargs and input.fargs[1] then
-                        filename = input.fargs[1]
-                    else
-                        filename = vim.fn.input("Plugin name: ")
-                    end
-                    local path = vim.fs.normalize(vim.fs.joinpath("~", ".local", "share", "chezmoi", 'dot_config', 'nvim',
-                        'lua', 'plugins', filename))
-                    vim.api.nvim_command(':e ' .. path)
-                end,
-                opts = { desc = "<Chezmoi> 󰊄 Create a new plugin file", nargs = '?' },
-            },
-        },
+        commands = commands,
         -- Initial augroups/autocmds to bind, can also be a function that returns the list
-        autocmds = {
-            -- {
-            -- 'BufWritePre',
-            -- function(ev)
-            --     local clients = vim.lsp.get_clients({ bufnr = ev.buf, method = 'textDocument/formatting' })
-            --     if clients == nil or #clients == 0 then
-            --         vim.notify('No LSP clients attached to buffer', vim.log.levels.TRACE,
-            --             { title = 'LSP' })
-            --         return
-            --     end
-            --     local function supportsFilter(client)
-            --         return client.supports_method('textDocument/formatting', ev.buf)
-            --     end
-            --     vim.notify(
-            --         'Formatting clients:' .. '\n' ..
-            --         table.concat(vim.tbl_map(function(t) return '- ' .. t.name end, clients), '\n'),
-            --         vim.log.levels.INFO, { title = 'LSP' })
-            --     vim.lsp.buf.format({
-            --         async = false,
-            --         bufnr = ev.buf,
-            --         filter = supportsFilter
-            --     })
-            --     vim.notify('Formatted buffer', vim.log.levels.INFO, { title = 'LSP' })
-            -- end,
-            -- description = 'Format on save'
-            -- },
-            {
-                { "BufRead", "BufNewFile" },
-                function(ev)
-                    local bufnr = ev.buf
-                    local edit_watch = function()
-                        require("chezmoi.commands.__edit").watch(bufnr)
-                    end
-                    vim.schedule(edit_watch)
-                end,
-                opts = {
-                    pattern = { vim.fs.normalize(vim.fs.joinpath("~", ".local", "share", "chezmoi", "*")) },
-                },
-            },
-        },
+        autocmds = autocmds,
         -- Initial functions to bind, can also be a function that returns the list
         funcs = {},
         -- Initial item groups to bind,
