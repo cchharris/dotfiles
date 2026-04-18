@@ -16,6 +16,7 @@
     gnome.enable = true;
     razer.enable = true;
     tailscale.enable = true;
+    howdy.enable = true;
   };
 
   # TLP for laptop power management — replaces GNOME's power-profiles-daemon
