@@ -59,6 +59,10 @@
   environment.shells = with pkgs; [ zsh ];
   users.defaultUserShell = pkgs.zsh;
 
+  # ExpressVPN
+  services.expressvpn.enable = true;
+  environment.systemPackages = with pkgs; [ expressvpn ];
+
   # System state version
   system.stateVersion = "25.11";
 }
