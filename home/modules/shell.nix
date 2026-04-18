@@ -81,8 +81,10 @@ in {
       htop         # Process viewer
       tree         # Directory tree
       claude-code  # Claude AI assistant CLI
-      _1password-cli # 1Password CLI (op)
     ];
+
+    # 1Password SSH agent
+    home.sessionVariables.SSH_AUTH_SOCK = "$HOME/.1password/agent.sock";
 
     programs.eza = {
       enable = true;

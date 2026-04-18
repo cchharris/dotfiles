@@ -9,7 +9,6 @@ let
   # manual step: mkdir -p ~/.1password && ln -sf "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock" ~/.1password/agent.sock).
   # This lets us use the same path on Linux and macOS.
   opAgentSock = "~/.1password/agent.sock";
-  opAgentSockEnv = "$HOME/.1password/agent.sock";
 in {
   options.cchharris.home.git = {
     enable = lib.mkEnableOption "git configuration";
@@ -39,11 +38,6 @@ in {
       matchBlocks."*" = {
         extraOptions.IdentityAgent = opAgentSock;
       };
-    };
-
-    # Set SSH_AUTH_SOCK for 1Password
-    home.sessionVariables = {
-      SSH_AUTH_SOCK = opAgentSockEnv;
     };
 
     programs.git = {
