@@ -55,6 +55,7 @@
   services.expressvpn.enable = true;
   environment.systemPackages = with pkgs; [
     expressvpn
+    unityhub  # Unity Game Engine version manager
   ];
 
   # System state version
