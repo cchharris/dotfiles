@@ -81,6 +81,7 @@ in {
       htop         # Process viewer
       tree         # Directory tree
       claude-code  # Claude AI assistant CLI
+      gcc          # C compiler
     ];
 
     # 1Password SSH agent
