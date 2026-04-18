@@ -50,6 +50,7 @@ in {
       vim-language-server           # Vimscript
       buf                           # Protobuf (buf_ls)
       zls                           # Zig
+      omnisharp-roslyn              # C#
 
       # Formatters / linters
       stylua
