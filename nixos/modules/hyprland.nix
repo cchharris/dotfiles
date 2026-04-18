@@ -89,6 +89,12 @@ in {
       variant = "";
     };
 
+    # XDG portal (required for screen sharing in Discord/Firefox/browsers on Wayland)
+    xdg.portal = {
+      enable = true;
+      extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
+    };
+
     # PAM configuration for hyprlock
     security.pam.services.hyprlock = {};
 

@@ -41,10 +41,14 @@ in {
       polkitPolicyOwners = [ "cchharris" ];
     };
 
+    # KDE Connect (phone integration: notifications, clipboard sync, file transfer)
+    programs.kdeconnect.enable = true;
+
     # Common desktop packages
     environment.systemPackages = with pkgs; [
       microsoft-edge
       discord
+      bluez-tools  # bt-device/bt-adapter required by HyprPanel bluetooth menu
     ];
   };
 }

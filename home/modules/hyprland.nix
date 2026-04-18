@@ -23,6 +23,14 @@ in {
       wofi
       pavucontrol   # volume mixer (hyprpanel volume widget → open mixer)
       playerctl     # MPRIS media control (hyprpanel media widget)
+      grim          # screenshot tool
+      slurp         # region selection for screenshots
+      swappy        # screenshot annotation
+      wf-recorder   # screen recording
+      dart-sass     # required by HyprPanel for CSS compilation
+      python3       # HyprPanel bluetooth scripts
+      gpustat       # HyprPanel GPU monitoring widget
+      btop          # opens when clicking HyprPanel CPU/RAM widgets
     ];
 
     # Hyprland configuration
@@ -91,6 +99,15 @@ in {
           # Window cycling
           "ALT, TAB, cyclenext"
           "ALT+SHIFT, TAB, cyclenext, prev"
+
+          # Screenshots
+          ", Print, exec, grim - | swappy -f -"                                       # fullscreen → annotate
+          "$mod+SHIFT, S, exec, grim -g \"$(slurp)\" - | swappy -f -"                # region → annotate
+          "$mod+SHIFT+CTRL, S, exec, grim -g \"$(slurp)\" - | wl-copy"               # region → clipboard
+
+          # Screen recording
+          "$mod+SHIFT, R, exec, wf-recorder -g \"$(slurp)\" -f ~/Videos/recording-$(date +%Y%m%d-%H%M%S).mp4"
+          "$mod+SHIFT+CTRL, R, exec, pkill wf-recorder"
 
           # Workspace navigation
           "$mod, right, workspace, +1"
