@@ -31,6 +31,9 @@ in {
       ForceDarkModeEnabled = true;
     };
 
+    # UPower — required by AstalBattery (hyprpanel battery widget uses D-Bus)
+    services.upower.enable = true;
+
     # Bluetooth manager (used by hyprpanel bluetooth widget)
     services.blueman.enable = true;
 
@@ -43,6 +46,12 @@ in {
 
     # KDE Connect (phone integration: notifications, clipboard sync, file transfer)
     programs.kdeconnect.enable = true;
+
+    # KDE Connect / GSConnect firewall ports (required on all DEs)
+    networking.firewall = {
+      allowedTCPPortRanges = [{ from = 1714; to = 1764; }];
+      allowedUDPPortRanges = [{ from = 1714; to = 1764; }];
+    };
 
     # Common desktop packages
     environment.systemPackages = with pkgs; [

@@ -139,6 +139,10 @@ in {
         cursor = {
           no_hardware_cursors = true;
         };
+
+        ecosystem = {
+          no_update_news = true;
+        };
       };
     };
 

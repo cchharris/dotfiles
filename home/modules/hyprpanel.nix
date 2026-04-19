@@ -46,12 +46,13 @@ in {
           "*" = {
             left = [ "dashboard" "workspaces" "media" ];
             middle = [ "windowtitle" ];
-            right = [ "volume" "network" "bluetooth" "systray" "clock" "notifications" ];
+            right = [ "volume" "network" "bluetooth" "battery" "systray" "clock" "notifications" ];
           };
         };
 
         menus = {
           dashboard = {
+            stats.enabled = false;
             shortcuts = {
               left = {
                 shortcut1.command = "microsoft-edge";
