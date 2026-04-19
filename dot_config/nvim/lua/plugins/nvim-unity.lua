@@ -13,7 +13,7 @@
 --   Linux:   "/opt/unity/Editor/Unity"
 --   macOS:   "/Applications/Unity/Hub/Editor/<version>/Unity.app/Contents/MacOS/Unity"
 
-local unity_path = nil
+local unity_path = vim.fn.expand("~/Unity/Hub/Editor/6000.4.3f1/Editor/Unity")
 
 return {
     "apyra/nvim-unity-sync",
