@@ -55,7 +55,9 @@
   services.expressvpn.enable = true;
   environment.systemPackages = with pkgs; [
     expressvpn
-    unityhub  # Unity Game Engine version manager
+    unityhub   # Unity Game Engine version manager
+    dotnet-sdk # .NET SDK (required for OmniSharp/C# LSP)
+    (pkgs.callPackage ../../pkgs/nvimunity.nix {})
   ];
 
   # System state version
