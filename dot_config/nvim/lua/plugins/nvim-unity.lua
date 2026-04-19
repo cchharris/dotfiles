@@ -13,7 +13,41 @@
 --   Linux:   "/opt/unity/Editor/Unity"
 --   macOS:   "/Applications/Unity/Hub/Editor/<version>/Unity.app/Contents/MacOS/Unity"
 
-local unity_path = vim.fn.expand("~/Unity/Hub/Editor/6000.4.3f1/Editor/Unity")
+-- Resolve Unity binary from the project's ProjectSettings/ProjectVersion.txt.
+-- Falls back to the latest installed version if the exact version isn't found.
+local function resolve_unity_path()
+    local hub_editors = vim.fn.expand("~/Unity/Hub/Editor")
+
+    -- Walk up from cwd to find ProjectSettings/ProjectVersion.txt
+    local dir = vim.fn.getcwd()
+    while dir ~= "/" do
+        local version_file = dir .. "/ProjectSettings/ProjectVersion.txt"
+        local f = io.open(version_file, "r")
+        if f then
+            local content = f:read("*a")
+            f:close()
+            local version = content:match("m_EditorVersion:%s*(%S+)")
+            if version then
+                local path = hub_editors .. "/" .. version .. "/Editor/Unity"
+                if vim.fn.executable(path) == 1 then
+                    return path
+                end
+            end
+        end
+        dir = vim.fn.fnamemodify(dir, ":h")
+    end
+
+    -- Fallback: pick the latest installed version
+    local installs = vim.fn.glob(hub_editors .. "/*/Editor/Unity", false, true)
+    if #installs > 0 then
+        table.sort(installs)
+        return installs[#installs]
+    end
+
+    return nil
+end
+
+local unity_path = resolve_unity_path()
 
 return {
     "apyra/nvim-unity-sync",
