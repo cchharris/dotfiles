@@ -155,6 +155,20 @@ return {
             },
         })
 
+        vim.lsp.config('omnisharp', {
+            cmd = { "OmniSharp", "--languageserver" },
+            settings = {
+                FormattingOptions = {
+                    EnableEditorConfigSupport = true,
+                    OrganizeImports = true,
+                },
+                RoslynExtensionsOptions = {
+                    EnableAnalyzersSupport = true,
+                    EnableImportCompletion = true,
+                },
+            },
+        })
+
         --rustacean takes over
         -- ['rust_analyzer'] = function() end,
     end
