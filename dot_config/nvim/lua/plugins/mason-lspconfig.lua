@@ -168,6 +168,7 @@ return {
                 },
             },
         })
+        vim.lsp.enable('omnisharp')
 
         --rustacean takes over
         -- ['rust_analyzer'] = function() end,
