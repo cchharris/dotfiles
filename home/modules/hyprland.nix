@@ -6,6 +6,8 @@ let
 in {
   options.cchharris.home.hyprland = {
     enable = lib.mkEnableOption "Hyprland user configuration";
+    nvidiaEnvVars = lib.mkEnableOption "NVIDIA Wayland env vars (LIBVA, GLX, NVD — needed on all NVIDIA setups)";
+    nvidiaGbmBackend = lib.mkEnableOption "Force GBM backend to nvidia-drm (single GPU only, breaks Optimus)";
   };
 
   config = lib.mkIf cfg.enable {
@@ -55,14 +57,15 @@ in {
         "$terminal" = "ghostty";
         "$menu" = "wofi --gtk-dark --allow-images --allow-markup --show drun";
 
-        # NVIDIA-required environment variables (Aquamarine-compatible, not wlroots-era)
         env = [
-          "LIBVA_DRIVER_NAME,nvidia"
           "XDG_SESSION_TYPE,wayland"
+          "SSH_AUTH_SOCK,$HOME/.1password/agent.sock"
+        ] ++ lib.optionals cfg.nvidiaEnvVars [
+          "LIBVA_DRIVER_NAME,nvidia"
           "__GLX_VENDOR_LIBRARY_NAME,nvidia"
           "NVD_BACKEND,direct"
-          "GBM_BACKEND,nvidia-drm"
-          "SSH_AUTH_SOCK,$HOME/.1password/agent.sock"
+        ] ++ lib.optionals cfg.nvidiaGbmBackend [
+          "GBM_BACKEND,nvidia-drm"  # single GPU only — breaks Optimus display output
         ];
 
         exec-once = [
@@ -136,13 +139,14 @@ in {
         };
 
         # GTX 1080 (Pascal) has hardware cursor issues under Wayland/Hyprland
-        cursor = {
+        cursor = lib.mkIf cfg.nvidiaGbmBackend {
           no_hardware_cursors = true;
         };
 
         ecosystem = {
           no_update_news = true;
         };
+
       };
     };
 

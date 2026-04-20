@@ -63,6 +63,16 @@ in {
     hardware.graphics = {
       enable = true;
       enable32Bit = true;
+      extraPackages = with pkgs; [
+        nvidia-vaapi-driver  # VA-API on NVIDIA (hardware decode on Wayland)
+        libvdpau-va-gl       # VDPAU through OpenGL
+        libva-vdpau-driver   # VA-API through VDPAU
+      ] ++ lib.optionals cfg.optimus.enable [
+        intel-media-driver   # Intel iGPU VA-API (iHD, Broadwell+) for Optimus display path
+      ];
+      extraPackages32 = with pkgs; [
+        nvidia-vaapi-driver
+      ];
     };
   };
 }

@@ -21,7 +21,11 @@
     editor.enable = true;
     terminal.enable = true;
     git.enable = true;
-    hyprland.enable = true;
+    hyprland = {
+      enable = true;
+      nvidiaEnvVars = true;  # needed for VA-API and GLX on NVIDIA Optimus
+      # nvidiaGbmBackend intentionally off — Optimus uses Intel for display output
+    };
     hyprpanel.enable = true;
   };
 

@@ -17,7 +17,7 @@
   let
     mkPkgs = system: import nixpkgs { inherit system; config.allowUnfree = true; };
   in {
-    # razer-blade configuration (GNOME)
+    # razer-blade configuration (Hyprland)
     nixosConfigurations.razer-blade = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
@@ -27,7 +27,7 @@
         ./nixos/modules/desktop-common.nix
         ./nixos/modules/nvidia.nix
         ./nixos/modules/gaming.nix
-        ./nixos/modules/gnome.nix
+        ./nixos/modules/hyprland.nix
         ./nixos/modules/razer.nix
         ./nixos/modules/howdy.nix
         ./nixos/modules/tailscale.nix
@@ -37,7 +37,7 @@
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.backupFileExtension = "backup";
-          home-manager.users.cchharris = import ./home/base.nix;
+          home-manager.users.cchharris = import ./home/razer-blade.nix;
           home-manager.extraSpecialArgs = { inherit inputs; };
         }
       ];

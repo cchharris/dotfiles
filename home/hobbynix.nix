@@ -21,7 +21,11 @@
     editor.enable = true;
     terminal.enable = true;
     git.enable = true;
-    hyprland.enable = true;
+    hyprland = {
+      enable = true;
+      nvidiaEnvVars = true;
+      nvidiaGbmBackend = true;  # single GPU, no Optimus
+    };
     hyprpanel.enable = true;
   };
 

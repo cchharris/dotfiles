@@ -13,12 +13,26 @@
       optimus.enable = true;  # Dual GPU laptop
     };
     gaming.enable = true;
-    gnome.enable = true;
+    hyprland.enable = true;
     razer.enable = true;
     tailscale.enable = true;
     howdy.enable = true;
   };
 
+  # Bluetooth
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+    settings = {
+      General = {
+        Experimental = true;
+        FastConnectable = true;
+      };
+      Policy = {
+        AutoEnable = true;
+      };
+    };
+  };
   # TLP for laptop power management — replaces GNOME's power-profiles-daemon
   services.power-profiles-daemon.enable = false;
   services.tlp = {
@@ -54,6 +68,7 @@
   # ExpressVPN (host-specific service)
   services.expressvpn.enable = true;
   environment.systemPackages = with pkgs; [
+    bluez      # Bluetooth stack (bluetoothctl + utils; equivalent to bluez + bluez-utils on Arch)
     expressvpn
     unityhub   # Unity Game Engine version manager
     dotnet-sdk # .NET SDK (required for OmniSharp/C# LSP)
