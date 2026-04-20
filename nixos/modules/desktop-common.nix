@@ -55,7 +55,13 @@ in {
 
     # Common desktop packages
     environment.systemPackages = with pkgs; [
-      microsoft-edge
+      (microsoft-edge.override {
+        commandLineArgs = [
+          "--use-angle=vulkan"
+          "--enable-features=Vulkan"
+          "--disable-gpu-memory-buffer-video-frames"
+        ];
+      })
       discord
       bluez-tools  # bt-device/bt-adapter required by HyprPanel bluetooth menu
       libva-utils  # provides vainfo for diagnosing VA-API / hardware decode issues
