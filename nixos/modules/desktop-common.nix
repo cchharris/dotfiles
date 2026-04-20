@@ -55,14 +55,7 @@ in {
 
     # Common desktop packages
     environment.systemPackages = with pkgs; [
-      (microsoft-edge.override {
-        commandLineArgs = [
-          "--ozone-platform=wayland"
-          "--use-angle=vulkan"
-          "--enable-features=Vulkan"
-          "--disable-gpu-memory-buffer-video-frames"
-        ];
-      })
+      microsoft-edge
       discord
       bluez-tools  # bt-device/bt-adapter required by HyprPanel bluetooth menu
       libva-utils  # provides vainfo for diagnosing VA-API / hardware decode issues
