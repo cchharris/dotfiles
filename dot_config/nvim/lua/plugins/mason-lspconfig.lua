@@ -24,7 +24,6 @@ return {
             "html",          -- html
             "jsonls",        -- json
             "lua_ls",        -- lua
-            "nil_ls",        -- nix
             "omnisharp",     -- c# (unity, .NET)
             "powershell_es", -- powershell
             "ruff",          -- python
@@ -169,7 +168,9 @@ return {
             },
         })
         vim.lsp.enable('omnisharp')
-        vim.lsp.enable('nil_ls')
+        if vim.fn.has('win32') == 0 then
+            vim.lsp.enable('nil_ls')
+        end
 
         --rustacean takes over
         -- ['rust_analyzer'] = function() end,
