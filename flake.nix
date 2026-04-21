@@ -16,6 +16,11 @@
       url = "github:raybbian/hyprtasking";
       inputs.hyprland.follows = "hyprland";
     };
+    elephant.url = "github:abenz1267/elephant";
+    walker = {
+      url = "github:abenz1267/walker";
+      inputs.elephant.follows = "elephant";
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, nix-darwin, ... }@inputs:

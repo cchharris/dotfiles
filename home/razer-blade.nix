@@ -9,6 +9,7 @@
     ./modules/git.nix
     ./modules/hyprland.nix
     ./modules/hyprpanel.nix
+    ./modules/walker.nix
   ];
 
   home.username = "cchharris";
@@ -27,6 +28,7 @@
       # nvidiaGbmBackend intentionally off — Optimus uses Intel for display output
     };
     hyprpanel.enable = true;
+    walker.enable = true;
   };
 
   # Discord

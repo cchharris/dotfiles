@@ -9,6 +9,7 @@
     ./modules/git.nix
     ./modules/hyprland.nix
     ./modules/hyprpanel.nix
+    ./modules/walker.nix
   ];
 
   home.username = "cchharris";
@@ -27,6 +28,7 @@
       nvidiaGbmBackend = true;  # single GPU, no Optimus
     };
     hyprpanel.enable = true;
+    walker.enable = true;
   };
 
   # Discord

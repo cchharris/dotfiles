@@ -58,7 +58,7 @@ in {
         ];
 
         "$terminal" = "ghostty";
-        "$menu" = "wofi --gtk-dark --allow-images --allow-markup --show drun";
+        "$menu" = "walker";
 
         env = [
           "XDG_SESSION_TYPE,wayland"
