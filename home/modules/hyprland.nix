@@ -160,6 +160,7 @@ in {
             layout = "grid";
             gap_size = 20;
             border_size = 4;
+            bg_color = "0xff000000";
             exit_on_hovered = false;
             grid = {
               rows = 3;
