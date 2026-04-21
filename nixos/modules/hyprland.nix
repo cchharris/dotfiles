@@ -1,5 +1,5 @@
 # Hyprland window manager module
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 
 let
   cfg = config.cchharris.nixos.hyprland;
@@ -12,10 +12,12 @@ in {
     # Enable common desktop features
     cchharris.nixos.desktop-common.enable = true;
 
-    # Hyprland
+    # Hyprland — use flake package so plugins built against the same binary
     programs.hyprland = {
       enable = true;
       xwayland.enable = true;
+      package = inputs.hyprland.packages.${pkgs.system}.hyprland;
+      portalPackage = inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
     };
 
     programs.hyprlock.enable = true;
@@ -35,7 +37,7 @@ in {
     };
 
     environment.etc."greetd/environments".text = ''
-      ${pkgs.hyprland}/bin/start-hyprland
+      ${inputs.hyprland.packages.${pkgs.system}.hyprland}/bin/start-hyprland
     '';
 
     environment.etc."greetd/gtkgreet.css".text = ''
@@ -92,7 +94,7 @@ in {
     # XDG portal (required for screen sharing in Discord/Firefox/browsers on Wayland)
     xdg.portal = {
       enable = true;
-      extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
+      extraPortals = [ inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland ];
     };
 
     # PAM configuration for hyprlock

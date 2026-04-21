@@ -38,8 +38,8 @@ in {
     # Hyprland configuration
     wayland.windowManager.hyprland = {
       enable = true;
-      package = null;  # Use system package
-      portalPackage = null;  # Use system package
+      package = inputs.hyprland.packages.${pkgs.system}.hyprland;
+      portalPackage = inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
       plugins = [
         inputs.hyprtasking.packages.${pkgs.system}.hyprtasking
       ];
@@ -122,13 +122,6 @@ in {
           "$mod+SHIFT, right, movetoworkspace, +1"
           "$mod+SHIFT, left, movetoworkspace, -1"
 
-          # Hyprtasking overlay
-          "$mod, tab, hyprtasking:toggle, cursor"
-          ", escape, hyprtasking:if_active, hyprtasking:toggle cursor"
-          "$mod, H, hyprtasking:if_active, hyprtasking:move left"
-          "$mod, J, hyprtasking:if_active, hyprtasking:move down"
-          "$mod, K, hyprtasking:if_active, hyprtasking:move up"
-          "$mod, L, hyprtasking:if_active, hyprtasking:move right"
         ];
 
         input = {
