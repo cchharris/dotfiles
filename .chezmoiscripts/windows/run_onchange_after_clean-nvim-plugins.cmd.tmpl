@@ -1,0 +1,8 @@
+@echo off
+rem Removes stale plugin spec files from ~/.config/nvim/lua/plugins/ that are
+rem no longer in the chezmoi source. Replicates exact_ directory cleanup.
+rem
+rem run_onchange trigger — source file list embedded at render time so any
+rem add/remove to dot_config/nvim/lua/plugins/ causes this script to re-run:
+{{ output "pwsh" "-NoProfile" "-NonInteractive" "-Command" (printf "Get-ChildItem '%s/dot_config/nvim/lua/plugins' -File | Sort-Object Name | ForEach-Object { '# ' + $_.Name }" .chezmoi.sourceDir) }}
+pwsh -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "$source = '{{ .chezmoi.sourceDir }}/dot_config/nvim/lua/plugins'; $target = (Join-Path $env:USERPROFILE '.config/nvim/lua/plugins'); if (-not (Test-Path $target)) { exit 0 }; $srcFiles = (Get-ChildItem $source -File | Select-Object -ExpandProperty Name); foreach ($f in (Get-ChildItem $target -File)) { if ($srcFiles -notcontains $f.Name) { Remove-Item $f.FullName -Force; Write-Host ('Removed stale nvim plugin spec: ' + $f.Name) } }"
