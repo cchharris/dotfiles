@@ -1,5 +1,5 @@
 # Hyprland user configuration (keybindings, settings)
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 
 let
   cfg = config.cchharris.home.hyprland;
@@ -40,6 +40,9 @@ in {
       enable = true;
       package = null;  # Use system package
       portalPackage = null;  # Use system package
+      plugins = [
+        inputs.hyprtasking.packages.${pkgs.system}.hyprtasking
+      ];
       systemd = {
         enable = false;
         enableXdgAutostart = true;
@@ -118,6 +121,14 @@ in {
           "$mod, left, workspace, -1"
           "$mod+SHIFT, right, movetoworkspace, +1"
           "$mod+SHIFT, left, movetoworkspace, -1"
+
+          # Hyprtasking overlay
+          "$mod, tab, hyprtasking:toggle, cursor"
+          ", escape, hyprtasking:if_active, hyprtasking:toggle cursor"
+          "$mod, H, hyprtasking:if_active, hyprtasking:move left"
+          "$mod, J, hyprtasking:if_active, hyprtasking:move down"
+          "$mod, K, hyprtasking:if_active, hyprtasking:move up"
+          "$mod, L, hyprtasking:if_active, hyprtasking:move right"
         ];
 
         input = {
@@ -146,6 +157,26 @@ in {
 
         ecosystem = {
           no_update_news = true;
+        };
+
+        plugin = {
+          hyprtasking = {
+            layout = "grid";
+            gap_size = 20;
+            border_size = 4;
+            exit_on_hovered = false;
+            grid = {
+              rows = 3;
+              cols = 3;
+              loop = false;
+            };
+            gestures = {
+              enabled = true;
+              open_fingers = 4;    # 4-finger swipe up/down to open/close
+              open_positive = true; # swipe up = open, swipe down = close
+              move_fingers = 3;    # 3-finger swipe to move between workspaces when open
+            };
+          };
         };
 
       };
