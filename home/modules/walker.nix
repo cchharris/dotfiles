@@ -8,9 +8,9 @@ in {
     enable = lib.mkEnableOption "Walker application launcher";
   };
 
-  config = lib.mkIf cfg.enable {
-    imports = [ inputs.walker.homeManagerModules.default ];
+  imports = [ inputs.walker.homeManagerModules.default ];
 
+  config = lib.mkIf cfg.enable {
     programs.walker = {
       enable = true;
       runAsService = true;
