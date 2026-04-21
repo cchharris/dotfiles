@@ -39,7 +39,9 @@ in {
         };
       };
 
-      theme.style = ''
+      config.theme = "catppuccin-mocha";
+
+      themes."catppuccin-mocha".style = ''
         * {
           all: unset;
           font-family: "SauceCodePro Nerd Font", monospace;
