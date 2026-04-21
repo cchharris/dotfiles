@@ -20,7 +20,7 @@ local function resolve_unity_path()
 
     -- Walk up from cwd to find ProjectSettings/ProjectVersion.txt
     local dir = vim.fn.getcwd()
-    while dir ~= "/" do
+    while dir ~= "/" and not dir:match("^%a:[\\/]?$") do
         local version_file = dir .. "/ProjectSettings/ProjectVersion.txt"
         local f = io.open(version_file, "r")
         if f then
