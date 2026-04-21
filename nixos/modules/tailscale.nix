@@ -13,5 +13,9 @@ in {
 
     # Open firewall for Tailscale
     networking.firewall.checkReversePath = "loose";
+
+    environment.systemPackages = with pkgs; [
+      trayscale  # GTK4 systray applet for Tailscale
+    ];
   };
 }

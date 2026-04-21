@@ -70,6 +70,7 @@ in {
 
         exec-once = [
           "hyprpanel"
+          "trayscale --hide-window"
           "wl-clipboard-history -t"
           "wl-paste --watch cliphist store"
           "rm \"$HOME/.cache/cliphist/db\""
