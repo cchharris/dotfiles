@@ -182,6 +182,21 @@ in {
     # Hyprlock configuration
     programs.hyprlock.enable = true;
 
+    # GTK dark theme (Catppuccin Mocha)
+    gtk = {
+      enable = true;
+      theme = {
+        name = "catppuccin-mocha-blue-standard+default";
+        package = pkgs.catppuccin-gtk.override {
+          accents = [ "blue" ];
+          variant = "mocha";
+        };
+      };
+    };
+
+    # Tell XDG portal (and apps that query it) to prefer dark mode
+    dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
+
     # Wayland environment variable
     home.sessionVariables.NIXOS_OZONE_WL = "1";
   };
