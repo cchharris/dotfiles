@@ -11,7 +11,7 @@
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    hyprland.url = "github:hyprwm/Hyprland";
+    hyprland.url = "github:hyprwm/Hyprland/v0.54.3";
     hyprtasking = {
       url = "github:raybbian/hyprtasking";
       inputs.hyprland.follows = "hyprland";
