@@ -122,6 +122,9 @@ in {
           "$mod+SHIFT, right, movetoworkspace, +1"
           "$mod+SHIFT, left, movetoworkspace, -1"
 
+          # Hyprtasking overlay
+          "$mod, tab, hyprtasking:toggle, cursor"
+
         ];
 
         input = {
