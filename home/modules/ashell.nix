@@ -63,7 +63,7 @@ in {
         };
 
         appearance = {
-          style         = "Islands";
+          style         = "Solid";
           primary_color = "#89b4fa";   # Catppuccin Mocha blue
           success_color = "#a6e3a1";   # green
           text_color    = "#cdd6f4";   # text
