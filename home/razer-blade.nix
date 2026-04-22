@@ -27,7 +27,6 @@
       nvidiaEnvVars = true;  # needed for VA-API and GLX on NVIDIA Optimus
       # nvidiaGbmBackend intentionally off — Optimus uses Intel for display output
       monitorScale = "1.6";
-      xwaylandForceZeroScaling = false;  # allow Hyprland to upscale XWayland apps to 1.6x (Edge forces XWayland on NVIDIA)
     };
     hyprpanel.enable = true;
     walker.enable = true;
