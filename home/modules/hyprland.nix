@@ -8,11 +8,6 @@ in {
     enable = lib.mkEnableOption "Hyprland user configuration";
     nvidiaEnvVars = lib.mkEnableOption "NVIDIA Wayland env vars (LIBVA, GLX, NVD — needed on all NVIDIA setups)";
     nvidiaGbmBackend = lib.mkEnableOption "Force GBM backend to nvidia-drm (single GPU only, breaks Optimus)";
-    xwaylandForceZeroScaling = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = "Prevent Hyprland from upscaling XWayland apps (keeps them sharp at 1x). Disable on HiDPI to let Hyprland scale XWayland apps to the correct physical size.";
-    };
     monitorScale = lib.mkOption {
       type = lib.types.str;
       default = "1";
@@ -153,7 +148,7 @@ in {
         };
 
         xwayland = {
-          force_zero_scaling = cfg.xwaylandForceZeroScaling;
+          force_zero_scaling = true;
         };
 
         # GTX 1080 (Pascal) has hardware cursor issues under Wayland/Hyprland
