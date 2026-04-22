@@ -8,7 +8,7 @@
     ./modules/terminal.nix
     ./modules/git.nix
     ./modules/hyprland.nix
-    ./modules/hyprpanel.nix
+    ./modules/ashell.nix
     ./modules/walker.nix
   ];
 
@@ -27,7 +27,7 @@
       nvidiaEnvVars = true;
       nvidiaGbmBackend = true;  # single GPU, no Optimus
     };
-    hyprpanel.enable = true;
+    ashell.enable = true;
     walker.enable = true;
   };
 

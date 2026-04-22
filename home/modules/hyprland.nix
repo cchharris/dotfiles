@@ -28,16 +28,13 @@ in {
       nautilus
       wl-clipboard
       wofi
-      pavucontrol   # volume mixer (hyprpanel volume widget → open mixer)
-      playerctl     # MPRIS media control (hyprpanel media widget)
+      pavucontrol   # volume mixer (ashell audio → open mixer)
+      playerctl     # MPRIS media control (ashell media player widget)
       grim          # screenshot tool
       slurp         # region selection for screenshots
       swappy        # screenshot annotation
       wf-recorder   # screen recording
-      dart-sass     # required by HyprPanel for CSS compilation
-      python3       # HyprPanel bluetooth scripts
-      gpustat       # HyprPanel GPU monitoring widget
-      btop          # opens when clicking HyprPanel CPU/RAM widgets
+      btop          # system monitor
     ];
 
     # Hyprland configuration
@@ -77,7 +74,7 @@ in {
         ];
 
         exec-once = [
-          "hyprpanel"
+          "ashell"
           "trayscale --hide-window"
           "wl-clipboard-history -t"
           "wl-paste --watch cliphist store"

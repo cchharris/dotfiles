@@ -8,7 +8,7 @@
     ./modules/terminal.nix
     ./modules/git.nix
     ./modules/hyprland.nix
-    ./modules/hyprpanel.nix
+    ./modules/ashell.nix
     ./modules/walker.nix
   ];
 
@@ -28,7 +28,7 @@
       # nvidiaGbmBackend intentionally off — Optimus uses Intel for display output
       monitorScale = "1.6";
     };
-    hyprpanel.enable = true;
+    ashell.enable = true;
     walker.enable = true;
   };
 
