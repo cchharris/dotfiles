@@ -8,6 +8,11 @@ in {
     enable = lib.mkEnableOption "Hyprland user configuration";
     nvidiaEnvVars = lib.mkEnableOption "NVIDIA Wayland env vars (LIBVA, GLX, NVD — needed on all NVIDIA setups)";
     nvidiaGbmBackend = lib.mkEnableOption "Force GBM backend to nvidia-drm (single GPU only, breaks Optimus)";
+    monitorScale = lib.mkOption {
+      type = lib.types.str;
+      default = "1";
+      description = "Monitor scale factor (e.g. \"1\", \"1.5\", \"2\")";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -54,7 +59,7 @@ in {
         # Run `hyprctl monitors` or check /sys/class/drm/ for connector name.
         # Use "preferred" to let the driver negotiate — replace once stable.
         monitor = [
-          ",preferred,auto,1"
+          ",preferred,auto,${cfg.monitorScale}"
         ];
 
         "$terminal" = "ghostty";
