@@ -8,6 +8,10 @@ let
   # Edge appends --ozone-platform=x11 during its own GPU-detection relaunch phase,
   # overriding flags set in commandLineArgs. Wrapping the binary and appending
   # --ozone-platform=wayland *last* ensures it wins.
+  #
+  # symlinkJoin alone isn't enough: the .desktop files contain hardcoded absolute
+  # paths to the base package's bin, bypassing the outer wrapper. We patch them
+  # to point at $out/bin/microsoft-edge instead.
   edgePackage =
     let
       base = pkgs.microsoft-edge.override {
@@ -25,6 +29,11 @@ let
         postBuild = ''
           wrapProgram $out/bin/microsoft-edge \
             --append-flags "--ozone-platform=wayland"
+          for f in $out/share/applications/*.desktop; do
+            cp --remove-destination "$(readlink -f "$f")" "$f"
+            substituteInPlace "$f" \
+              --replace-fail "${base}/bin/microsoft-edge" "$out/bin/microsoft-edge"
+          done
         '';
       };
 in {
