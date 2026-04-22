@@ -26,7 +26,7 @@
       enable = true;
       nvidiaEnvVars = true;  # needed for VA-API and GLX on NVIDIA Optimus
       # nvidiaGbmBackend intentionally off — Optimus uses Intel for display output
-      monitorScale = "1.5";
+      monitorScale = "1.6";
     };
     hyprpanel.enable = true;
     walker.enable = true;
