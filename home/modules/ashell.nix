@@ -6,15 +6,15 @@ let
 
   # Exit 0 if connected (ashell uses exit code for CustomButton active state)
   expressvpnStatus = pkgs.writeShellScript "expressvpn-status" ''
-    ${pkgs.expressvpn}/bin/expressvpn status 2>/dev/null | grep -qi "connected"
+    expressvpn status 2>/dev/null | grep -qi "connected"
   '';
 
   # Toggles ExpressVPN on/off
   expressvpnToggle = pkgs.writeShellScript "expressvpn-toggle" ''
-    if ${pkgs.expressvpn}/bin/expressvpn status 2>/dev/null | grep -qi "connected"; then
-      ${pkgs.expressvpn}/bin/expressvpn disconnect
+    if expressvpn status 2>/dev/null | grep -qi "connected"; then
+      expressvpn disconnect
     else
-      ${pkgs.expressvpn}/bin/expressvpn connect
+      expressvpn connect
     fi
   '';
 
