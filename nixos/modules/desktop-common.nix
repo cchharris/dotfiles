@@ -7,6 +7,11 @@ let
 in {
   options.cchharris.nixos.desktop-common = {
     enable = lib.mkEnableOption "common desktop environment features";
+    edgeScaleFactor = lib.mkOption {
+      type = lib.types.str;
+      default = "";
+      description = "Force device scale factor for Edge (e.g. \"1.6\"). Empty string disables the flag.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -61,7 +66,7 @@ in {
           "--use-angle=vulkan"
           "--enable-features=Vulkan"
           "--disable-gpu-memory-buffer-video-frames"
-        ];
+        ] ++ lib.optional (cfg.edgeScaleFactor != "") "--force-device-scale-factor=${cfg.edgeScaleFactor}";
       })
       discord
       bluez-tools  # bt-device/bt-adapter required by HyprPanel bluetooth menu

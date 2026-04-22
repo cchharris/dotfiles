@@ -6,6 +6,8 @@
   networking.hostName = "razer-blade";
 
   # Enable all features for this machine
+  cchharris.nixos.desktop-common.edgeScaleFactor = "1.6";
+
   cchharris.nixos = {
     nvidia = {
       enable = true;
