@@ -55,7 +55,7 @@ in {
           bluetooth_more_cmd    = "blueman-manager";
           wifi_more_cmd         = "nm-connection-editor";
           battery_format              = "IconAndPercentage";
-          audio_indicator_format      = "IconAndText";
+          audio_indicator_format      = "IconAndPercentage";
           microphone_indicator_format = "Icon";
           network_indicator_format    = "Icon";
           bluetooth_indicator_format  = "Icon";
