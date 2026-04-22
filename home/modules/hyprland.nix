@@ -182,20 +182,20 @@ in {
     # Hyprlock configuration
     programs.hyprlock.enable = true;
 
-    # GTK dark theme (Catppuccin Mocha)
+    # GTK dark theme
     gtk = {
       enable = true;
       theme = {
-        name = "catppuccin-mocha-blue-standard+default";
-        package = pkgs.catppuccin-gtk.override {
-          accents = [ "blue" ];
-          variant = "mocha";
-        };
+        name = "adw-gtk3-dark";
+        package = pkgs.adw-gtk3;
       };
     };
 
     # Tell XDG portal (and apps that query it) to prefer dark mode
     dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
+
+    # Force dark GTK theme for apps that ignore the portal (Edge under XWayland, 1Password)
+    home.sessionVariables.GTK_THEME = "adw-gtk3-dark";
 
     # Wayland environment variable
     home.sessionVariables.NIXOS_OZONE_WL = "1";
