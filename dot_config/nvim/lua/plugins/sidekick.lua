@@ -115,6 +115,12 @@ end
 
 return {
     "folke/sidekick.nvim",
+    init = function()
+        vim.api.nvim_create_autocmd("TermOpen", {
+            pattern = "*claude",
+            callback = function() vim.wo.winfixbuf = true end,
+        })
+    end,
     opts = {
         cli = {
             claude = is_windows and {

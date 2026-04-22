@@ -23,6 +23,7 @@ return {
             open_on_start = false,
             close_on_exit = 'success',
         },
+        disable_template_modules = { "vscode$" },
     },
     keys = {
         {
