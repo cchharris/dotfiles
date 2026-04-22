@@ -4,16 +4,9 @@
 let
   cfg = config.cchharris.home.ashell;
 
-  # Polls expressvpn status every 5s and emits Waybar-format JSON
-  expressvpnWatch = pkgs.writeShellScript "expressvpn-watch" ''
-    while true; do
-      if ${pkgs.expressvpn}/bin/expressvpn status 2>/dev/null | grep -qi "connected"; then
-        printf '{"text":"connected","alt":"connected"}\n'
-      else
-        printf '{"text":"disconnected","alt":"disconnected"}\n'
-      fi
-      sleep 5
-    done
+  # Exit 0 if connected (ashell uses exit code for CustomButton active state)
+  expressvpnStatus = pkgs.writeShellScript "expressvpn-status" ''
+    ${pkgs.expressvpn}/bin/expressvpn status 2>/dev/null | grep -qi "connected"
   '';
 
   # Toggles ExpressVPN on/off
@@ -62,20 +55,11 @@ in {
         modules = {
           left   = [ [ "appLauncher" "Updates" "Workspaces" ] ];
           center = [ "WindowTitle" ];
-          right  = [ "MediaPlayer" "SystemInfo" [ "Tray" "ExpressVpn" "Tempo" "Privacy" "Settings" ] ];
+          right  = [ "MediaPlayer" "SystemInfo" [ "Tray" "Tempo" "Privacy" "Settings" ] ];
         };
 
         CustomModule = [
           { name = "appLauncher"; icon = "󱗼"; command = "walker"; }
-          {
-            name       = "ExpressVpn";
-            type       = "Button";
-            icon       = "󰌿";                         # default: unlocked (disconnected)
-            command    = "${expressvpnToggle}";
-            listen_cmd = "${expressvpnWatch}";
-            icons      = { "connected" = "󰌾"; "disconnected" = "󰌿"; };
-            alert      = "disconnected";               # red dot when VPN is off
-          }
         ];
 
         updates = {
@@ -119,6 +103,16 @@ in {
           network_indicator_format    = "Icon";
           bluetooth_indicator_format  = "Icon";
           indicators = [ "Audio" "Microphone" "Bluetooth" "Network" "Battery" ];
+
+          CustomButton = [
+            {
+              name           = "ExpressVPN";
+              icon           = "󰦝";
+              command        = "${expressvpnToggle}";
+              status_command = "${expressvpnStatus}";
+              tooltip        = "Toggle ExpressVPN";
+            }
+          ];
         };
 
         appearance = {
