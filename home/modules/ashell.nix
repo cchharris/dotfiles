@@ -96,7 +96,7 @@ in {
           audio_sinks_more_cmd   = "pavucontrol -t 3";
           audio_sources_more_cmd = "pavucontrol -t 4";
           bluetooth_more_cmd     = "blueman-manager";
-          wifi_more_cmd          = "nm-connection-editor";
+          wifi_more_cmd          = "ghostty -e nmtui";
           battery_format              = "IconAndPercentage";
           audio_indicator_format      = "IconAndPercentage";
           microphone_indicator_format = "Icon";
