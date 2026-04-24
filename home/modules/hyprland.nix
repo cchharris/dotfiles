@@ -35,6 +35,7 @@ in {
       swappy        # screenshot annotation
       wf-recorder   # screen recording
       btop          # system monitor
+      brightnessctl # backlight control
     ];
 
     # Hyprland configuration
@@ -128,6 +129,10 @@ in {
 
           # Hyprtasking overlay
           "$mod, tab, hyprtasking:toggle, cursor"
+
+          # Brightness
+          ", XF86MonBrightnessUp,   exec, brightnessctl set +5%"
+          ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
 
         ];
 
