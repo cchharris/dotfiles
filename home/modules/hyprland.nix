@@ -75,8 +75,8 @@ in {
 
         exec-once = [
           "elephant"
-          "ashell"
           "trayscale --hide-window"
+          "ashell"
           "wl-clipboard-history -t"
           "wl-paste --watch cliphist store"
           "rm \"$HOME/.cache/cliphist/db\""
