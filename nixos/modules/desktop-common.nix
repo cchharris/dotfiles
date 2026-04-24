@@ -59,9 +59,8 @@ in {
       (microsoft-edge.override {
         commandLineArgs = [
           "--ozone-platform=wayland"
-          "--use-angle=vulkan"
-          "--enable-features=Vulkan"
           "--disable-gpu-memory-buffer-video-frames"
+          "--disable-gpu"
         ];
       })
       discord
