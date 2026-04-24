@@ -32,6 +32,7 @@
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
       modules = [
+        { nixpkgs.overlays = [ (final: prev: { expressvpn = final.callPackage ./pkgs/expressvpn.nix {}; }) ]; }
         ./hardware/razer-blade.nix
         ./nixos/modules/defaults.nix
         ./nixos/modules/desktop-common.nix
@@ -58,6 +59,7 @@
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
       modules = [
+        { nixpkgs.overlays = [ (final: prev: { expressvpn = final.callPackage ./pkgs/expressvpn.nix {}; }) ]; }
         ./hardware/hobbynix.nix
         ./nixos/modules/defaults.nix
         ./nixos/modules/desktop-common.nix

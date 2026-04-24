@@ -67,9 +67,26 @@
 
   # ExpressVPN (host-specific service)
   services.expressvpn.enable = true;
+  systemd.tmpfiles.rules = [
+    "r  /opt/expressvpn - - - - -"
+    "d  /opt/expressvpn          0755 root root -"
+    "L+ /opt/expressvpn/bin      - - - - ${pkgs.expressvpn}/bin"
+    "L+ /opt/expressvpn/lib      - - - - ${pkgs.expressvpn}/lib"
+    "L+ /opt/expressvpn/plugins  - - - - ${pkgs.expressvpn}/plugins"
+    "L+ /opt/expressvpn/qml      - - - - ${pkgs.expressvpn}/qml"
+    "L+ /opt/expressvpn/share    - - - - ${pkgs.expressvpn}/share"
+    "d  /opt/expressvpn/etc      0755 root root -"
+  ];
+  users.groups.expressvpn = {};
+  users.groups.expressvpnhnsd = {};
+  users.users.expressvpn = { isSystemUser = true; group = "expressvpn"; };
+  systemd.services.expressvpn.path = with pkgs; [ iptables iproute2 wireguard-tools kmod openresolv coreutils gnugrep gawk ];
+  environment.etc."opt/edge/native-messaging-hosts/com.expressvpn.helper.json".source =
+    "${pkgs.expressvpn}/share/com.expressvpn.helper.json";
   environment.systemPackages = with pkgs; [
     bluez      # Bluetooth stack (bluetoothctl + utils; equivalent to bluez + bluez-utils on Arch)
     expressvpn
+    iptables
     unityhub   # Unity Game Engine version manager
     dotnet-sdk # .NET SDK (required for OmniSharp/C# LSP)
     (pkgs.callPackage ../../pkgs/nvimunity.nix {})

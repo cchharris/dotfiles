@@ -61,6 +61,19 @@
 
   # ExpressVPN
   services.expressvpn.enable = true;
+  systemd.tmpfiles.rules = [
+    "r  /opt/expressvpn - - - - -"
+    "d  /opt/expressvpn          0755 root root -"
+    "L+ /opt/expressvpn/bin      - - - - ${pkgs.expressvpn}/bin"
+    "L+ /opt/expressvpn/lib      - - - - ${pkgs.expressvpn}/lib"
+    "L+ /opt/expressvpn/plugins  - - - - ${pkgs.expressvpn}/plugins"
+    "L+ /opt/expressvpn/qml      - - - - ${pkgs.expressvpn}/qml"
+    "L+ /opt/expressvpn/share    - - - - ${pkgs.expressvpn}/share"
+    "d  /opt/expressvpn/etc      0755 root root -"
+  ];
+  users.groups.expressvpn = {};
+  users.groups.expressvpnhnsd = {};
+  users.users.expressvpn = { isSystemUser = true; group = "expressvpn"; };
   environment.systemPackages = with pkgs; [ expressvpn ];
 
   # System state version

@@ -82,7 +82,7 @@
   users.users.cchharris = {
     isNormalUser = true;
     description = "Christopher Harris";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "expressvpn" ];
     packages = with pkgs; [ ];
   };
 }

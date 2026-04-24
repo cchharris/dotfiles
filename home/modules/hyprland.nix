@@ -74,12 +74,14 @@ in {
         ];
 
         exec-once = [
+          "elephant"
           "ashell"
           "trayscale --hide-window"
           "wl-clipboard-history -t"
           "wl-paste --watch cliphist store"
           "rm \"$HOME/.cache/cliphist/db\""
           "1password --silent"
+          "expressvpn-client"
         ];
 
         "$mod" = "SUPER";
