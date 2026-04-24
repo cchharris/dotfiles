@@ -60,7 +60,6 @@ in {
         commandLineArgs = [
           "--ozone-platform=wayland"
           "--disable-gpu-memory-buffer-video-frames"
-          "--disable-gpu"
         ];
       })
       discord
