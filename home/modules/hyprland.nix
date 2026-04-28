@@ -3,6 +3,7 @@
 
 let
   cfg = config.cchharris.home.hyprland;
+
 in {
   options.cchharris.home.hyprland = {
     enable = lib.mkEnableOption "Hyprland user configuration";
@@ -36,6 +37,7 @@ in {
       wf-recorder   # screen recording
       btop          # system monitor
       brightnessctl # backlight control
+      adwaita-icon-theme # icons for swayosd custom OSD
       swaynotificationcenter
       swayosd
     ];
@@ -43,10 +45,10 @@ in {
     # Hyprland configuration
     wayland.windowManager.hyprland = {
       enable = true;
-      package = inputs.hyprland.packages.${pkgs.system}.hyprland;
-      portalPackage = inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
+      package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+      portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
       plugins = [
-        inputs.hyprtasking.packages.${pkgs.system}.hyprtasking
+        inputs.hyprtasking.packages.${pkgs.stdenv.hostPlatform.system}.hyprtasking
       ];
       systemd = {
         enable = false;
@@ -137,6 +139,7 @@ in {
           # Brightness (swayosd-client shows OSD overlay)
           ", XF86MonBrightnessUp,   exec, swayosd-client --brightness raise"
           ", XF86MonBrightnessDown, exec, swayosd-client --brightness lower"
+
 
           # Volume (swayosd-client shows OSD overlay)
           ", XF86AudioRaiseVolume,  exec, swayosd-client --output-volume raise"

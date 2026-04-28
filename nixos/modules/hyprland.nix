@@ -16,8 +16,8 @@ in {
     programs.hyprland = {
       enable = true;
       xwayland.enable = true;
-      package = inputs.hyprland.packages.${pkgs.system}.hyprland;
-      portalPackage = inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
+      package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+      portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
     };
 
     programs.hyprlock.enable = true;
@@ -37,7 +37,7 @@ in {
     };
 
     environment.etc."greetd/environments".text = ''
-      ${inputs.hyprland.packages.${pkgs.system}.hyprland}/bin/start-hyprland
+      ${inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland}/bin/start-hyprland
     '';
 
     environment.etc."greetd/gtkgreet.css".text = ''
@@ -94,7 +94,7 @@ in {
     # XDG portal (required for screen sharing in Discord/Firefox/browsers on Wayland)
     xdg.portal = {
       enable = true;
-      extraPortals = [ inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland ];
+      extraPortals = [ inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland ];
     };
 
     # PAM configuration for hyprlock
