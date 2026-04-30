@@ -18,7 +18,7 @@ in {
       withRuby = false;
       withPython3 = false;
       plugins = with pkgs.vimPlugins; [
-        (nvim-treesitter.withPlugins (_: pkgs.tree-sitter.allGrammars))
+        nvim-treesitter.withAllGrammars
       ];
     };
 
