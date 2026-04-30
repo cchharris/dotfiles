@@ -78,8 +78,11 @@ in {
       bat          # Better cat
       fd           # Better find
       fzf          # Fuzzy finder
+      ripgrep      # Better grep
       htop         # Process viewer
       tree         # Directory tree
+      dust         # Better du
+      tldr         # Simplified man pages
       claude-code  # Claude AI assistant CLI
       gcc          # C compiler
     ];
