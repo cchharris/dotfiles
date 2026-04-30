@@ -64,6 +64,11 @@ local keys = {
         function() require("sidekick.cli").toggle({ name = "claude", focus = true }) end,
         desc = "<Sidekick>  Toggle Claude",
     },
+    {
+        "<leader>sF",
+        function() require("config.sidekick").toggle_full() end,
+        desc = "<Sidekick>  Toggle Claude fullscreen",
+    },
     -- Terminal-mode keybindings: \ prefix to forward Claude Code shortcuts
     -- that neovim/terminal intercepts before they reach the Claude process.
     {

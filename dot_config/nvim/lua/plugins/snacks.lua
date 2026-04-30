@@ -11,6 +11,7 @@ local sections = vim.tbl_filter(function(v) return v ~= nil end, {
     { pane = 1, icon = "󰦛 ", key = "s", desc = "Restore Session", action = ":lua require('auto-session').restore_session()",
       enabled = function() return require('auto-session').session_exists_for_cwd() end },
     { pane = 1, icon = "󰒲 ", key = "L", desc = "Lazy",            action = ":Lazy", enabled = package.loaded.lazy ~= nil },
+    { pane = 1, icon = "* ", icon_hl = "SnacksDashboardClaude", key = "a", desc = "Claude", action = function() require("config.sidekick").toggle_full() end },
     { pane = 1, icon = "󰈆 ", key = "q", desc = "Quit",            action = ":qa" },
     { pane = 1, section = "startup" },
     function()
@@ -77,10 +78,30 @@ return {
     lazy = false,
     ---@type snacks.Config
     config = function()
+        local claude_orange = "#DA7756"
+        vim.api.nvim_set_hl(0, "SnacksDashboardClaude", { fg = claude_orange })
+        vim.api.nvim_create_autocmd("ColorScheme", {
+            callback = function()
+                vim.api.nvim_set_hl(0, "SnacksDashboardClaude", { fg = claude_orange })
+            end,
+        })
+
         require("snacks").setup({
             bigfile      = { enabled = true },
             bufdelete    = { enabled = true },
-            dashboard    = { enabled = true, sections = sections, width = 120 },
+            dashboard    = {
+                enabled = true,
+                sections = sections,
+                width = 120,
+                formats = {
+                    icon = function(item)
+                        if item.file and (item.icon == "file" or item.icon == "directory") then
+                            return Snacks.dashboard.icon(item.file, item.icon)
+                        end
+                        return { item.icon, width = 2, hl = item.icon_hl or "icon" }
+                    end,
+                },
+            },
             explorer     = { enabled = true },
             indent       = { enabled = false },
             input        = { enabled = true },
