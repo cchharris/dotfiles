@@ -194,8 +194,8 @@ in {
             bg_color = "0xff000000";
             exit_on_hovered = false;
             grid = {
-              rows = 3;
-              cols = 3;
+              rows = 1;
+              cols = 9;
               loop = false;
             };
             gestures = {
