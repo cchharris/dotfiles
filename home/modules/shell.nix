@@ -36,6 +36,9 @@ in {
       };
 
       initContent = ''
+        # Raise file descriptor limit (macOS launchd default is 256)
+        ulimit -n 65536
+
         # Additional shell initialization
         bindkey -e  # Emacs keybindings
 

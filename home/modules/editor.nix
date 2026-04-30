@@ -17,6 +17,7 @@ in {
       withNodeJs = true;
       withRuby = false;
       withPython3 = false;
+      sideloadInitLua = true;
       plugins = with pkgs.vimPlugins; [
         nvim-treesitter.withAllGrammars
       ];
@@ -45,12 +46,14 @@ in {
       clang-tools                   # C / C++
       cmake-language-server         # CMake
       ruff                          # Python (linter + LSP)
+      pyrefly                       # Python
       tailwindcss-language-server   # Tailwind CSS
       dockerfile-language-server        # Docker
       vim-language-server           # Vimscript
       buf                           # Protobuf (buf_ls)
       zls                           # Zig
       omnisharp-roslyn              # C#
+      rust-analyzer                 # Rust
 
       # Formatters / linters
       stylua
