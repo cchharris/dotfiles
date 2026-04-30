@@ -59,7 +59,7 @@ in {
       (microsoft-edge.override {
         commandLineArgs = [
           "--ozone-platform=wayland"
-          "--disable-gpu-memory-buffer-video-frames"
+          "--enable-features=VaapiOnNvidiaGPUs"
         ];
       })
       discord
