@@ -98,6 +98,10 @@ in {
     programs.fzf = {
       enable = true;
       enableZshIntegration = true;
+      defaultCommand = "rg --files --hidden --follow --glob '!.git'";
+      defaultOptions = [ "--height=40%" "--layout=reverse" "--border" ];
+      changeDirWidgetOptions = [ "--preview 'eza --tree --color=always {} | head -200'" ];
+      fileWidgetOptions = [ "--preview 'bat -n --color=always {}'" ];
     };
 
     programs.bat = {
