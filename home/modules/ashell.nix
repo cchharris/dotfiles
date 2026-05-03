@@ -25,7 +25,8 @@ let
     latest=$(${pkgs.curl}/bin/curl -sf --max-time 10 \
       "https://api.github.com/repos/NixOS/nixpkgs/commits/nixos-unstable" \
       | ${pkgs.jq}/bin/jq -r '.sha' 2>/dev/null) || exit 0
-    [ -n "$latest" ] && [ "$current" != "$latest" ] && echo "nixpkgs update available"
+    [ -n "$latest" ] && [ "$current" != "$latest" ] && \
+      echo "nixpkgs ''${current:0:7} -> ''${latest:0:7}"
   '';
 
   # Opens a terminal and runs flake update + rebuild
