@@ -34,8 +34,8 @@ let
     ghostty -e bash -c '
       cd ~/dotfiles
       nix flake update
-      sudo nixos-rebuild switch --flake .#razer-blade
-      echo "Done — press enter to exit"
+      sudo nixos-rebuild boot --flake .#razer-blade
+      echo "Done — reboot to apply. Press enter to exit"
       read
     '
   '';
