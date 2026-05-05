@@ -9,6 +9,7 @@ in {
     enable = lib.mkEnableOption "Hyprland user configuration";
     nvidiaEnvVars = lib.mkEnableOption "NVIDIA Wayland env vars (LIBVA, GLX, NVD — needed on all NVIDIA setups)";
     nvidiaGbmBackend = lib.mkEnableOption "Force GBM backend to nvidia-drm (single GPU only, breaks Optimus)";
+    polychromaticAutostart = lib.mkEnableOption "Autostart polychromatic-tray-applet to apply saved Razer lighting on login";
     monitorScale = lib.mkOption {
       type = lib.types.str;
       default = "1";
@@ -82,13 +83,15 @@ in {
           "elephant"
           "swaync"
           "swayosd-server"
-          "trayscale --hide-window"
+          "pgrep trayscale || trayscale --hide-window"
           "ashell"
           "wl-clipboard-history -t"
           "wl-paste --watch cliphist store"
           "rm \"$HOME/.cache/cliphist/db\""
           "1password --silent"
           "expressvpn-client"
+        ] ++ lib.optionals cfg.polychromaticAutostart [
+          "polychromatic-tray-applet"
         ];
 
         "$mod" = "SUPER";
