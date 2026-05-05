@@ -11,6 +11,19 @@ in {
   config = lib.mkIf cfg.enable {
     services.tailscale.enable = true;
 
+    # Prevent Tailscale from taking exclusive DNS control so ExpressVPN can manage DNS when active
+    systemd.services.tailscale-disable-dns = {
+      description = "Disable Tailscale DNS management";
+      after = [ "tailscaled.service" ];
+      wants = [ "tailscaled.service" ];
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStart = "${pkgs.tailscale}/bin/tailscale set --accept-dns=false";
+      };
+    };
+
     # Open firewall for Tailscale
     networking.firewall.checkReversePath = "loose";
 

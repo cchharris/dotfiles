@@ -32,7 +32,23 @@
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
       modules = [
-        { nixpkgs.overlays = [ (final: prev: { expressvpn = final.callPackage ./pkgs/expressvpn.nix {}; }) ]; }
+        { nixpkgs.overlays = [ (final: prev: {
+            expressvpn = final.callPackage ./pkgs/expressvpn.nix {};
+            # egl-wayland2 1.0.1 returns fd 0 (stdin) instead of -1 on syncobj
+            # creation failure, causing GLFenceEGL::ServerWait() to SIGSEGV in
+            # Chromium-based browsers on NVIDIA Optimus Wayland. Fix is commit
+            # aebd876 ("Return invalid fd on syncobj creation failure"), merged
+            # Apr 28 2026 into main but not yet tagged as a release.
+            egl-wayland2 = prev.egl-wayland2.overrideAttrs (_: {
+              version = "1.0.2-unstable-2026-04-30";
+              src = prev.fetchFromGitHub {
+                owner = "NVIDIA";
+                repo = "egl-wayland2";
+                rev = "6d3d235808959a62259964c2dbd01ece594c1e7f";
+                hash = "sha256-eFLxJ2SqnQjKfxwvbxMXcVDKPrdTpAuPE3H+SqDuSI4=";
+              };
+            });
+        }) ]; }
         ./hardware/razer-blade.nix
         ./nixos/modules/defaults.nix
         ./nixos/modules/desktop-common.nix
@@ -59,7 +75,18 @@
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
       modules = [
-        { nixpkgs.overlays = [ (final: prev: { expressvpn = final.callPackage ./pkgs/expressvpn.nix {}; }) ]; }
+        { nixpkgs.overlays = [ (final: prev: {
+            expressvpn = final.callPackage ./pkgs/expressvpn.nix {};
+            egl-wayland2 = prev.egl-wayland2.overrideAttrs (_: {
+              version = "1.0.2-unstable-2026-04-30";
+              src = prev.fetchFromGitHub {
+                owner = "NVIDIA";
+                repo = "egl-wayland2";
+                rev = "6d3d235808959a62259964c2dbd01ece594c1e7f";
+                hash = "sha256-eFLxJ2SqnQjKfxwvbxMXcVDKPrdTpAuPE3H+SqDuSI4=";
+              };
+            });
+        }) ]; }
         ./hardware/hobbynix.nix
         ./nixos/modules/defaults.nix
         ./nixos/modules/desktop-common.nix

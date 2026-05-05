@@ -74,6 +74,14 @@
   users.groups.expressvpn = {};
   users.groups.expressvpnhnsd = {};
   users.users.expressvpn = { isSystemUser = true; group = "expressvpn"; };
+  systemd.services.expressvpn.path = with pkgs; [ iptables iproute2 wireguard-tools kmod openresolv coreutils gnugrep gawk ];
+  systemd.services.expressvpn.serviceConfig = {
+    ExecStop = "${pkgs.expressvpn}/bin/expressvpn disconnect";
+    TimeoutStopSec = "30";
+  };
+  systemd.services.expressvpn.postStop = ''
+    ${pkgs.openresolv}/bin/resolvconf -d tun0.expressvpn 2>/dev/null || true
+  '';
   environment.systemPackages = with pkgs; [ expressvpn ];
 
   # System state version

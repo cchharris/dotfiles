@@ -73,6 +73,15 @@ EOF
     substituteInPlace $out/bin/openvpn-updown.sh \
       --replace-fail '/usr/bin/systemctl' 'systemctl'
 
+    # On NixOS, /etc/resolv.conf is a plain file managed by resolvconf (not a symlink to
+    # /run/resolvconf/resolv.conf), so the upstream symlink check never matches and DNS
+    # falls through to a direct overwrite that leaves no cleanup on crash. Drop the symlink
+    # requirement and use resolvconf whenever it is available in PATH (injected above).
+    substituteInPlace $out/bin/openvpn-updown.sh \
+      --replace-fail \
+        'elif [ $(realpath /etc/resolv.conf) = $resolvconf_link_path ] && hash resolvconf 2> /dev/null; then' \
+        'elif hash resolvconf 2>/dev/null; then'
+
     runHook postInstall
   '';
 

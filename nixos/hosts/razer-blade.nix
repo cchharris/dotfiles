@@ -85,6 +85,19 @@
   users.groups.expressvpnhnsd = {};
   users.users.expressvpn = { isSystemUser = true; group = "expressvpn"; };
   systemd.services.expressvpn.path = with pkgs; [ iptables iproute2 wireguard-tools kmod openresolv coreutils gnugrep gawk ];
+  systemd.services.expressvpn.serviceConfig = {
+    # Ask the daemon to disconnect gracefully before sending SIGTERM, so it can
+    # run its own iptables/routing teardown. 30s covers slow servers; SIGTERM/SIGKILL
+    # fire after that if the daemon is stuck.
+    ExecStop = "${pkgs.expressvpn}/bin/expressvpn disconnect";
+    TimeoutStopSec = "30";
+  };
+  # Safety-net cleanup that always runs, even after SIGKILL: remove the
+  # resolvconf entry the updown script adds so DNS is never left pointing at
+  # a dead VPN server.
+  systemd.services.expressvpn.postStop = ''
+    ${pkgs.openresolv}/bin/resolvconf -d tun0.expressvpn 2>/dev/null || true
+  '';
   environment.etc."opt/edge/native-messaging-hosts/com.expressvpn.helper.json".source =
     "${pkgs.expressvpn}/share/com.expressvpn.helper.json";
   environment.systemPackages = with pkgs; [

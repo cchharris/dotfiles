@@ -24,6 +24,14 @@ in {
     # Add user to openrazer group
     users.users.cchharris.extraGroups = [ "openrazer" ];
 
+    # openrazer's udev rules set GROUP="openrazer" on Razer USB devices but don't
+    # add TAG+="uaccess", which logind requires to hand the device fd to a Wayland
+    # compositor (Hyprland uses libseat → logind TakeDevice). Without it the kernel
+    # detects the device but Hyprland can't open the event node on first plug-in.
+    services.udev.extraRules = ''
+      SUBSYSTEM=="input", ATTRS{idVendor}=="1532", TAG+="uaccess", TAG+="seat"
+    '';
+
     # Windows Hello-style facial recognition via IR camera
     # IR camera is on /dev/video2 (USB interface 02, separate from RGB on interface 00)
     cchharris.nixos.howdy = {
