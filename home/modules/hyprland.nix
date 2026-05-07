@@ -71,6 +71,9 @@ in {
         env = [
           "XDG_SESSION_TYPE,wayland"
           "SSH_AUTH_SOCK,$HOME/.1password/agent.sock"
+          # ashell's units_from_locale_name strips .UTF-8 encoding only if bare;
+          # set bare en_US here (session-only) so it matches the "en_US" → Imperial branch
+          "LC_MEASUREMENT,en_US"
         ] ++ lib.optionals cfg.nvidiaEnvVars [
           "LIBVA_DRIVER_NAME,nvidia"
           "__GLX_VENDOR_LIBRARY_NAME,nvidia"

@@ -89,6 +89,7 @@ in {
 
         tempo = {
           clock_format = "%a %d %b %R";
+          weather_location = "Current";  # IP-based geolocation, no API key needed
         };
 
         # [settings] — ashell's own settings panel config

@@ -58,8 +58,10 @@ in {
     environment.systemPackages = with pkgs; [
       (microsoft-edge.override {
         commandLineArgs = [
-          "--ozone-platform=wayland"
-          "--enable-features=VaapiOnNvidiaGPUs"
+          # Force XWayland to rule out native Wayland as the crash source.
+          # Edge 147 crashes at 0xe489aca via GLib IPC dispatch on native
+          # Wayland regardless of GPU flags — testing X11 mode as workaround.
+          "--ozone-platform=x11"
         ];
       })
       discord

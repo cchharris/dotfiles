@@ -77,9 +77,15 @@ EOF
     # /run/resolvconf/resolv.conf), so the upstream symlink check never matches and DNS
     # falls through to a direct overwrite that leaves no cleanup on crash. Drop the symlink
     # requirement and use resolvconf whenever it is available in PATH (injected above).
+    # up) section uses "2> /dev/null" (space before /dev/null)
     substituteInPlace $out/bin/openvpn-updown.sh \
       --replace-fail \
         'elif [ $(realpath /etc/resolv.conf) = $resolvconf_link_path ] && hash resolvconf 2> /dev/null; then' \
+        'elif hash resolvconf 2>/dev/null; then'
+    # down) section uses "elif  " (two spaces) and "2>/dev/null" (no space) — different string, needs separate patch
+    substituteInPlace $out/bin/openvpn-updown.sh \
+      --replace-fail \
+        'elif  [ $(realpath /etc/resolv.conf) = $resolvconf_link_path ] && hash resolvconf 2>/dev/null; then' \
         'elif hash resolvconf 2>/dev/null; then'
 
     runHook postInstall

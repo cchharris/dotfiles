@@ -76,6 +76,7 @@
     ripgrep
     git
     fzf
+    bind  # provides dig, nslookup for DNS debugging
   ];
 
   # User account
