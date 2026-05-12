@@ -90,6 +90,26 @@ return {
                 end,
                 description = "<LSP>  Toggle diagnostic virtual lines"
             },
+            {
+                '<leader>ga',
+                function()
+                    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+                        local buf = vim.api.nvim_win_get_buf(win)
+                        if vim.bo[buf].filetype:match("^Diffview") then
+                            vim.cmd("DiffviewClose")
+                            return
+                        end
+                    end
+                    require("lazy").load({ plugins = { "diffview.nvim" } })
+                    local base = vim.trim(vim.fn.system("git merge-base HEAD origin/main"))
+                    if vim.v.shell_error ~= 0 then
+                        vim.cmd("DiffviewOpen")
+                    else
+                        vim.cmd("DiffviewOpen " .. base)
+                    end
+                end,
+                description = "<Diffview>  Toggle branch diff vs main",
+            },
         },
         -- Initial commands to bind, can also be a function that returns the list
         commands = commands,
