@@ -87,7 +87,8 @@ in {
       dust         # Better du
       tldr         # Simplified man pages
       claude-code  # Claude AI assistant CLI
-      gcc          # C compiler
+    ] ++ lib.optionals (!pkgs.stdenv.isDarwin) [
+      gcc          # C compiler (Linux only — on macOS it shadows Apple clang and breaks native module builds)
     ];
 
     # 1Password SSH agent
