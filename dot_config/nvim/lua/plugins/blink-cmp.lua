@@ -5,7 +5,6 @@ return {
         'rafamadriz/friendly-snippets',
         'MahanRahmati/blink-nerdfont.nvim',
         'Kaiser-Yang/blink-cmp-git',
-        'Kaiser-Yang/blink-cmp-avante',
         { 'mikavilpas/blink-ripgrep.nvim', dependencies = { 'nvim-lua/plenary.nvim' } },
         'L3MON4D3/LuaSnip',
         'onsails/lspkind.nvim',
@@ -193,7 +192,6 @@ return {
             -- elsewhere in your config, without redefining it, due to `opts_extend`
             sources = {
                 default = {
-                    'avante',
                     'git',
                     'lsp',
                     'path',
@@ -228,12 +226,6 @@ return {
                         name = 'Git',
                         max_items = 5,
                         score_offset = 0, -- We'll likely be searching by message/hash
-                        opts = {
-                        },
-                    },
-                    avante = {
-                        module = 'blink-cmp-avante',
-                        name = 'Avante',
                         opts = {
                         },
                     },
