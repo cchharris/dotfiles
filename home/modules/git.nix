@@ -35,8 +35,8 @@ in {
       # 1Password writes this file automatically; it's what routes the correct
       # key to each host (e.g. personal key for github.com vs work key).
       includes = lib.optionals pkgs.stdenv.isDarwin [ "~/.ssh/1Password/config" ];
-      matchBlocks."*" = {
-        extraOptions.IdentityAgent = opAgentSock;
+      settings."*" = {
+        IdentityAgent = opAgentSock;
       };
     };
 

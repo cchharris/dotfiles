@@ -46,11 +46,9 @@ in {
     # Hyprland configuration
     wayland.windowManager.hyprland = {
       enable = true;
+      configType = "hyprlang";
       package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
       portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
-      plugins = [
-        inputs.hyprtasking.packages.${pkgs.stdenv.hostPlatform.system}.hyprtasking
-      ];
       systemd = {
         enable = false;
         enableXdgAutostart = true;
@@ -139,9 +137,6 @@ in {
           "$mod+SHIFT, right, movetoworkspace, +1"
           "$mod+SHIFT, left, movetoworkspace, -1"
 
-          # Hyprtasking overlay
-          "$mod, tab, hyprtasking:toggle, cursor"
-
           # Brightness (swayosd-client shows OSD overlay)
           ", XF86MonBrightnessUp,   exec, swayosd-client --brightness raise"
           ", XF86MonBrightnessDown, exec, swayosd-client --brightness lower"
@@ -192,28 +187,36 @@ in {
           no_update_news = true;
         };
 
-        plugin = {
-          hyprtasking = {
-            layout = "grid";
-            gap_size = 20;
-            border_size = 4;
-            bg_color = "0xff000000";
-            exit_on_hovered = false;
-            grid = {
-              rows = 1;
-              cols = 9;
-              loop = false;
-            };
-            gestures = {
-              enabled = true;
-              open_fingers = 4;    # 4-finger swipe up/down to open/close
-              open_positive = true; # swipe up = open, swipe down = close
-              move_fingers = 3;    # 3-finger swipe to move between workspaces when open
-            };
-          };
-        };
-
       };
+
+      # Load hyprtasking via `plugin =` (inline, during config parse) so the
+      # dispatcher is registered before the bind below is evaluated.
+      extraConfig = ''
+        plugin = ${inputs.hyprtasking.packages.${pkgs.stdenv.hostPlatform.system}.hyprtasking}/lib/libhyprtasking.so
+
+        bind = $mod, tab, hyprtasking:toggle, cursor
+
+        plugin {
+          hyprtasking {
+            layout = grid
+            gap_size = 20
+            border_size = 4
+            bg_color = 0xff000000
+            exit_on_hovered = false
+            grid {
+              rows = 1
+              cols = 9
+              loop = false
+            }
+            gestures {
+              enabled = true
+              open_fingers = 4
+              open_positive = true
+              move_fingers = 3
+            }
+          }
+        }
+      '';
     };
 
     # Hyprlock configuration
