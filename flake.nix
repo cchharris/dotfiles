@@ -48,6 +48,20 @@
                 hash = "sha256-eFLxJ2SqnQjKfxwvbxMXcVDKPrdTpAuPE3H+SqDuSI4=";
               };
             });
+            # openrazer 3.12.2 calls hid_report_raw_event() with 5 args but
+            # Linux 6.18.33 changed its signature to require 6. Fixed in v3.12.3
+            # (openrazer/openrazer commit ef57422, released 2026-05-21); nixpkgs
+            # hasn't updated yet as of the 2026-05-23 nixos-unstable pin.
+            linuxPackages = prev.linuxPackages.extend (_: lpPrev: {
+              openrazer = lpPrev.openrazer.overrideAttrs (_: {
+                src = prev.fetchFromGitHub {
+                  owner = "openrazer";
+                  repo = "openrazer";
+                  tag = "v3.12.3";
+                  hash = "sha256-X1NPqbugBdxD5Nt9wIwQADV4CuydGLpgKhlNazVdrIY=";
+                };
+              });
+            });
         }) ]; }
         ./hardware/razer-blade.nix
         ./nixos/modules/defaults.nix
