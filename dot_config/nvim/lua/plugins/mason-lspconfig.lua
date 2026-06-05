@@ -41,7 +41,12 @@ return {
             --"harper_ls",   -- toml, typescript, rust, ruby, python, markdown, lua, javascript, java, C, C++, C#
         } or {}
 
-        require("mason-lspconfig").setup({ ensure_installed = ensure_installed })
+        require("mason-lspconfig").setup({
+            ensure_installed = ensure_installed,
+            automatic_enable = {
+                exclude = { "rust_analyzer" }, -- rustaceanvim manages this
+            },
+        })
 
         local keymap = vim.keymap
 
@@ -172,7 +177,5 @@ return {
             vim.lsp.enable('nil_ls')
         end
 
-        --rustacean takes over
-        -- ['rust_analyzer'] = function() end,
     end
 }
