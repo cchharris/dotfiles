@@ -6,6 +6,7 @@
     ./modules/editor.nix
     ./modules/terminal.nix
     ./modules/git.nix
+    ./modules/npm-cli.nix
   ];
 
   home.username = "christopherharris";
@@ -17,6 +18,13 @@
     editor.enable = true;
     terminal.enable = true;
     git.enable = true;
+    npmCli = {
+      enable = true;
+      packages = {
+        # ACP server for agentic.nvim. Bump version to upgrade on next `hm`.
+        "@agentclientprotocol/claude-agent-acp" = "0.33.1";
+      };
+    };
   };
 
   # Override Linux-specific aliases from shell.nix
