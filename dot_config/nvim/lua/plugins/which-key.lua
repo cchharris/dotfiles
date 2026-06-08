@@ -2,6 +2,9 @@ return {
 	"folke/which-key.nvim",
 	event = "VeryLazy",
 	opts = {
+		disable = {
+			ft = { "AgenticInput", "AgenticChat", "AgenticTodos", "AgenticCode", "AgenticFiles", "AgenticDiagnostics" },
+		},
 		triggers = {
 			{ "<auto>", mode = "nixsotc" },
 			{ "\\", mode = "t" },
