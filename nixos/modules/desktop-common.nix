@@ -68,6 +68,8 @@ in {
       bluez-tools  # bt-device/bt-adapter required by HyprPanel bluetooth menu
       libva-utils  # provides vainfo for diagnosing VA-API / hardware decode issues
 
+      gimp
+
       # GStreamer codec plugins (H.264, H.265, AV1, VP8/9, MP3, etc.)
       gst_all_1.gst-plugins-good
       gst_all_1.gst-plugins-bad

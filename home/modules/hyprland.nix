@@ -41,6 +41,7 @@ in {
       adwaita-icon-theme # icons for swayosd custom OSD
       swaynotificationcenter
       swayosd
+      kanshi    # auto-apply monitor profiles on connect/disconnect
     ];
 
     # Hyprland configuration
@@ -81,6 +82,7 @@ in {
         ];
 
         exec-once = [
+          "kanshi"
           "elephant"
           "swaync"
           "swayosd-server"

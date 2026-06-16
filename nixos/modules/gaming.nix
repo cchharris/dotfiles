@@ -91,11 +91,48 @@ in {
       "L /usr/bin/python3 - - - - ${nsl-python}/bin/python3"
     ];
 
+    # bwrap 0.11.x refuses to run when it inherits ambient capabilities from
+    # Hyprland's CAP_SYS_NICE security wrapper. Override only the steam FHS
+    # launcher to drop ambient/inheritable caps before bwrap — this leaves the
+    # system-wide pkgs.bubblewrap untouched so flatpak builds aren't affected.
     programs.steam = {
       enable = true;
       extraCompatPackages = with pkgs; [
         proton-ge-bin
       ];
+      package = pkgs.steam.override {
+        buildFHSEnv = pkgs.buildFHSEnv.override {
+          # capsh's "--" passes remaining args to bash rather than exec'ing directly,
+          # so we compile a tiny C binary that clears ambient/inheritable caps via
+          # prctl+capset syscalls and then execv's the real bwrap. No shell involved.
+          bubblewrap = pkgs.runCommandCC "bwrap" {} ''
+            mkdir -p $out/bin
+            cat > wrapper.c << 'CSRC'
+            #include <sys/prctl.h>
+            #include <sys/syscall.h>
+            #include <unistd.h>
+            #define PR_CAP_AMBIENT 47
+            #define PR_CAP_AMBIENT_CLEAR_ALL 4
+            #define CAP_VERSION3 0x20080522
+            typedef unsigned int u32;
+            struct cap_hdr { u32 version; int pid; };
+            struct cap_dat { u32 effective; u32 permitted; u32 inheritable; };
+            int main(int argc, char *argv[]) {
+              struct cap_hdr h = { CAP_VERSION3, 0 };
+              struct cap_dat d[2] = {0};
+              prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_CLEAR_ALL, 0, 0, 0);
+              syscall(SYS_capget, &h, d);
+              d[0].inheritable = 0;
+              d[1].inheritable = 0;
+              syscall(SYS_capset, &h, d);
+              execv("${pkgs.bubblewrap}/bin/bwrap", argv);
+              return 1;
+            }
+            CSRC
+            $CC -O2 -o $out/bin/bwrap wrapper.c
+          '';
+        };
+      };
     };
 
     environment.systemPackages = with pkgs; [
