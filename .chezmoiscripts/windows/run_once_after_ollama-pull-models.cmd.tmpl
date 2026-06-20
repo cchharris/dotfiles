@@ -1,0 +1,7 @@
+echo Pulling local Ollama coding model
+ollama pull qwen3-coder:30b
+echo Creating 32k-context variant for agentic tool use
+powershell -NoProfile -Command "Set-Content -Path \"$env:TEMP\Modelfile-qwen3-coder-32k\" -Value \"FROM qwen3-coder:30b`nPARAMETER num_ctx 32768\""
+ollama create qwen3-coder-32k:30b -f "%TEMP%\Modelfile-qwen3-coder-32k"
+ollama rm qwen3-coder:30b
+echo Done pulling Ollama models
