@@ -1,0 +1,3 @@
+@echo off
+:: Homelab CA cert hash: {{ include "nixos/certs/homelab-ca.crt" | sha256sum }}
+certutil -addstore -user Root "%USERPROFILE%\.local\share\chezmoi\nixos\certs\homelab-ca.crt"
