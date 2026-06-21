@@ -38,26 +38,13 @@ in {
       after = [ "tailscaled.service" ];
       bindsTo = [ "tailscaled.service" ];
       wantedBy = [ "multi-user.target" ];
-      path = [ pkgs.iptables ];
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
-        # ts-input is created dynamically by tailscaled after it starts, not
-        # immediately on daemon start. Wait up to 30s for the chain to appear.
-        ExecStart = pkgs.writeShellScript "expressvpn-compat-start" ''
-          for i in $(seq 1 30); do
-            if iptables -L ts-input 2>/dev/null; then
-              iptables -I ts-input 1 -s 100.64.100.0/24 -i tun0 -j RETURN
-              exit 0
-            fi
-            sleep 1
-          done
-          echo "ts-input chain never appeared after 30s" >&2
-          exit 1
-        '';
-        ExecStop = pkgs.writeShellScript "expressvpn-compat-stop" ''
-          iptables -D ts-input -s 100.64.100.0/24 -i tun0 -j RETURN 2>/dev/null || true
-        '';
+        # ts-input is created by Tailscale after the daemon starts; poll until it exists.
+        ExecStartPre = "${pkgs.bash}/bin/bash -c 'for i in $(seq 1 30); do ${pkgs.iptables}/bin/iptables -n -L ts-input >/dev/null 2>&1 && exit 0; sleep 1; done; exit 1'";
+        ExecStart = "${pkgs.iptables}/bin/iptables -I ts-input 1 -s 100.64.100.0/24 -i tun0 -j RETURN";
+        ExecStop = "${pkgs.iptables}/bin/iptables -D ts-input -s 100.64.100.0/24 -i tun0 -j RETURN || true";
       };
     };
 

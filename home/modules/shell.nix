@@ -18,7 +18,7 @@ in {
       shellAliases = {
         ll = "ls -la";
         cat = "bat";
-        update = "sudo nixos-rebuild switch --flake ~/dotfiles#$(hostname)";
+        update = "sudo nixos-rebuild boot --flake ~/dotfiles#$(hostname)";
         hm = "sudo nixos-rebuild switch --flake ~/dotfiles#$(hostname)";
       };
 

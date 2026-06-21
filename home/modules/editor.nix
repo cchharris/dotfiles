@@ -32,6 +32,15 @@ in {
       recursive = true;
     };
 
+    # If a previous HM generation left ~/.config/nvim as a single dir symlink into the
+    # nix store, the recursive link pass above can't back up or replace files inside it
+    # (read-only filesystem). Remove the stale dir symlink before link generation runs.
+    home.activation.removeStaleNvimDirLink = lib.hm.dag.entryBefore ["checkLinkTargets"] ''
+      if [ -L "$HOME/.config/nvim" ]; then
+        $DRY_RUN_CMD rm "$HOME/.config/nvim"
+      fi
+    '';
+
     home.packages = with pkgs; [
       # LSP servers — nix provides these so Mason doesn't try to install on NixOS
       nil                           # Nix
