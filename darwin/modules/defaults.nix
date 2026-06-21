@@ -21,6 +21,11 @@
     NSGlobalDomain.InitialKeyRepeat = 15;
   };
 
+  # Trust homelab local CA so .home services work with HTTPS
+  security.pki.certificates = [
+    (builtins.readFile ../../nixos/certs/homelab-ca.crt)
+  ];
+
   # Placeholder — rename to match actual Mac hostname (run: scutil --get LocalHostName)
   networking.hostName = "mac";
 

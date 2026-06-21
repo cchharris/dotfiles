@@ -80,6 +80,11 @@
     bind  # provides dig, nslookup for DNS debugging
   ];
 
+  # Trust homelab local CA so .home services work with HTTPS
+  security.pki.certificates = [
+    (builtins.readFile ../certs/homelab-ca.crt)
+  ];
+
   # User account
   users.users.cchharris = {
     isNormalUser = true;
