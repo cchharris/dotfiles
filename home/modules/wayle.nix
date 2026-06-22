@@ -59,6 +59,10 @@ in {
       center = ["window-title"]
       right = ["media", "cpu", "ram", "systray", "clock", "weather", "notifications", "volume", "microphone", "bluetooth", "network", "battery", "custom-expressvpn"]
 
+      [modules.weather]
+      location = "Seattle"
+      units = "imperial"
+
       [styling]
       theme-provider = "wayle"
 
