@@ -100,13 +100,12 @@ in {
     # PAM configuration for hyprlock
     security.pam.services.hyprlock = {};
 
-    # SwayOSD udev rules (backlight + input device access for the server)
-    services.udev.packages = [ pkgs.swayosd ];
 
     # Hyprland-specific packages
     environment.systemPackages = with pkgs; [
       ghostty
       hyprlock
+      brightnessctl
     ];
   };
 }

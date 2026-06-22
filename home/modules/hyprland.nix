@@ -30,17 +30,15 @@ in {
       nautilus
       wl-clipboard
       wofi
-      pavucontrol   # volume mixer (ashell audio → open mixer)
-      playerctl     # MPRIS media control (ashell media player widget)
+      pavucontrol   # volume mixer (wayle audio → open mixer)
+      playerctl     # MPRIS media control (wayle media widget)
       grim          # screenshot tool
       slurp         # region selection for screenshots
       swappy        # screenshot annotation
       wf-recorder   # screen recording
       btop          # system monitor
       brightnessctl # backlight control
-      adwaita-icon-theme # icons for swayosd custom OSD
-      swaynotificationcenter
-      swayosd
+      adwaita-icon-theme # icons for GTK apps
       kanshi    # auto-apply monitor profiles on connect/disconnect
     ];
 
@@ -70,7 +68,7 @@ in {
         env = [
           "XDG_SESSION_TYPE,wayland"
           "SSH_AUTH_SOCK,$HOME/.1password/agent.sock"
-          # ashell's units_from_locale_name strips .UTF-8 encoding only if bare;
+          # wayle's units_from_locale_name strips .UTF-8 encoding only if bare;
           # set bare en_US here (session-only) so it matches the "en_US" → Imperial branch
           "LC_MEASUREMENT,en_US"
         ] ++ lib.optionals cfg.nvidiaEnvVars [
@@ -84,10 +82,8 @@ in {
         exec-once = [
           "kanshi"
           "elephant"
-          "swaync"
-          "swayosd-server"
           "pgrep trayscale || trayscale --hide-window"
-          "ashell"
+          "wayle shell"
           "wl-clipboard-history -t"
           "wl-paste --watch cliphist store"
           "rm \"$HOME/.cache/cliphist/db\""
@@ -138,17 +134,34 @@ in {
           "$mod, left, workspace, -1"
           "$mod+SHIFT, right, movetoworkspace, +1"
           "$mod+SHIFT, left, movetoworkspace, -1"
+          "$mod, 1, workspace, 1"
+          "$mod, 2, workspace, 2"
+          "$mod, 3, workspace, 3"
+          "$mod, 4, workspace, 4"
+          "$mod, 5, workspace, 5"
+          "$mod, 6, workspace, 6"
+          "$mod, 7, workspace, 7"
+          "$mod, 8, workspace, 8"
+          "$mod, 9, workspace, 9"
+          "$mod+SHIFT, 1, movetoworkspace, 1"
+          "$mod+SHIFT, 2, movetoworkspace, 2"
+          "$mod+SHIFT, 3, movetoworkspace, 3"
+          "$mod+SHIFT, 4, movetoworkspace, 4"
+          "$mod+SHIFT, 5, movetoworkspace, 5"
+          "$mod+SHIFT, 6, movetoworkspace, 6"
+          "$mod+SHIFT, 7, movetoworkspace, 7"
+          "$mod+SHIFT, 8, movetoworkspace, 8"
+          "$mod+SHIFT, 9, movetoworkspace, 9"
 
-          # Brightness (swayosd-client shows OSD overlay)
-          ", XF86MonBrightnessUp,   exec, swayosd-client --brightness raise"
-          ", XF86MonBrightnessDown, exec, swayosd-client --brightness lower"
+          # Brightness (wayle shows OSD)
+          ", XF86MonBrightnessUp,   exec, brightnessctl set 5%+"
+          ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
 
-
-          # Volume (swayosd-client shows OSD overlay)
-          ", XF86AudioRaiseVolume,  exec, swayosd-client --output-volume raise"
-          ", XF86AudioLowerVolume,  exec, swayosd-client --output-volume lower"
-          ", XF86AudioMute,         exec, swayosd-client --output-volume mute-toggle"
-          ", XF86AudioMicMute,      exec, swayosd-client --input-volume mute-toggle"
+          # Volume (wayle shows OSD)
+          ", XF86AudioRaiseVolume,  exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
+          ", XF86AudioLowerVolume,  exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+          ", XF86AudioMute,         exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+          ", XF86AudioMicMute,      exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
 
           # Media controls
           ", XF86AudioPlay,  exec, playerctl play-pause"
@@ -156,13 +169,13 @@ in {
           ", XF86AudioNext,  exec, playerctl next"
           ", XF86AudioPrev,  exec, playerctl previous"
 
-          # Notification center
-          "$mod, N, exec, swaync-client -t"
-
         ];
 
         input = {
           follow_mouse = 0;
+          touchpad = {
+            disable_while_typing = false;
+          };
         };
 
         general = {

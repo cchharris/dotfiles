@@ -104,6 +104,7 @@
     bluez      # Bluetooth stack (bluetoothctl + utils; equivalent to bluez + bluez-utils on Arch)
     expressvpn
     iptables
+    remmina    # Remote Desktop client (RDP/VNC)
     unityhub   # Unity Game Engine version manager
     dotnet-sdk # .NET SDK (required for OmniSharp/C# LSP)
     (pkgs.callPackage ../../pkgs/nvimunity.nix {})
