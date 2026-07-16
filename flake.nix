@@ -21,6 +21,11 @@
       url = "github:abenz1267/walker";
       inputs.elephant.follows = "elephant";
     };
+    # Wraps Nix-built OpenGL/EGL apps (e.g. ghostty) so they find the host's real Mesa
+    # driver on non-NixOS Linux, where /run/opengl-driver doesn't exist. Kept on its
+    # own nixpkgs pin rather than following the main one, since nixGL's driver
+    # detection is tested against specific mesa versions upstream.
+    nixgl.url = "github:nix-community/nixGL";
   };
 
   outputs = { self, nixpkgs, home-manager, nix-darwin, ... }@inputs:

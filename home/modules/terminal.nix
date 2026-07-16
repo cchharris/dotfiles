@@ -1,5 +1,5 @@
 # Terminal configuration (ghostty)
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, osConfig ? null, ... }:
 
 let
   cfg = config.cchharris.home.terminal;
@@ -44,14 +44,19 @@ in {
 
     # Install Nerd Font for terminal icons
     # ghostty-bin provides pre-built macOS binaries (pkgs.ghostty is broken on darwin)
-    # On NixOS hosts, ghostty is installed via the system module instead (nixos/modules/hyprland.nix, gnome.nix);
-    # this covers standalone (non-NixOS) Linux home-manager targets like work-linux.
+    # On NixOS hosts, ghostty is installed via the system module instead (nixos/modules/hyprland.nix,
+    # gnome.nix), which wires up /run/opengl-driver for Mesa/EGL discovery. Standalone (non-NixOS)
+    # Linux targets like work-linux/base lack that, so ghostty needs a nixGL wrapper to find the
+    # host's real driver — detected via `osConfig == null`, which home-manager only sets when NOT
+    # integrated into a nixosSystem/darwinSystem.
     home.packages = with pkgs; [
       nerd-fonts.jetbrains-mono
     ] ++ lib.optionals pkgs.stdenv.isDarwin [
       ghostty-bin
-    ] ++ lib.optionals pkgs.stdenv.isLinux [
-      ghostty
+    ] ++ lib.optionals (pkgs.stdenv.isLinux && osConfig == null) [
+      (pkgs.writeShellScriptBin "ghostty" ''
+        exec ${inputs.nixgl.packages.${pkgs.system}.nixGLDefault}/bin/nixGL ${pkgs.ghostty}/bin/ghostty "$@"
+      '')
     ];
 
     # Font configuration
