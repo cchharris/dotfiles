@@ -44,10 +44,14 @@ in {
 
     # Install Nerd Font for terminal icons
     # ghostty-bin provides pre-built macOS binaries (pkgs.ghostty is broken on darwin)
+    # On NixOS hosts, ghostty is installed via the system module instead (nixos/modules/hyprland.nix, gnome.nix);
+    # this covers standalone (non-NixOS) Linux home-manager targets like work-linux.
     home.packages = with pkgs; [
       nerd-fonts.jetbrains-mono
     ] ++ lib.optionals pkgs.stdenv.isDarwin [
       ghostty-bin
+    ] ++ lib.optionals pkgs.stdenv.isLinux [
+      ghostty
     ];
 
     # Font configuration
