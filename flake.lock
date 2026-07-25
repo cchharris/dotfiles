@@ -330,16 +330,17 @@
         "systems": "systems_3"
       },
       "locked": {
-        "lastModified": 1784680397,
-        "narHash": "sha256-KCJM6c+XRUO9VWP9KUUWJCMxxSPaiWMZNMOdnO0x3vk=",
+        "lastModified": 1778650915,
+        "narHash": "sha256-rGPLOx/BekKtDaDB1OQxARMwUBIvlENrogXLnsbBPiA=",
         "owner": "raybbian",
         "repo": "hyprtasking",
-        "rev": "a3efa15ada7318daa6fcf55c361dd7bdef15df3e",
+        "rev": "630583854a903cf5990505080297933d782c5583",
         "type": "github"
       },
       "original": {
         "owner": "raybbian",
         "repo": "hyprtasking",
+        "rev": "630583854a903cf5990505080297933d782c5583",
         "type": "github"
       }
     },

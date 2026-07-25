@@ -13,7 +13,8 @@
     };
     hyprland.url = "github:hyprwm/Hyprland/v0.54.3";
     hyprtasking = {
-      url = "github:raybbian/hyprtasking";
+      # pinned to last rev compatible with Hyprland v0.54.3; newer commits use APIs not in v0.54.3
+      url = "github:raybbian/hyprtasking/630583854a903cf5990505080297933d782c5583";
       inputs.hyprland.follows = "hyprland";
     };
     elephant.url = "github:abenz1267/elephant";
