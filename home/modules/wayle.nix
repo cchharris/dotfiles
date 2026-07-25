@@ -40,6 +40,17 @@ let
       read
     '
   '';
+
+  powerMenu = pkgs.writeShellScript "power-menu" ''
+    chosen=$(printf 'Lock\nSleep\nReboot\nShutdown' \
+      | wofi --dmenu --prompt "Power" --lines 4 --width 200)
+    case "$chosen" in
+      Lock)     hyprlock ;;
+      Sleep)    systemctl suspend ;;
+      Reboot)   systemctl reboot ;;
+      Shutdown) systemctl poweroff ;;
+    esac
+  '';
 in {
   options.cchharris.home.wayle = {
     enable = lib.mkEnableOption "wayle shell";
@@ -57,7 +68,7 @@ in {
       monitor = "*"
       left = ["custom-launcher", "hyprland-workspaces"]
       center = ["window-title"]
-      right = ["media", "cpu", "ram", "systray", "clock", "weather", "notifications", "volume", "microphone", "bluetooth", "network", "battery", "custom-expressvpn"]
+      right = ["media", "cpu", "ram", "systray", "clock", "weather", "notifications", "volume", "microphone", "bluetooth", "network", "battery", "custom-expressvpn", "custom-power"]
 
       [modules.weather]
       location = "Seattle"
@@ -92,6 +103,11 @@ in {
       interval-ms = 5000
       left-click = "${expressvpnToggle}"
       format = "{{ text }}"
+
+      [[modules.custom]]
+      id = "power"
+      left-click = "${powerMenu}"
+      format = "⏻"
     '';
   };
 }
