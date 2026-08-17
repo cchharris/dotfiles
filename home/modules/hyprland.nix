@@ -35,7 +35,8 @@ in {
       grim          # screenshot tool
       slurp         # region selection for screenshots
       swappy        # screenshot annotation
-      wf-recorder   # screen recording
+      wf-recorder   # screen recording (software encode)
+      gpu-screen-recorder # NVENC hardware-encoded recording — game clips
       btop          # system monitor
       brightnessctl # backlight control
       adwaita-icon-theme # icons for GTK apps

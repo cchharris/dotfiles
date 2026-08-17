@@ -68,7 +68,7 @@ in {
       monitor = "*"
       left = ["custom-launcher", "hyprland-workspaces"]
       center = ["window-title"]
-      right = ["media", "cpu", "ram", "systray", "clock", "weather", "notifications", "volume", "microphone", "bluetooth", "network", "battery", "custom-expressvpn", "custom-power"]
+      right = ["media", "cpu", "ram", "storage", "systray", "clock", "weather", "notifications", "volume", "microphone", "brightness", "bluetooth", "network", "power", "battery", "idle-inhibit", "custom-expressvpn", "custom-power"]
 
       [modules.weather]
       location = "Seattle"
