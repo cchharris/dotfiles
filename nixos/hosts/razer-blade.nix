@@ -22,6 +22,7 @@
     tailscale.enable = true;
     howdy.enable = true;
     cachyos.enable = true;
+    cachyosKernel.enable = true;
   };
 
   # Bluetooth

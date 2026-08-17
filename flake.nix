@@ -27,6 +27,11 @@
     # own nixpkgs pin rather than following the main one, since nixGL's driver
     # detection is tested against specific mesa versions upstream.
     nixgl.url = "github:nix-community/nixGL";
+    # linux-cachyos kernel (BORE scheduler + LTO) + matching nvidia driver builds,
+    # via a binary cache. Deliberately NOT following our nixpkgs — chaotic-nyx's
+    # cache is built against their own pinned nixpkgs revision, and following ours
+    # would cause cache misses (forcing a from-source kernel build).
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
   };
 
   outputs = { self, nixpkgs, home-manager, nix-darwin, ... }@inputs:
@@ -79,6 +84,8 @@
         ./nixos/modules/howdy.nix
         ./nixos/modules/tailscale.nix
         ./nixos/modules/cachyos.nix
+        ./nixos/modules/cachyos-kernel.nix
+        inputs.chaotic.nixosModules.default
         ./nixos/hosts/razer-blade.nix
         home-manager.nixosModules.home-manager
         {
