@@ -11,10 +11,11 @@
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    hyprland.url = "github:hyprwm/Hyprland/v0.54.3";
+    hyprland.url = "github:hyprwm/Hyprland/v0.56.1";
     hyprtasking = {
-      # pinned to last rev compatible with Hyprland v0.54.3; newer commits use APIs not in v0.54.3
-      url = "github:raybbian/hyprtasking/630583854a903cf5990505080297933d782c5583";
+      # matches hyprtasking's own hyprpm.toml compatibility pin for Hyprland v0.56.1.
+      # No compatibility pin exists yet for v0.56.2 (latest), so staying one behind.
+      url = "github:raybbian/hyprtasking/e68897e32fb5316bdfeae41268e6efb25a5dc4ea";
       inputs.hyprland.follows = "hyprland";
     };
     elephant.url = "github:abenz1267/elephant";

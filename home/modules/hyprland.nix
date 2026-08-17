@@ -185,7 +185,7 @@ in {
         };
 
         dwindle = {
-          pseudotile = true;
+          # pseudotile removed in Hyprland v0.55.0 — behavior is now always on
           preserve_split = true;
           force_split = 2;
         };
