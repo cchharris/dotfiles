@@ -4,22 +4,6 @@
 let
   cfg = config.cchharris.home.wayle;
 
-  expressvpnStatus = pkgs.writeShellScript "expressvpn-status" ''
-    if expressvpn status 2>/dev/null | grep -qi "^Connected"; then
-      printf '{"text":"VPN","alt":"connected"}\n'
-    else
-      printf '{"text":"VPN","alt":"disconnected"}\n'
-    fi
-  '';
-
-  expressvpnToggle = pkgs.writeShellScript "expressvpn-toggle" ''
-    if expressvpn status 2>/dev/null | grep -qi "^Connected"; then
-      expressvpn disconnect
-    else
-      expressvpn connect
-    fi
-  '';
-
   checkNixpkgsUpdates = pkgs.writeShellScript "check-nixpkgs-updates" ''
     current=$(${pkgs.jq}/bin/jq -r '.nodes.nixpkgs.locked.rev' \
       "$HOME/dotfiles/flake.lock" 2>/dev/null) || exit 0
@@ -68,7 +52,7 @@ in {
       monitor = "*"
       left = ["custom-launcher", "hyprland-workspaces"]
       center = ["window-title"]
-      right = ["media", "cpu", "ram", "storage", "systray", "clock", "weather", "notifications", "volume", "microphone", "brightness", "bluetooth", "network", "power", "battery", "idle-inhibit", "custom-expressvpn", "custom-power"]
+      right = ["media", "systray", "clock", "weather", "notifications", "volume", "brightness", "bluetooth", "network", "power", "battery", "idle-inhibit", "custom-power"]
 
       [modules.weather]
       location = "Seattle"
@@ -95,13 +79,6 @@ in {
       command = "${checkNixpkgsUpdates}"
       interval-ms = 3600000
       left-click = "${runNixpkgsUpdate}"
-      format = "{{ text }}"
-
-      [[modules.custom]]
-      id = "expressvpn"
-      command = "${expressvpnStatus}"
-      interval-ms = 5000
-      left-click = "${expressvpnToggle}"
       format = "{{ text }}"
 
       [[modules.custom]]
