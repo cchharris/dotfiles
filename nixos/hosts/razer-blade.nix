@@ -21,6 +21,7 @@
     razer.enable = true;
     tailscale.enable = true;
     howdy.enable = true;
+    cachyos.enable = true;
   };
 
   # Bluetooth
