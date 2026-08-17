@@ -27,13 +27,17 @@ in {
       rulesProvider = pkgs.ananicy-rules-cachyos;
     };
 
+    # Compressed RAM-backed swap, checked before the physical LUKS/NVMe swap
+    # partition (higher-priority swap devices are preferred by the kernel). Makes
+    # vm.swappiness=100 below the right call instead of the wrong one: swapping to
+    # zram is RAM-speed, so swapping "aggressively" no longer means "swap to disk."
+    zramSwap.enable = true;
+
     # Ported from CachyOS-Settings' 70-cachyos-settings.conf, minus:
-    #  - vm.swappiness=100: assumes zram-backed swap. This machine swaps to a physical
-    #    LUKS/NVMe partition, so the default (60) is left alone rather than swapping
-    #    aggressively to disk.
     #  - kernel.unprivileged_userns_clone: a Debian-kernel-only sysctl toggle; the
     #    stock nixpkgs kernel doesn't carry that patch, so the node wouldn't exist.
     boot.kernel.sysctl = {
+      "vm.swappiness" = 100;
       "vm.vfs_cache_pressure" = 50;
       "vm.dirty_bytes" = 268435456;
       "vm.dirty_background_bytes" = 67108864;

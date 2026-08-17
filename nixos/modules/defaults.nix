@@ -33,6 +33,10 @@
   };
   nix.settings.auto-optimise-store = true;
 
+  # Periodic TRIM. No-ops safely on filesystems/devices that don't support discard,
+  # so safe to enable unconditionally rather than per-host.
+  services.fstrim.enable = true;
+
   # Avahi for .local hostname resolution on LAN
   services.avahi = {
     enable = true;

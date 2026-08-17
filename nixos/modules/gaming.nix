@@ -135,6 +135,10 @@ in {
       };
     };
 
+    # Games request this on launch (via libgamemode) for a temporary CPU governor/
+    # priority bump and inhibited screensaver, reverting when the game exits.
+    programs.gamemode.enable = true;
+
     environment.systemPackages = with pkgs; [
       protonup-qt
       nonSteamLaunchers

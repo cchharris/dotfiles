@@ -11,10 +11,14 @@
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "vmd" "nvme" "usb_storage" "usbhid" "sd_mod" "rtsx_pci_sdmmc" ];
   boot.initrd.kernelModules = [ ];
+  # allowDiscards lets TRIM pass through dm-crypt to the NVMe controller, so
+  # services.fstrim (defaults.nix) actually reaches the physical device. Leaks a
+  # live map of allocated-vs-free blocks to anyone with the raw drive and forensic
+  # tooling; doesn't expose contents or weaken the LUKS/TPM2 unlock chain.
   boot.initrd.luks.devices = {
-    root = { device = "/dev/disk/by-uuid/ad032932-3f84-455a-8f1e-e165c12f9e27"; crypttabExtraOpts = [ "tpm2-device=auto" ]; };
-    swap = { device = "/dev/disk/by-uuid/12f17d05-001e-46e9-b6ce-072d592fdf13"; crypttabExtraOpts = [ "tpm2-device=auto" ]; };
-    data = { device = "/dev/disk/by-uuid/772b86e5-61e0-45b2-97db-f53a5a5931c9"; crypttabExtraOpts = [ "tpm2-device=auto" ]; };
+    root = { device = "/dev/disk/by-uuid/ad032932-3f84-455a-8f1e-e165c12f9e27"; crypttabExtraOpts = [ "tpm2-device=auto" ]; allowDiscards = true; };
+    swap = { device = "/dev/disk/by-uuid/12f17d05-001e-46e9-b6ce-072d592fdf13"; crypttabExtraOpts = [ "tpm2-device=auto" ]; allowDiscards = true; };
+    data = { device = "/dev/disk/by-uuid/772b86e5-61e0-45b2-97db-f53a5a5931c9"; crypttabExtraOpts = [ "tpm2-device=auto" ]; allowDiscards = true; };
   };
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
