@@ -43,6 +43,9 @@
   services.power-profiles-daemon.enable = false;
   services.tlp = {
     enable = true;
+    # Exposes the same DBus interface power-profiles-daemon would, so bar widgets
+    # (wayle) show real state instead of "missing".
+    pd.enable = true;
     settings = {
       # CPU scaling
       CPU_SCALING_GOVERNOR_ON_AC = "performance";
