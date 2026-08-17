@@ -52,11 +52,14 @@ in {
       monitor = "*"
       left = ["custom-launcher", "hyprland-workspaces"]
       center = ["window-title"]
-      right = ["media", "systray", "clock", "weather", "notifications", "volume", "brightness", "bluetooth", "network", "battery", "idle-inhibit", "custom-power"]
+      right = ["media", "systray", "clock", "weather", "notifications", "volume", "brightness", "bluetooth", "network", "battery", "idle-inhibit", "power"]
 
       [modules.weather]
       location = "Seattle"
       units = "imperial"
+
+      [modules.power]
+      left-click = "${powerMenu}"
 
       [styling]
       theme-provider = "wayle"
@@ -80,11 +83,6 @@ in {
       interval-ms = 3600000
       left-click = "${runNixpkgsUpdate}"
       format = "{{ text }}"
-
-      [[modules.custom]]
-      id = "power"
-      left-click = "${powerMenu}"
-      format = "⏻"
     '';
   };
 }
