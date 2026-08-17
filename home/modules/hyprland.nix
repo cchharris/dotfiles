@@ -46,9 +46,10 @@ in {
     # Hyprland configuration
     wayland.windowManager.hyprland = {
       enable = true;
-      configType = "hyprlang";
+      configType = "lua";
       package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
       portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+      plugins = [ inputs.hyprtasking.packages.${pkgs.stdenv.hostPlatform.system}.hyprtasking ];
       systemd = {
         enable = false;
         enableXdgAutostart = true;
@@ -56,182 +57,171 @@ in {
       };
 
       settings = {
-        # Monitor config: connector,resolution@refresh,position,scale
-        # Run `hyprctl monitors` or check /sys/class/drm/ for connector name.
-        # Use "preferred" to let the driver negotiate — replace once stable.
-        monitor = [
-          ",preferred,auto,${cfg.monitorScale}"
-        ];
-
-        "$terminal" = "ghostty";
-        "$menu" = "walker";
+        # Monitor config — see https://wiki.hypr.land/Configuring/Basics/Monitors/
+        # "preferred"/"auto" lets the driver negotiate — replace once stable.
+        monitor = {
+          output = "";
+          mode = "preferred";
+          position = "auto";
+          scale = cfg.monitorScale;
+        };
 
         env = [
-          "XDG_SESSION_TYPE,wayland"
-          "SSH_AUTH_SOCK,$HOME/.1password/agent.sock"
+          { _args = [ "XDG_SESSION_TYPE" "wayland" ]; }
+          { _args = [ "SSH_AUTH_SOCK" "$HOME/.1password/agent.sock" ]; }
           # wayle's units_from_locale_name strips .UTF-8 encoding only if bare;
           # set bare en_US here (session-only) so it matches the "en_US" → Imperial branch
-          "LC_MEASUREMENT,en_US"
+          { _args = [ "LC_MEASUREMENT" "en_US" ]; }
         ] ++ lib.optionals cfg.nvidiaEnvVars [
-          "LIBVA_DRIVER_NAME,nvidia"
-          "__GLX_VENDOR_LIBRARY_NAME,nvidia"
-          "NVD_BACKEND,direct"
+          { _args = [ "LIBVA_DRIVER_NAME" "nvidia" ]; }
+          { _args = [ "__GLX_VENDOR_LIBRARY_NAME" "nvidia" ]; }
+          { _args = [ "NVD_BACKEND" "direct" ]; }
         ] ++ lib.optionals cfg.nvidiaGbmBackend [
-          "GBM_BACKEND,nvidia-drm"  # single GPU only — breaks Optimus display output
+          { _args = [ "GBM_BACKEND" "nvidia-drm" ]; }  # single GPU only — breaks Optimus display output
         ];
 
-        exec-once = [
-          "kanshi"
-          "elephant"
-          "pgrep trayscale || trayscale --hide-window"
-          "wayle shell"
-          "wl-clipboard-history -t"
-          "wl-paste --watch cliphist store"
-          "rm \"$HOME/.cache/cliphist/db\""
-          "1password --silent"
-          "expressvpn-client"
-        ] ++ lib.optionals cfg.polychromaticAutostart [
-          "polychromatic-tray-applet"
-        ];
+        config = {
+          general = {
+            layout = "dwindle";
+          };
 
-        "$mod" = "SUPER";
+          input = {
+            follow_mouse = 0;
+            touchpad = {
+              disable_while_typing = false;
+            };
+          };
 
-        # Vim-style HJKL keybindings
-        bind = [
-          # Application launchers
-          "$mod, T, exec, $terminal"
-          "$mod, C, killactive"
-          "$mod, M, exec, $menu"
-          "$mod, F, togglefloating"
-          "$mod+SHIFT, F, fullscreen"
+          dwindle = {
+            preserve_split = true;
+            force_split = 2;
+          };
 
-          # Vim-style navigation (HJKL)
-          "$mod, H, movefocus, l"
-          "$mod, J, movefocus, d"
-          "$mod, K, movefocus, u"
-          "$mod, L, movefocus, r"
+          xwayland = {
+            force_zero_scaling = true;
+          };
 
-          # Vim-style window movement
-          "$mod+SHIFT, H, movewindow, l"
-          "$mod+SHIFT, J, movewindow, d"
-          "$mod+SHIFT, K, movewindow, u"
-          "$mod+SHIFT, L, movewindow, r"
-
-          # Window cycling
-          "ALT, TAB, cyclenext"
-          "ALT+SHIFT, TAB, cyclenext, prev"
-
-          # Screenshots
-          ", Print, exec, grim - | swappy -f -"                                       # fullscreen → annotate
-          "$mod+SHIFT, S, exec, grim -g \"$(slurp)\" - | swappy -f -"                # region → annotate
-          "$mod+SHIFT+CTRL, S, exec, grim -g \"$(slurp)\" - | wl-copy"               # region → clipboard
-
-          # Screen recording
-          "$mod+SHIFT, R, exec, wf-recorder -g \"$(slurp)\" -f ~/Videos/recording-$(date +%Y%m%d-%H%M%S).mp4"
-          "$mod+SHIFT+CTRL, R, exec, pkill wf-recorder"
-
-          # Workspace navigation
-          "$mod, right, workspace, +1"
-          "$mod, left, workspace, -1"
-          "$mod+SHIFT, right, movetoworkspace, +1"
-          "$mod+SHIFT, left, movetoworkspace, -1"
-          "$mod, 1, workspace, 1"
-          "$mod, 2, workspace, 2"
-          "$mod, 3, workspace, 3"
-          "$mod, 4, workspace, 4"
-          "$mod, 5, workspace, 5"
-          "$mod, 6, workspace, 6"
-          "$mod, 7, workspace, 7"
-          "$mod, 8, workspace, 8"
-          "$mod, 9, workspace, 9"
-          "$mod+SHIFT, 1, movetoworkspace, 1"
-          "$mod+SHIFT, 2, movetoworkspace, 2"
-          "$mod+SHIFT, 3, movetoworkspace, 3"
-          "$mod+SHIFT, 4, movetoworkspace, 4"
-          "$mod+SHIFT, 5, movetoworkspace, 5"
-          "$mod+SHIFT, 6, movetoworkspace, 6"
-          "$mod+SHIFT, 7, movetoworkspace, 7"
-          "$mod+SHIFT, 8, movetoworkspace, 8"
-          "$mod+SHIFT, 9, movetoworkspace, 9"
-
-          # Brightness (wayle shows OSD)
-          ", XF86MonBrightnessUp,   exec, brightnessctl set 5%+"
-          ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
-
-          # Volume (wayle shows OSD)
-          ", XF86AudioRaiseVolume,  exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
-          ", XF86AudioLowerVolume,  exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
-          ", XF86AudioMute,         exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
-          ", XF86AudioMicMute,      exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
-
-          # Media controls
-          ", XF86AudioPlay,  exec, playerctl play-pause"
-          ", XF86AudioPause, exec, playerctl play-pause"
-          ", XF86AudioNext,  exec, playerctl next"
-          ", XF86AudioPrev,  exec, playerctl previous"
-
-        ];
-
-        input = {
-          follow_mouse = 0;
-          touchpad = {
-            disable_while_typing = false;
+          ecosystem = {
+            no_update_news = true;
+          };
+        } // lib.optionalAttrs cfg.nvidiaGbmBackend {
+          # GTX 1080 (Pascal) has hardware cursor issues under Wayland/Hyprland
+          cursor = {
+            no_hardware_cursors = true;
           };
         };
-
-        general = {
-          "$modifier" = "SUPER";
-          layout = "dwindle";
-        };
-
-        dwindle = {
-          # pseudotile removed in Hyprland v0.55.0 — behavior is now always on
-          preserve_split = true;
-          force_split = 2;
-        };
-
-        xwayland = {
-          force_zero_scaling = true;
-        };
-
-        # GTX 1080 (Pascal) has hardware cursor issues under Wayland/Hyprland
-        cursor = lib.mkIf cfg.nvidiaGbmBackend {
-          no_hardware_cursors = true;
-        };
-
-        ecosystem = {
-          no_update_news = true;
-        };
-
       };
 
-      # Load hyprtasking via `plugin =` (inline, during config parse) so the
-      # dispatcher is registered before the bind below is evaluated.
+      # Raw Lua: keybindings translated from hyprlang dispatcher-string syntax to
+      # hl.dsp.* calls (https://wiki.hypr.land/Configuring/Basics/Binds/), autostart,
+      # and hyprtasking's plugin config (its README documents this Lua form directly:
+      # https://github.com/raybbian/hyprtasking#configuration). The plugin itself is
+      # loaded via the `plugins` option above, not here.
       extraConfig = ''
-        plugin = ${inputs.hyprtasking.packages.${pkgs.stdenv.hostPlatform.system}.hyprtasking}/lib/libhyprtasking.so
+        local mod = "SUPER"
+        local terminal = "ghostty"
+        local menu = "walker"
 
-        bind = $mod, tab, hyprtasking:toggle, cursor
+        hl.on("hyprland.start", function()
+          hl.exec_cmd("kanshi")
+          hl.exec_cmd("elephant")
+          hl.exec_cmd("pgrep trayscale || trayscale --hide-window")
+          hl.exec_cmd("wayle shell")
+          hl.exec_cmd("wl-clipboard-history -t")
+          hl.exec_cmd("wl-paste --watch cliphist store")
+          hl.exec_cmd('rm "$HOME/.cache/cliphist/db"')
+          hl.exec_cmd("1password --silent")
+          hl.exec_cmd("expressvpn-client")
+      ''
+      + lib.optionalString cfg.polychromaticAutostart ''
+          hl.exec_cmd("polychromatic-tray-applet")
+      ''
+      + ''
+        end)
 
-        plugin {
-          hyprtasking {
-            layout = grid
-            gap_size = 20
-            border_size = 4
-            bg_color = 0xff000000
-            exit_on_hovered = false
-            grid {
-              rows = 1
-              cols = 9
-              loop = false
-            }
-            gestures {
-              enabled = true
-              open_fingers = 4
-              open_positive = true
-              move_fingers = 3
-            }
-          }
-        }
+        -- Application launchers
+        hl.bind(mod .. " + T", hl.dsp.exec_cmd(terminal))
+        hl.bind(mod .. " + C", hl.dsp.window.close())
+        hl.bind(mod .. " + M", hl.dsp.exec_cmd(menu))
+        hl.bind(mod .. " + F", hl.dsp.window.float({ action = "toggle" }))
+        hl.bind(mod .. " + SHIFT + F", hl.dsp.window.fullscreen({ action = "toggle" }))
+
+        -- Vim-style navigation (HJKL)
+        hl.bind(mod .. " + H", hl.dsp.focus({ direction = "left" }))
+        hl.bind(mod .. " + J", hl.dsp.focus({ direction = "down" }))
+        hl.bind(mod .. " + K", hl.dsp.focus({ direction = "up" }))
+        hl.bind(mod .. " + L", hl.dsp.focus({ direction = "right" }))
+
+        -- Vim-style window movement
+        hl.bind(mod .. " + SHIFT + H", hl.dsp.window.move({ direction = "left" }))
+        hl.bind(mod .. " + SHIFT + J", hl.dsp.window.move({ direction = "down" }))
+        hl.bind(mod .. " + SHIFT + K", hl.dsp.window.move({ direction = "up" }))
+        hl.bind(mod .. " + SHIFT + L", hl.dsp.window.move({ direction = "right" }))
+
+        -- Window cycling
+        hl.bind("ALT + TAB", hl.dsp.window.cycle_next({}))
+        hl.bind("ALT + SHIFT + TAB", hl.dsp.window.cycle_next({ next = false }))
+
+        -- Screenshots
+        hl.bind("Print", hl.dsp.exec_cmd("grim - | swappy -f -"))
+        hl.bind(mod .. " + SHIFT + S", hl.dsp.exec_cmd('grim -g "$(slurp)" - | swappy -f -'))
+        hl.bind(mod .. " + SHIFT + CTRL + S", hl.dsp.exec_cmd('grim -g "$(slurp)" - | wl-copy'))
+
+        -- Screen recording
+        hl.bind(mod .. " + SHIFT + R", hl.dsp.exec_cmd('wf-recorder -g "$(slurp)" -f ~/Videos/recording-$(date +%Y%m%d-%H%M%S).mp4'))
+        hl.bind(mod .. " + SHIFT + CTRL + R", hl.dsp.exec_cmd("pkill wf-recorder"))
+
+        -- Workspace navigation
+        hl.bind(mod .. " + right", hl.dsp.focus({ workspace = "+1" }))
+        hl.bind(mod .. " + left", hl.dsp.focus({ workspace = "-1" }))
+        hl.bind(mod .. " + SHIFT + right", hl.dsp.window.move({ workspace = "+1" }))
+        hl.bind(mod .. " + SHIFT + left", hl.dsp.window.move({ workspace = "-1" }))
+        for i = 1, 9 do
+          hl.bind(mod .. " + " .. i, hl.dsp.focus({ workspace = i }))
+          hl.bind(mod .. " + SHIFT + " .. i, hl.dsp.window.move({ workspace = i }))
+        end
+
+        -- Brightness (wayle shows OSD)
+        hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("brightnessctl set 5%+"))
+        hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl set 5%-"))
+
+        -- Volume (wayle shows OSD)
+        hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"))
+        hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"))
+        hl.bind("XF86AudioMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"))
+        hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"))
+
+        -- Media controls
+        hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"))
+        hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"))
+        hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"))
+        hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"))
+
+        -- hyprtasking
+        hl.bind(mod .. " + TAB", function() hl.plugin.hyprtasking.toggle("cursor") end)
+
+        hl.config({
+          plugin = {
+            hyprtasking = {
+              layout = "grid",
+              gap_size = 20,
+              border_size = 4,
+              bg_color = 0xff000000,
+              exit_on_hovered = false,
+              grid = {
+                rows = 1,
+                cols = 9,
+                loop = false,
+              },
+              gestures = {
+                enabled = true,
+                open_fingers = 4,
+                open_positive = true,
+                move_fingers = 3,
+              },
+            },
+          },
+        })
       '';
     };
 
