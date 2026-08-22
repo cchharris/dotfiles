@@ -136,6 +136,23 @@
       ];
     };
 
+    # nas configuration (headless server — no home-manager/desktop modules)
+    nixosConfigurations.nas = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = { inherit inputs; };
+      modules = [
+        ./hardware/nas.nix
+        ./nixos/modules/defaults.nix
+        ./nixos/modules/tailscale.nix
+        ./nixos/modules/fail2ban.nix
+        ./nixos/modules/zfs.nix
+        ./nixos/modules/nfs.nix
+        ./nixos/modules/samba.nix
+        ./nixos/modules/smartd.nix
+        ./nixos/hosts/nas.nix
+      ];
+    };
+
     darwinConfigurations.mac = nix-darwin.lib.darwinSystem {
       system = "aarch64-darwin";
       specialArgs = { inherit inputs; };

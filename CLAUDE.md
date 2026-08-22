@@ -18,6 +18,11 @@ sudo nixos-rebuild switch --flake ~/dotfiles#razer-blade
 sudo nixos-rebuild switch --flake ~/dotfiles#hobbynix
 ```
 
+**nas** (headless NAS, run on that machine):
+```bash
+sudo nixos-rebuild switch --flake ~/dotfiles#nas
+```
+
 **Home Manager only** (no sudo, faster iteration):
 ```bash
 home-manager switch --flake ~/dotfiles#cchharris
@@ -62,6 +67,7 @@ This is a multi-platform dotfiles repo using Nix (NixOS + nix-darwin + Home Mana
 `flake.nix` defines these outputs:
 - `nixosConfigurations.razer-blade` — Razer Blade laptop (Hyprland + NVIDIA Optimus)
 - `nixosConfigurations.hobbynix` — desktop PC (Hyprland + GTX 1080, xrdp, fail2ban)
+- `nixosConfigurations.nas` — headless NAS (ZFS, NFS/Samba, no home-manager/desktop modules); backs the Turing Pi k8s cluster's PVs, see `~/Repos/homelab`
 - `darwinConfigurations.mac` — macOS system config via nix-darwin
 - `homeConfigurations.cchharris` — standalone Home Manager (non-NixOS Linux)
 - `homeConfigurations.work-mac` — standalone Home Manager (work macOS, aarch64)
@@ -80,7 +86,11 @@ Each module defines a `cchharris.nixos.<name>.enable` option (mkEnableOption pat
 - `howdy.nix` — facial recognition (IR camera); configurable PAM services, certainty threshold, video device
 - `tailscale.nix` — Tailscale VPN (both hosts)
 - `xrdp.nix` — RDP server (hobbynix only)
-- `fail2ban.nix` — intrusion prevention (hobbynix only)
+- `fail2ban.nix` — intrusion prevention (hobbynix, nas)
+- `zfs.nix` — ZFS pool support: autoscrub, autotrim, encrypted datasets via passphrase-prompt (nas only)
+- `nfs.nix` — NFS server, exports configurable per-host (nas only)
+- `samba.nix` — Samba file sharing, shares configurable per-host (nas only)
+- `smartd.nix` — S.M.A.R.T. drive health monitoring (nas only)
 
 ### macOS system modules (`darwin/modules/`)
 
