@@ -142,6 +142,7 @@ in {
     environment.systemPackages = with pkgs; [
       protonup-qt
       nonSteamLaunchers
+      gamescope
     ];
   };
 }
