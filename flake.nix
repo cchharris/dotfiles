@@ -120,6 +120,7 @@
         ./nixos/modules/defaults.nix
         ./nixos/modules/desktop-common.nix
         ./nixos/modules/nvidia.nix
+        ./nixos/modules/gaming.nix
         ./nixos/modules/hyprland.nix
         ./nixos/modules/tailscale.nix
         ./nixos/modules/xrdp.nix

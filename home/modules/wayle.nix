@@ -19,7 +19,7 @@ let
     ghostty -e bash -c '
       cd ~/dotfiles
       nix flake update
-      sudo nixos-rebuild boot --flake .#razer-blade
+      sudo nixos-rebuild boot --flake ".#$(hostname)"
       echo "Done — reboot to apply. Press enter to exit"
       read
     '

@@ -18,6 +18,7 @@
     tailscale.enable = true;
     xrdp.enable = true;
     fail2ban.enable = true;
+    gaming.enable = true;
   };
 
   # Bluetooth configuration
@@ -50,9 +51,6 @@
     enable = true;
     polkitPolicyOwners = [ "cchharris" ];
   };
-
-  # Steam gaming support
-  programs.steam.enable = true;
 
   # zsh
   programs.zsh.enable = true;
