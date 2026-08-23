@@ -6,7 +6,7 @@ let
 
   nonSteamLaunchersScript = pkgs.fetchurl {
     url = "https://raw.githubusercontent.com/moraroy/NonSteamLaunchers-On-Steam-Deck/main/NonSteamLaunchers.sh";
-    hash = "sha256-ILJl6aRRuvpq1Mu/284SaD+PPnbuZz80jR0TihhbTi8=";
+    hash = "sha256-6t/8KyJShIkkALpxtD9jhkN7GDH2A3zOHIPC71wjnuQ=";
   };
 
   # Packages whose GI typelibs are needed for the GTK3 Python GUI
