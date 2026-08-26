@@ -3,6 +3,27 @@
 
 let
   cfg = config.cchharris.nixos.hyprland;
+
+  sddm-theme-catlogin = pkgs.stdenvNoCC.mkDerivation {
+    pname = "sddm-theme-catlogin";
+    version = "unstable-2026-08-25";
+
+    src = pkgs.fetchFromGitHub {
+      owner = "MaxBoss69";
+      repo = "Catlogin";
+      rev = "48f729b35959a4aecd5497565b5f668b9dbc22cf";
+      hash = "sha256-0kPSUnjV7NOKgc0NCgzDw9xH0QLxCFdKUxR73h0ILS4=";
+    };
+
+    dontBuild = true;
+
+    installPhase = ''
+      runHook preInstall
+      mkdir -p $out/share/sddm/themes/catlogin
+      cp -r $src/* $out/share/sddm/themes/catlogin/
+      runHook postInstall
+    '';
+  };
 in {
   options.cchharris.nixos.hyprland = {
     enable = lib.mkEnableOption "Hyprland window manager";
@@ -25,65 +46,13 @@ in {
     # Hint to electron apps to use wayland
     environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
-    # greetd with gtkgreet for login manager
-    services.greetd = {
+    # SDDM (Wayland-native greeter) with the Catlogin theme
+    services.displayManager.sddm = {
       enable = true;
-      settings = {
-        default_session = {
-          command = "${pkgs.cage}/bin/cage -s -- ${pkgs.gtkgreet}/bin/gtkgreet -s /etc/greetd/gtkgreet.css";
-          user = "greeter";
-        };
-      };
+      wayland.enable = true;
+      theme = "catlogin";
+      extraPackages = [ pkgs.kdePackages.qtsvg ];
     };
-
-    environment.etc."greetd/environments".text = ''
-      ${inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland}/bin/start-hyprland
-    '';
-
-    environment.etc."greetd/gtkgreet.css".text = ''
-      * {
-        background: #1e1e2e;
-        color: #cdd6f4;
-      }
-      window {
-        background-image: none;
-        background-color: #1e1e2e;
-      }
-      box#body {
-        background-color: #181825;
-        border-radius: 12px;
-        padding: 32px;
-        margin: 16px;
-      }
-      label {
-        color: #cdd6f4;
-      }
-      entry {
-        background-color: #313244;
-        color: #cdd6f4;
-        border: 1px solid #45475a;
-        border-radius: 6px;
-        padding: 8px;
-      }
-      entry:focus {
-        border-color: #89b4fa;
-      }
-      button {
-        background-color: #89b4fa;
-        color: #1e1e2e;
-        border: none;
-        border-radius: 6px;
-        padding: 8px 16px;
-        font-weight: bold;
-      }
-      button:hover {
-        background-color: #b4befe;
-      }
-      combobox button {
-        background-color: #313244;
-        color: #cdd6f4;
-      }
-    '';
 
     # X11 config for keyboard (still used by some apps)
     services.xserver.xkb = {
@@ -102,10 +71,12 @@ in {
 
 
     # Hyprland-specific packages
-    environment.systemPackages = with pkgs; [
+    environment.systemPackages = [
+      sddm-theme-catlogin
+    ] ++ (with pkgs; [
       ghostty
       hyprlock
       brightnessctl
-    ];
+    ]);
   };
 }
