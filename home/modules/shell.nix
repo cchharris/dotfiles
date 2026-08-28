@@ -110,14 +110,15 @@ in {
 
     # Interactive cheatsheet — fuzzy-search (via fzf) commands, fill in
     # placeholder args, and it types the finished command into the shell.
+    # navi defaults to shelling out via bash regardless of login shell,
+    # which throws a harmless "bind: warning: line editing not enabled"
+    # in non-interactive contexts. Tried pointing shell.command at zsh
+    # to avoid it, but navi's own internal `fn` scripts (e.g. `navi fn
+    # welcome`) are bash-specific and broke under zsh — reverted. The
+    # warning is cosmetic; leave shell.command at its bash default.
     programs.navi = {
       enable = true;
       enableZshIntegration = true;
-      # navi defaults to shelling out via bash for previews/variable
-      # interpolation regardless of login shell, which spawns a
-      # non-interactive bash and throws a harmless but noisy
-      # "bind: warning: line editing not enabled". Point it at zsh instead.
-      settings.shell.command = "zsh";
     };
 
     programs.fzf = {
