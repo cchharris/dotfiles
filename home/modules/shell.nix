@@ -48,31 +48,14 @@ in {
       '';
     };
 
+    # Catppuccin Powerline preset (https://starship.rs/presets/catppuccin-powerline),
+    # pinned to the Mocha flavor to match theming everywhere else (Ghostty, wayle, SDDM).
+    # `presets` pulls the actual .toml shipped inside the starship package itself,
+    # so this stays in sync with upstream instead of a hand-copied config.
     programs.starship = {
       enable = true;
       enableZshIntegration = true;
-      settings = {
-        add_newline = false;
-        character = {
-          success_symbol = "[>](bold green)";
-          error_symbol = "[x](bold red)";
-        };
-        directory = {
-          truncation_length = 3;
-          truncate_to_repo = true;
-        };
-        git_branch = {
-          symbol = " ";
-        };
-        nix_shell = {
-          symbol = " ";
-          format = "via [$symbol$state]($style) ";
-        };
-        golang = {
-          disabled = true;
-        };
-        command_timeout = 2000;
-      };
+      presets = [ "catppuccin-powerline" ];
     };
 
     # Useful CLI tools
