@@ -180,13 +180,13 @@
     homeConfigurations.cchharris = home-manager.lib.homeManagerConfiguration {
       pkgs = mkPkgs "x86_64-linux";
       extraSpecialArgs = { inherit inputs; };
-      modules = [ ./home/base.nix ];
+      modules = [ inputs.catppuccin.homeModules.catppuccin ./home/base.nix ];
     };
 
     homeConfigurations."work-mac" = home-manager.lib.homeManagerConfiguration {
       pkgs = mkPkgs "aarch64-darwin";
       extraSpecialArgs = { inherit inputs; };
-      modules = [ ./home/work-mac.nix ];
+      modules = [ inputs.catppuccin.homeModules.catppuccin ./home/work-mac.nix ];
     };
 
     # work-linux: standalone home-manager for non-NixOS work machines.
@@ -195,7 +195,7 @@
     homeConfigurations."work-linux" = home-manager.lib.homeManagerConfiguration {
       pkgs = mkPkgs "x86_64-linux";
       extraSpecialArgs = { inherit inputs; };
-      modules = [ ./home/work-linux.nix ];
+      modules = [ inputs.catppuccin.homeModules.catppuccin ./home/work-linux.nix ];
     };
   };
 }
