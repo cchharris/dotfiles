@@ -108,6 +108,13 @@ in {
       '';
     };
 
+    # Interactive cheatsheet — fuzzy-search (via fzf) commands, fill in
+    # placeholder args, and it types the finished command into the shell.
+    programs.navi = {
+      enable = true;
+      enableZshIntegration = true;
+    };
+
     programs.fzf = {
       enable = true;
       enableZshIntegration = true;
