@@ -113,6 +113,11 @@ in {
     programs.navi = {
       enable = true;
       enableZshIntegration = true;
+      # navi defaults to shelling out via bash for previews/variable
+      # interpolation regardless of login shell, which spawns a
+      # non-interactive bash and throws a harmless but noisy
+      # "bind: warning: line editing not enabled". Point it at zsh instead.
+      settings.shell.command = "zsh";
     };
 
     programs.fzf = {
