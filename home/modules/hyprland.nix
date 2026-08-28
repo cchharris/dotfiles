@@ -15,6 +15,11 @@ in {
       default = "1";
       description = "Monitor scale factor (e.g. \"1\", \"1.5\", \"2\")";
     };
+    gpuCount = lib.mkOption {
+      type = lib.types.ints.positive;
+      default = 1;
+      description = "Number of GPU boxes to show in btop. Optimus laptops (iGPU + dGPU) should set 2.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -38,7 +43,6 @@ in {
       swappy        # screenshot annotation
       wf-recorder   # screen recording (software encode)
       gpu-screen-recorder # NVENC hardware-encoded recording — game clips
-      btop          # system monitor
       brightnessctl # backlight control
       adwaita-icon-theme # icons for GTK apps
       kanshi    # auto-apply monitor profiles on connect/disconnect
@@ -237,6 +241,19 @@ in {
 
     # Hyprlock configuration
     programs.hyprlock.enable = true;
+
+    # System monitor — shown_boxes gpu list sized to this host's GPU count
+    # (Optimus laptops set gpuCount = 2 for iGPU + dGPU).
+    programs.btop = {
+      enable = true;
+      settings = {
+        shown_boxes = lib.concatStringsSep " "
+          ([ "cpu" "mem" "net" "proc" ]
+          ++ map (i: "gpu${toString i}") (lib.range 0 (cfg.gpuCount - 1)));
+        # Nix manages this file; don't let btop overwrite it on exit.
+        save_config_on_exit = false;
+      };
+    };
 
     # GTK dark theme
     gtk = {
