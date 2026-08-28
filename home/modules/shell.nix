@@ -129,13 +129,10 @@ in {
       changeDirWidgetOptions = [ "--preview 'eza --tree --color=always {} | head -200'" ];
       fileWidgetOptions = [ "--preview 'bat -n --color=always {}'" ];
     };
+    catppuccin.fzf.enable = true;
 
-    programs.bat = {
-      enable = true;
-      config = {
-        theme = "TwoDark";
-      };
-    };
+    programs.bat.enable = true;
+    catppuccin.bat.enable = true; # was hardcoded to TwoDark; catppuccin.bat sets the theme itself
 
     programs.zoxide = {
       enable = true;

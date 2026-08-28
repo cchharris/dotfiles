@@ -244,6 +244,7 @@ in {
 
     # Hyprlock configuration
     programs.hyprlock.enable = true;
+    catppuccin.hyprlock.enable = true;
 
     # System monitor — shown_boxes gpu list sized to this host's GPU count
     # (Optimus laptops set gpuCount = 2 for iGPU + dGPU).
@@ -257,6 +258,7 @@ in {
         save_config_on_exit = false;
       };
     };
+    catppuccin.btop.enable = true;
 
     # GTK dark theme
     gtk = {
@@ -266,6 +268,15 @@ in {
         package = pkgs.adw-gtk3;
       };
     };
+    # Widget theme (above) stays adw-gtk3-dark — catppuccin/nix doesn't ship a
+    # GTK widget theme, only icons + cursors, so layer those on top instead.
+    catppuccin.gtk.icon.enable = true;
+    # Sets home.pointerCursor, which home-manager's own cursor module then
+    # uses to set HYPRCURSOR_THEME/HYPRCURSOR_SIZE automatically.
+    catppuccin.cursors.enable = true;
+    # catppuccin's cursors module doesn't set this itself (deprecation warning
+    # otherwise) — home-manager now wants it explicit rather than inferred.
+    home.pointerCursor.enable = true;
 
     # Tell XDG portal (and apps that query it) to prefer dark mode
     dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
