@@ -85,6 +85,7 @@ in {
       htop         # Process viewer
       tree         # Directory tree
       dust         # Better du
+      duf          # Better df
       tldr         # Simplified man pages
       claude-code  # Claude AI assistant CLI
     ] ++ lib.optionals (!pkgs.stdenv.isDarwin) [

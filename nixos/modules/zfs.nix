@@ -33,6 +33,6 @@ in {
     # after boot with either:
     #   ssh nas 'systemd-tty-ask-password-agent'   # answers the pending prompt
     #   ssh nas 'zfs load-key -a && zfs mount -a'  # or just do it directly
-    environment.systemPackages = with pkgs; [ zfs smartmontools ];
+    environment.systemPackages = with pkgs; [ zfs ];  # smartmontools now in defaults.nix
   };
 }

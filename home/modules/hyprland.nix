@@ -30,6 +30,7 @@ in {
       nautilus
       wl-clipboard
       wofi
+      awww           # wallpaper daemon backend wayle's wallpaper engine renders through (formerly "swww")
       pavucontrol   # volume mixer (wayle audio → open mixer)
       playerctl     # MPRIS media control (wayle media widget)
       grim          # screenshot tool
@@ -104,6 +105,14 @@ in {
           ecosystem = {
             no_update_news = true;
           };
+
+          misc = {
+            disable_hyprland_logo = true;
+            disable_splash_rendering = true;
+            # Matches Catlogin's SDDM backgroundColor so the screen doesn't
+            # jump color before wayle's wallpaper paints over it.
+            background_color = "0x2a2d3d";
+          };
         } // lib.optionalAttrs cfg.nvidiaGbmBackend {
           # GTX 1080 (Pascal) has hardware cursor issues under Wayland/Hyprland
           cursor = {
@@ -123,10 +132,11 @@ in {
         local menu = "walker"
 
         hl.on("hyprland.start", function()
+          hl.exec_cmd("awww-daemon")
+          hl.exec_cmd("wayle shell")
           hl.exec_cmd("kanshi")
           hl.exec_cmd("elephant")
           hl.exec_cmd("pgrep trayscale || trayscale --hide-window")
-          hl.exec_cmd("wayle shell")
           hl.exec_cmd("wl-clipboard-history -t")
           hl.exec_cmd("wl-paste --watch cliphist store")
           hl.exec_cmd('rm "$HOME/.cache/cliphist/db"')
