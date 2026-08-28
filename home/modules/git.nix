@@ -9,6 +9,14 @@ let
   # manual step: mkdir -p ~/.1password && ln -sf "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock" ~/.1password/agent.sock).
   # This lets us use the same path on Linux and macOS.
   opAgentSock = "~/.1password/agent.sock";
+
+  # Personal GitHub (cchharris) SSH key, already present in 1Password's agent
+  # alongside the work key. GitHub picks whichever key the agent offers first
+  # for a bare "github.com" host, so a separate alias + IdentitiesOnly is the
+  # only way to force this specific key for personal repos.
+  personalGithubPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIyWWc5WYguyz4LEjIDypqAIMnh02N/DtUufxyrapd3b GitHub (cchharris)";
+  personalGithubPubkeyPath = "~/.ssh/id_cchharris_personal.pub";
+  personalGithubAlias = "github.com-personal";
 in {
   options.cchharris.home.git = {
     enable = lib.mkEnableOption "git configuration";
@@ -56,7 +64,15 @@ in {
         settings."*" = {
           IdentityAgent = opAgentSock;
         };
+        settings.${personalGithubAlias} = {
+          HostName = "github.com";
+          User = "git";
+          IdentityAgent = opAgentSock;
+          IdentitiesOnly = "yes";
+          IdentityFile = personalGithubPubkeyPath;
+        };
       };
+      home.file.".ssh/id_cchharris_personal.pub".text = personalGithubPubkey + "\n";
     })
 
     (lib.mkIf (!cfg.manageSshConfig) {
@@ -72,7 +88,16 @@ in {
       + ''
         Host *
             IdentityAgent ${opAgentSock}
+
+        Host ${personalGithubAlias}
+            HostName github.com
+            User git
+            IdentityAgent ${opAgentSock}
+            IdentitiesOnly yes
+            IdentityFile ${personalGithubPubkeyPath}
       '';
+
+      home.file.".ssh/id_cchharris_personal.pub".text = personalGithubPubkey + "\n";
 
       home.activation.checkSshConfigInclude = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         sshConfig="$HOME/.ssh/config"
