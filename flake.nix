@@ -33,6 +33,10 @@
     # cache is built against their own pinned nixpkgs revision, and following ours
     # would cause cache misses (forcing a from-source kernel build).
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+    catppuccin = {
+      url = "github:catppuccin/nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, nix-darwin, ... }@inputs:
@@ -87,6 +91,7 @@
         ./nixos/modules/cachyos.nix
         ./nixos/modules/cachyos-kernel.nix
         inputs.chaotic.nixosModules.default
+        inputs.catppuccin.nixosModules.catppuccin
         ./nixos/hosts/razer-blade.nix
         home-manager.nixosModules.home-manager
         {
@@ -95,6 +100,7 @@
           home-manager.backupFileExtension = "backup";
           home-manager.users.cchharris = import ./home/razer-blade.nix;
           home-manager.extraSpecialArgs = { inherit inputs; };
+          home-manager.sharedModules = [ inputs.catppuccin.homeModules.catppuccin ];
         }
       ];
     };
@@ -124,6 +130,7 @@
         ./nixos/modules/tailscale.nix
         ./nixos/modules/xrdp.nix
         ./nixos/modules/fail2ban.nix
+        inputs.catppuccin.nixosModules.catppuccin
         ./nixos/hosts/hobbynix.nix
         home-manager.nixosModules.home-manager
         {
@@ -132,6 +139,7 @@
           home-manager.backupFileExtension = "backup";
           home-manager.users.cchharris = import ./home/hobbynix.nix;
           home-manager.extraSpecialArgs = { inherit inputs; };
+          home-manager.sharedModules = [ inputs.catppuccin.homeModules.catppuccin ];
         }
       ];
     };

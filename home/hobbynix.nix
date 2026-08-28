@@ -10,6 +10,7 @@
     ./modules/hyprland.nix
     ./modules/ashell.nix
     ./modules/walker.nix
+    ./modules/catppuccin.nix
   ];
 
   home.username = "cchharris";
@@ -29,6 +30,7 @@
     };
     ashell.enable = true;
     walker.enable = true;
+    catppuccinTheme.enable = true;
   };
 
   # Discord
