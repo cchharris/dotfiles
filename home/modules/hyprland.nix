@@ -88,6 +88,9 @@ in {
         config = {
           general = {
             layout = "dwindle";
+            gaps_in = 2;   # was Hyprland's default 5
+            gaps_out = 4;  # was Hyprland's default 20 — that plus wayle's exclusive
+                           # bar zone was the dead space near the top edge
           };
 
           input = {
