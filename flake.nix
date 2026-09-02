@@ -125,6 +125,7 @@
         ./nixos/modules/tailscale.nix
         ./nixos/modules/xrdp.nix
         ./nixos/modules/fail2ban.nix
+        ./nixos/modules/cachyos.nix
         ./nixos/hosts/hobbynix.nix
         home-manager.nixosModules.home-manager
         {

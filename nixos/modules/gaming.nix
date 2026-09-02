@@ -100,6 +100,9 @@ in {
       extraCompatPackages = with pkgs; [
         proton-ge-bin
       ];
+      # steamui.so (Aug 2026 client) dlmopens libXtst.so.6 but the steam FHS
+      # doesn't pull in 32-bit libXtst by default — add it explicitly.
+      extraPackages = [ pkgs.pkgsi686Linux.xorg.libXtst ];
       package = pkgs.steam.override {
         buildFHSEnv = pkgs.buildFHSEnv.override {
           # capsh's "--" passes remaining args to bash rather than exec'ing directly,

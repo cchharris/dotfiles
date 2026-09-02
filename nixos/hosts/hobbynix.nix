@@ -19,6 +19,7 @@
     xrdp.enable = true;
     fail2ban.enable = true;
     gaming.enable = true;
+    cachyos.enable = true;
   };
 
   # Bluetooth configuration
@@ -81,6 +82,13 @@
     ${pkgs.openresolv}/bin/resolvconf -d tun0.expressvpn 2>/dev/null || true
   '';
   environment.systemPackages = with pkgs; [ expressvpn ];
+
+  # Seagate 2TB data drive (NTFS, always-on)
+  fileSystems."/mnt/data" = {
+    device = "/dev/disk/by-uuid/981fb539-0e6c-4f44-a5f2-89b7358a8853";
+    fsType = "btrfs";
+    options = [ "compress=zstd" "nofail" "x-systemd.automount" ];
+  };
 
   # System state version
   system.stateVersion = "25.11";
