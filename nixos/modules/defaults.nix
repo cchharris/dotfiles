@@ -48,7 +48,20 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelParams = [ "button.lid_init_state=open" ];
+  boot.kernelParams = [
+    "button.lid_init_state=open"
+    "quiet"
+    "splash"
+    "loglevel=3"
+    "vt.global_cursor_default=0"
+    "rd.systemd.show_status=false"
+    "rd.udev.log_level=3"
+    "udev.log_priority=3"
+  ];
+
+  # Plymouth boot splash — hides kernel/systemd console text before SDDM appears
+  boot.plymouth.enable = true;
+  boot.consoleLogLevel = 0;
 
   # Networking
   networking.networkmanager.enable = true;
@@ -85,6 +98,7 @@
     git
     fzf
     bind  # provides dig, nslookup for DNS debugging
+    smartmontools  # S.M.A.R.T. drive health (smartctl)
   ];
 
   # Trust homelab local CA so .home services work with HTTPS

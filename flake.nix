@@ -33,6 +33,10 @@
     # cache is built against their own pinned nixpkgs revision, and following ours
     # would cause cache misses (forcing a from-source kernel build).
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+    catppuccin = {
+      url = "github:catppuccin/nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, nix-darwin, ... }@inputs:
@@ -87,6 +91,7 @@
         ./nixos/modules/cachyos.nix
         ./nixos/modules/cachyos-kernel.nix
         inputs.chaotic.nixosModules.default
+        inputs.catppuccin.nixosModules.catppuccin
         ./nixos/hosts/razer-blade.nix
         home-manager.nixosModules.home-manager
         {
@@ -95,6 +100,7 @@
           home-manager.backupFileExtension = "backup";
           home-manager.users.cchharris = import ./home/razer-blade.nix;
           home-manager.extraSpecialArgs = { inherit inputs; };
+          home-manager.sharedModules = [ inputs.catppuccin.homeModules.catppuccin ];
         }
       ];
     };
@@ -126,6 +132,7 @@
         ./nixos/modules/xrdp.nix
         ./nixos/modules/fail2ban.nix
         ./nixos/modules/cachyos.nix
+        inputs.catppuccin.nixosModules.catppuccin
         ./nixos/hosts/hobbynix.nix
         home-manager.nixosModules.home-manager
         {
@@ -134,6 +141,7 @@
           home-manager.backupFileExtension = "backup";
           home-manager.users.cchharris = import ./home/hobbynix.nix;
           home-manager.extraSpecialArgs = { inherit inputs; };
+          home-manager.sharedModules = [ inputs.catppuccin.homeModules.catppuccin ];
         }
       ];
     };
@@ -174,13 +182,13 @@
     homeConfigurations.cchharris = home-manager.lib.homeManagerConfiguration {
       pkgs = mkPkgs "x86_64-linux";
       extraSpecialArgs = { inherit inputs; };
-      modules = [ ./home/base.nix ];
+      modules = [ inputs.catppuccin.homeModules.catppuccin ./home/base.nix ];
     };
 
     homeConfigurations."work-mac" = home-manager.lib.homeManagerConfiguration {
       pkgs = mkPkgs "aarch64-darwin";
       extraSpecialArgs = { inherit inputs; };
-      modules = [ ./home/work-mac.nix ];
+      modules = [ inputs.catppuccin.homeModules.catppuccin ./home/work-mac.nix ];
     };
 
     # work-linux: standalone home-manager for non-NixOS work machines.
@@ -189,7 +197,7 @@
     homeConfigurations."work-linux" = home-manager.lib.homeManagerConfiguration {
       pkgs = mkPkgs "x86_64-linux";
       extraSpecialArgs = { inherit inputs; };
-      modules = [ ./home/work-linux.nix ];
+      modules = [ inputs.catppuccin.homeModules.catppuccin ./home/work-linux.nix ];
     };
   };
 }

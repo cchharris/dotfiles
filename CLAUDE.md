@@ -79,7 +79,7 @@ Each module defines a `cchharris.nixos.<name>.enable` option (mkEnableOption pat
 - `defaults.nix` — locale, networking, base system packages, user account
 - `nvidia.nix` — NVIDIA GPU drivers (supports Optimus for razer-blade, standalone for hobbynix)
 - `gaming.nix` — Steam + Proton; includes the `nonSteamLaunchers` custom derivation (see below)
-- `hyprland.nix` — Hyprland WM, greetd/gtkgreet login, xdg-portal, hyprlock PAM
+- `hyprland.nix` — Hyprland WM, SDDM login (Catlogin theme, fetched pinned from GitHub), xdg-portal, hyprlock PAM
 - `gnome.nix` — GNOME (kept for reference; not used by any active host)
 - `desktop-common.nix` — PipeWire, printing, Firefox, Edge, blueman, KDE Connect, 1Password
 - `razer.nix` — Razer-specific hardware config (openrazer, polychromatic)

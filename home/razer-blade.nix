@@ -11,6 +11,7 @@
     ./modules/wayle.nix
     ./modules/walker.nix
     ./modules/k8s.nix
+    ./modules/catppuccin.nix
   ];
 
   home.username = "cchharris";
@@ -27,12 +28,14 @@
       enable = true;
       nvidiaEnvVars = true;  # needed for VA-API and GLX on NVIDIA Optimus
       # nvidiaGbmBackend intentionally off — Optimus uses Intel for display output
+      gpuCount = 2;  # Intel iGPU + NVIDIA dGPU
       monitorScale = "1.6";
       polychromaticAutostart = true;
     };
     wayle.enable = true;
     walker.enable = true;
     k8s.enable = true;
+    catppuccinTheme.enable = true;
   };
 
   # Discord

@@ -48,31 +48,14 @@ in {
       '';
     };
 
+    # Catppuccin Powerline preset (https://starship.rs/presets/catppuccin-powerline),
+    # pinned to the Mocha flavor to match theming everywhere else (Ghostty, wayle, SDDM).
+    # `presets` pulls the actual .toml shipped inside the starship package itself,
+    # so this stays in sync with upstream instead of a hand-copied config.
     programs.starship = {
       enable = true;
       enableZshIntegration = true;
-      settings = {
-        add_newline = false;
-        character = {
-          success_symbol = "[>](bold green)";
-          error_symbol = "[x](bold red)";
-        };
-        directory = {
-          truncation_length = 3;
-          truncate_to_repo = true;
-        };
-        git_branch = {
-          symbol = " ";
-        };
-        nix_shell = {
-          symbol = " ";
-          format = "via [$symbol$state]($style) ";
-        };
-        golang = {
-          disabled = true;
-        };
-        command_timeout = 2000;
-      };
+      presets = [ "catppuccin-powerline" ];
     };
 
     # Useful CLI tools
@@ -85,6 +68,7 @@ in {
       htop         # Process viewer
       tree         # Directory tree
       dust         # Better du
+      duf          # Better df
       tldr         # Simplified man pages
       claude-code  # Claude AI assistant CLI
     ] ++ lib.optionals (!pkgs.stdenv.isDarwin) [
@@ -99,6 +83,44 @@ in {
       enableZshIntegration = true;
     };
 
+    # Terminal multiplexer — session persistence. Not shell-integrated (no
+    # auto-start on new terminals) yet; invoke manually with `zellij`.
+    programs.zellij = {
+      enable = true;
+      settings.theme = "catppuccin-mocha";
+      # zellij ships no built-in themes — colors from catppuccin/zellij upstream.
+      themes.catppuccin-mocha = ''
+        themes {
+          catppuccin-mocha {
+            bg "#585b70"
+            fg "#cdd6f4"
+            red "#f38ba8"
+            green "#a6e3a1"
+            blue "#89b4fa"
+            yellow "#f9e2af"
+            magenta "#f5c2e7"
+            orange "#fab387"
+            cyan "#89dceb"
+            black "#181825"
+            white "#cdd6f4"
+          }
+        }
+      '';
+    };
+
+    # Interactive cheatsheet — fuzzy-search (via fzf) commands, fill in
+    # placeholder args, and it types the finished command into the shell.
+    # navi defaults to shelling out via bash regardless of login shell,
+    # which throws a harmless "bind: warning: line editing not enabled"
+    # in non-interactive contexts. Tried pointing shell.command at zsh
+    # to avoid it, but navi's own internal `fn` scripts (e.g. `navi fn
+    # welcome`) are bash-specific and broke under zsh — reverted. The
+    # warning is cosmetic; leave shell.command at its bash default.
+    programs.navi = {
+      enable = true;
+      enableZshIntegration = true;
+    };
+
     programs.fzf = {
       enable = true;
       enableZshIntegration = true;
@@ -107,13 +129,10 @@ in {
       changeDirWidgetOptions = [ "--preview 'eza --tree --color=always {} | head -200'" ];
       fileWidgetOptions = [ "--preview 'bat -n --color=always {}'" ];
     };
+    catppuccin.fzf.enable = true;
 
-    programs.bat = {
-      enable = true;
-      config = {
-        theme = "TwoDark";
-      };
-    };
+    programs.bat.enable = true;
+    catppuccin.bat.enable = true; # was hardcoded to TwoDark; catppuccin.bat sets the theme itself
 
     programs.zoxide = {
       enable = true;
