@@ -38,12 +38,14 @@ in {
       after = [ "tailscaled.service" ];
       bindsTo = [ "tailscaled.service" ];
       wantedBy = [ "multi-user.target" ];
+      path = [ pkgs.iproute2 pkgs.iptables ];
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
-        # ts-input is created by Tailscale after the daemon starts; poll until it exists.
-        ExecStartPre = "${pkgs.bash}/bin/bash -c 'for i in $(seq 1 30); do ${pkgs.iptables}/bin/iptables -n -L ts-input >/dev/null 2>&1 && exit 0; sleep 1; done; exit 1'";
-        ExecStart = "${pkgs.iptables}/bin/iptables -I ts-input 1 -s 100.64.100.0/24 -i tun0 -j RETURN";
+        # No-op if ExpressVPN isn't connected (tun0 absent); otherwise wait up
+        # to 30s for Tailscale to create ts-input before inserting the rule.
+        ExecStartPre = "${pkgs.bash}/bin/bash -c 'ip link show tun0 >/dev/null 2>&1 || exit 0; for i in $(seq 1 30); do ${pkgs.iptables}/bin/iptables -n -L ts-input >/dev/null 2>&1 && exit 0; sleep 1; done; exit 1'";
+        ExecStart = "${pkgs.bash}/bin/bash -c 'ip link show tun0 >/dev/null 2>&1 && ${pkgs.iptables}/bin/iptables -I ts-input 1 -s 100.64.100.0/24 -i tun0 -j RETURN || true'";
         ExecStop = "${pkgs.iptables}/bin/iptables -D ts-input -s 100.64.100.0/24 -i tun0 -j RETURN || true";
       };
     };
