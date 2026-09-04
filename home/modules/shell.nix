@@ -71,6 +71,7 @@ in {
       duf          # Better df
       tldr         # Simplified man pages
       claude-code  # Claude AI assistant CLI
+      (callPackage ../../pkgs/herdr.nix {}) # Terminal workspace manager for AI coding agents
     ] ++ lib.optionals (!pkgs.stdenv.isDarwin) [
       gcc          # C compiler (Linux only — on macOS it shadows Apple clang and breaks native module builds)
     ];
