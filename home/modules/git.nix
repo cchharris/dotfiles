@@ -17,6 +17,9 @@ let
   personalGithubPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIyWWc5WYguyz4LEjIDypqAIMnh02N/DtUufxyrapd3b GitHub (cchharris)";
   personalGithubPubkeyPath = "~/.ssh/id_cchharris_personal.pub";
   personalGithubAlias = "github.com-personal";
+
+  # nas access key routing (see cchharris.home.git.nasIdentity below).
+  nasPubkeyPath = lib.optionalString (cfg.nasIdentity != null) (toString (pkgs.writeText "nas-identity.pub" cfg.nasIdentity));
 in {
   options.cchharris.home.git = {
     enable = lib.mkEnableOption "git configuration";
@@ -49,6 +52,20 @@ in {
         nix-managed) - a home-manager activation check warns if it's missing.
       '';
     };
+
+    nasIdentity = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = ''
+        This machine's own dedicated public key (as literal ssh-ed25519 text,
+        generated in 1Password — see nixos/hosts/nas.nix), used only to pin
+        which identity gets offered when SSHing to nas. The 1Password agent
+        otherwise offers every enabled key indiscriminately; without this, a
+        lost/compromised machine's key isn't the only thing you'd have to
+        worry about revoking for nas access. Leave null on hosts that don't
+        need nas access.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
@@ -70,6 +87,17 @@ in {
           IdentityAgent = opAgentSock;
           IdentitiesOnly = "yes";
           IdentityFile = personalGithubPubkeyPath;
+        };
+        # Covers plain "nas" (Tailscale MagicDNS or /etc/hosts) and "nas.local"
+        # (avahi/mDNS) — add the tailnet's full nas.<tailnet>.ts.net form here
+        # too if you end up SSHing by that name instead.
+        settings."nas nas.local" = lib.mkIf (cfg.nasIdentity != null) {
+          # IdentityFile can point at a public key (OpenSSH 8.9+): ssh uses it
+          # to select the matching private key from the agent, so only this
+          # machine's own key is ever offered for nas — no private key needed
+          # locally, this file is just the public half.
+          IdentityFile = nasPubkeyPath;
+          IdentitiesOnly = true;
         };
       };
       home.file.".ssh/id_cchharris_personal.pub".text = personalGithubPubkey + "\n";
@@ -95,6 +123,13 @@ in {
             IdentityAgent ${opAgentSock}
             IdentitiesOnly yes
             IdentityFile ${personalGithubPubkeyPath}
+      ''
+      + lib.optionalString (cfg.nasIdentity != null) ''
+
+        Host nas nas.local
+            IdentityAgent ${opAgentSock}
+            IdentitiesOnly yes
+            IdentityFile ${nasPubkeyPath}
       '';
 
       home.file.".ssh/id_cchharris_personal.pub".text = personalGithubPubkey + "\n";

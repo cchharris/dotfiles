@@ -22,7 +22,10 @@
     shell.enable = true;
     editor.enable = true;
     terminal.enable = true;
-    git.enable = true;
+    git = {
+      enable = true;
+      nasIdentity = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBf0rftj3rBkAvJSi9KYpb2k2VViVhE5D1e/XtD/BhS6";
+    };
     hyprland = {
       enable = true;
       nvidiaEnvVars = true;
