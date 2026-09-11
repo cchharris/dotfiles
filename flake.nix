@@ -159,7 +159,57 @@
         ./nixos/modules/nfs.nix
         ./nixos/modules/samba.nix
         ./nixos/modules/smartd.nix
+        ./nixos/modules/zfs-vault.nix
         ./nixos/hosts/nas.nix
+      ];
+    };
+
+    # aibox configuration (headless) — dual-GPU inference box, NVIDIA RTX 5080 + AMD RX 7900 XTX
+    nixosConfigurations.aibox = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = { inherit inputs; };
+      modules = [
+        ./hardware/aibox.nix
+        ./nixos/modules/defaults.nix
+        ./nixos/modules/tailscale.nix
+        ./nixos/modules/nvidia.nix
+        ./nixos/modules/amdgpu.nix
+        ./nixos/hosts/aibox.nix
+      ];
+    };
+
+    # mainrig configuration (Hyprland) — main dev + gaming desktop
+    nixosConfigurations.mainrig = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = { inherit inputs; };
+      modules = [
+        { nixpkgs.overlays = [ (final: prev: {
+            egl-wayland2 = prev.egl-wayland2.overrideAttrs (_: {
+              version = "1.0.2-unstable-2026-04-30";
+              src = prev.fetchFromGitHub {
+                owner = "NVIDIA";
+                repo = "egl-wayland2";
+                rev = "6d3d235808959a62259964c2dbd01ece594c1e7f";
+                hash = "sha256-eFLxJ2SqnQjKfxwvbxMXcVDKPrdTpAuPE3H+SqDuSI4=";
+              };
+            });
+        }) ]; }
+        ./hardware/mainrig.nix
+        ./nixos/modules/defaults.nix
+        ./nixos/modules/desktop-common.nix
+        ./nixos/modules/nvidia.nix
+        ./nixos/modules/gaming.nix
+        ./nixos/modules/hyprland.nix
+        ./nixos/modules/tailscale.nix
+        ./nixos/hosts/mainrig.nix
+        home-manager.nixosModules.home-manager
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.backupFileExtension = "backup";
+          home-manager.users.cchharris = import ./home/mainrig.nix;
+          home-manager.extraSpecialArgs = { inherit inputs; };
+        }
       ];
     };
 
