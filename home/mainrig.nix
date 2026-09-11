@@ -1,0 +1,41 @@
+# Home Manager configuration for mainrig (Hyprland)
+{ config, lib, pkgs, ... }:
+
+{
+  imports = [
+    ./modules/shell.nix
+    ./modules/editor.nix
+    ./modules/terminal.nix
+    ./modules/git.nix
+    ./modules/hyprland.nix
+    ./modules/ashell.nix
+    ./modules/walker.nix
+    ./modules/k8s.nix
+  ];
+
+  home.username = "cchharris";
+  home.homeDirectory = "/home/cchharris";
+  home.stateVersion = "26.05";
+
+  # Enable Hyprland modules instead of GNOME
+  cchharris.home = {
+    shell.enable = true;
+    editor.enable = true;
+    terminal.enable = true;
+    git.enable = true;
+    hyprland = {
+      enable = true;
+      nvidiaEnvVars = true;
+      nvidiaGbmBackend = true;  # single GPU, no Optimus
+    };
+    ashell.enable = true;
+    walker.enable = true;
+    k8s.enable = true;
+  };
+
+  # Discord
+  programs.discord.enable = true;
+
+  # Let Home Manager manage itself
+  programs.home-manager.enable = true;
+}
