@@ -69,13 +69,29 @@
             # (openrazer/openrazer commit ef57422, released 2026-05-21); nixpkgs
             # hasn't updated yet as of the 2026-05-23 nixos-unstable pin.
             linuxPackages = prev.linuxPackages.extend (_: lpPrev: {
-              openrazer = lpPrev.openrazer.overrideAttrs (_: {
+              openrazer = lpPrev.openrazer.overrideAttrs (old: {
                 src = prev.fetchFromGitHub {
                   owner = "openrazer";
                   repo = "openrazer";
                   tag = "v3.12.3";
                   hash = "sha256-X1NPqbugBdxD5Nt9wIwQADV4CuydGLpgKhlNazVdrIY=";
                 };
+                # Linux 7.2.0 has dropped strncpy() from the kernel's exported
+                # string API entirely (kernel-wide hardening effort replacing
+                # it with strscpy()) — confirmed by testing: re-adding
+                # <linux/string.h> still left it undeclared, since the
+                # declaration is gone, not missing an include. v3.12.3's
+                # driver/*.c still call strncpy() directly; strscpy() takes
+                # the same 3-arg form used at every call site and is a safe
+                # drop-in (also guarantees NUL termination, unlike strncpy()).
+                # Same fix duplicated in cachyos-kernel.nix's openrazer
+                # override, for the same reason the src pin above is too.
+                postPatch = (old.postPatch or "") + ''
+                  sed -i 's/\bstrncpy(/strscpy(/g' \
+                    driver/razerkbd_driver.c \
+                    driver/razermouse_driver.c \
+                    driver/razeraccessory_driver.c
+                '';
               });
             });
         }) ]; }

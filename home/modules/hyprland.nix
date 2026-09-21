@@ -132,7 +132,14 @@ in {
       # hl.dsp.* calls (https://wiki.hypr.land/Configuring/Basics/Binds/), autostart,
       # and hyprtasking's plugin config (its README documents this Lua form directly:
       # https://github.com/raybbian/hyprtasking#configuration). The plugin itself is
-      # loaded via the `plugins` option above, not here.
+      # loaded via the `plugins` option above — but for configType = "lua", Home
+      # Manager emits that as a *deferred* `hyprctl plugin load` inside an
+      # `hl.on("hyprland.start", ...)` handler (see the generated config's
+      # "startup" section), not a synchronous native `plugin = <path>` directive.
+      # So hyprtasking's own hl.config({plugin.hyprtasking = {...}}) block below
+      # must also be deferred to hyprland.start — otherwise it runs during the
+      # initial parse, before the plugin has loaded and registered its config
+      # schema, and every key in it fails as "unknown config key".
       extraConfig = ''
         local mod = "SUPER"
         local terminal = "ghostty"
@@ -217,28 +224,32 @@ in {
         -- hyprtasking
         hl.bind(mod .. " + TAB", function() hl.plugin.hyprtasking.toggle("cursor") end)
 
-        hl.config({
-          plugin = {
-            hyprtasking = {
-              layout = "grid",
-              gap_size = 20,
-              border_size = 4,
-              bg_color = 0xff000000,
-              exit_on_hovered = false,
-              grid = {
-                rows = 1,
-                cols = 9,
-                loop = false,
-              },
-              gestures = {
-                enabled = true,
-                open_fingers = 4,
-                open_positive = true,
-                move_fingers = 3,
+        -- Deferred to hyprland.start so this runs after the plugin-load handler
+        -- above has actually loaded hyprtasking — see the comment on extraConfig.
+        hl.on("hyprland.start", function()
+          hl.config({
+            plugin = {
+              hyprtasking = {
+                layout = "grid",
+                gap_size = 20,
+                border_size = 4,
+                bg_color = 0xff000000,
+                exit_on_hovered = false,
+                grid = {
+                  rows = 1,
+                  cols = 9,
+                  loop = false,
+                },
+                gestures = {
+                  enabled = true,
+                  open_fingers = 4,
+                  open_positive = true,
+                  move_fingers = 3,
+                },
               },
             },
-          },
-        })
+          })
+        end)
       '';
     };
 

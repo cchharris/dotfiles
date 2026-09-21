@@ -32,6 +32,16 @@ in {
       ForceDarkModeEnabled = true;
     };
 
+    # Force-install the "Claude in Chrome" extension via managed policy — same
+    # mechanism as the Edge dark-theme policy above, pointed at Chrome's policy
+    # dir instead. Note: force-installed extensions can't be disabled/removed
+    # from chrome://extensions (shown as "installed by your administrator").
+    environment.etc."opt/chrome/policies/managed/claude-extension.json".text = builtins.toJSON {
+      ExtensionInstallForcelist = [
+        "fcoeoabgfenejglbffodgkkbkcdhcgfn;https://clients2.google.com/service/update2/crx"
+      ];
+    };
+
     # UPower — required by AstalBattery (hyprpanel battery widget uses D-Bus)
     services.upower.enable = true;
 
@@ -58,12 +68,15 @@ in {
     environment.systemPackages = with pkgs; [
       (microsoft-edge.override {
         commandLineArgs = [
-          # Force XWayland to rule out native Wayland as the crash source.
-          # Edge 147 crashes at 0xe489aca via GLib IPC dispatch on native
-          # Wayland regardless of GPU flags — testing X11 mode as workaround.
+          # Force XWayland. Edge 150 on native Wayland SIGSEGVs ~4min after
+          # a VA-API "vaEndPicture failed, internal decoding error" during
+          # video playback (2 reproductions, 2026-09-13: 19:47:14->19:49:25,
+          # 19:54:42->19:58:55) — looks like delayed memory corruption from
+          # the failed hw decode, not tied to any user action in between.
           "--ozone-platform=x11"
         ];
       })
+      google-chrome  # needed for the "Claude in Chrome" extension — Edge doesn't support it
       discord
       bluez-tools  # bt-device/bt-adapter required by HyprPanel bluetooth menu
       libva-utils  # provides vainfo for diagnosing VA-API / hardware decode issues

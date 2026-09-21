@@ -29,7 +29,7 @@ in {
       # 3.12.2 calls hid_report_raw_event() with 5 args but kernels >=6.18.33 need
       # 6. linuxPackages_cachyos-gcc is a separate package set from the default
       # kernel's, so the overlay in flake.nix doesn't reach it — reapplied here.
-      openrazer = lpPrev.openrazer.overrideAttrs (_: {
+      openrazer = lpPrev.openrazer.overrideAttrs (old: {
         version = "3.12.3-unstable";
         src = pkgs.fetchFromGitHub {
           owner = "openrazer";
@@ -37,6 +37,23 @@ in {
           tag = "v3.12.3";
           hash = "sha256-X1NPqbugBdxD5Nt9wIwQADV4CuydGLpgKhlNazVdrIY=";
         };
+        # Linux 7.2.0 has dropped strncpy() from the kernel's exported string
+        # API entirely (part of the long-running kernel-wide hardening effort
+        # to replace it with strscpy()) — confirmed by testing: adding
+        # <linux/string.h> back (the first thing tried) still left strncpy()
+        # undeclared, since the declaration is just gone, not missing an
+        # include. v3.12.3's driver/*.c still call strncpy() directly.
+        # strscpy() takes the same 3-arg (dest, src, size) form used at every
+        # call site here and is a safe drop-in — it also guarantees NUL
+        # termination, which strncpy() doesn't. Same fix applied in parallel
+        # in flake.nix's default-kernel openrazer override, for the same
+        # reason the src pin above is duplicated there.
+        postPatch = (old.postPatch or "") + ''
+          sed -i 's/\bstrncpy(/strscpy(/g' \
+            driver/razerkbd_driver.c \
+            driver/razermouse_driver.c \
+            driver/razeraccessory_driver.c
+        '';
       });
     });
 
