@@ -161,6 +161,8 @@ in
     };
     users.groups.${cfg.serviceUser} = { };
 
+    # Note: load-key also covers unload-key — `unload-key` is not a valid
+    # `zfs allow` permission name and makes the command fail.
     # `zfs allow` isn't declarative — re-applying it idempotently every boot
     # avoids relying on a one-time manual step that could be forgotten after
     # a reinstall or a pool re-import.
@@ -171,7 +173,7 @@ in
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
-        ExecStart = "${pkgs.zfs}/bin/zfs allow ${cfg.serviceUser} load-key,unload-key,mount ${cfg.dataset}";
+        ExecStart = "${pkgs.zfs}/bin/zfs allow ${cfg.serviceUser} load-key,mount ${cfg.dataset}";
       };
     };
 
