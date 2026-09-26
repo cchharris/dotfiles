@@ -162,6 +162,7 @@
         ./nixos/modules/zfs-vault.nix
         ./nixos/modules/monitoring.nix
         ./nixos/modules/lancache.nix
+        ./nixos/modules/nix-cache.nix
         ./nixos/hosts/nas.nix
         home-manager.nixosModules.home-manager
         {

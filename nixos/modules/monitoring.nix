@@ -1,9 +1,10 @@
 # NAS monitoring: Prometheus exporters (scraped by the homelab cluster's
 # kube-prometheus-stack, graphed in Grafana) + Scrutiny (SMART dashboard).
 #
-# Exposure: exporters are reachable from the cluster nodes (scrapeFrom) and from
-# Tailscale only; Scrutiny's web UI (no auth of its own) is Tailscale-only —
-# nothing here is open to the rest of the LAN.
+# Exposure: exporters and Scrutiny are reachable from the cluster nodes
+# (scrapeFrom) and from Tailscale only. Scrutiny's UI has no auth of its own; the
+# cluster ingress publishes it (https://scrutiny.home) — nothing here is open to
+# the rest of the LAN directly.
 { config, lib, pkgs, ... }:
 
 let
@@ -13,6 +14,9 @@ let
   exporterPorts = [ 9100 9134 9633 ];
   scrutinyPort = config.services.scrutiny.settings.web.listen.port;
   nft = config.networking.nftables.enable;
+  # Ports the cluster nodes may reach: the exporters (Prometheus scrapes) and
+  # Scrutiny (the cluster ingress publishes it as https://scrutiny.home).
+  nodePorts = exporterPorts ++ [ scrutinyPort ];
 in {
   options.cchharris.nixos.monitoring = {
     enable = lib.mkEnableOption "Prometheus exporters + Scrutiny SMART dashboard";
@@ -56,11 +60,11 @@ in {
       networking.firewall.extraCommands = lib.concatMapStrings (ip:
         lib.concatMapStrings (port: ''
           iptables -A nixos-fw -p tcp -s ${ip} --dport ${toString port} -j nixos-fw-accept
-        '') exporterPorts) cfg.scrapeFrom;
+        '') nodePorts) cfg.scrapeFrom;
     })
     (lib.mkIf nft {
       networking.firewall.extraInputRules = ''
-        ip saddr { ${lib.concatStringsSep ", " cfg.scrapeFrom} } tcp dport { ${lib.concatMapStringsSep ", " toString exporterPorts} } accept
+        ip saddr { ${lib.concatStringsSep ", " cfg.scrapeFrom} } tcp dport { ${lib.concatMapStringsSep ", " toString nodePorts} } accept
       '';
     })
   ]);

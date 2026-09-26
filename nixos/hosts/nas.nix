@@ -97,6 +97,7 @@
     zfs.enable = true;
     smartd.enable = true;
     lancache.enable = true;  # Steam/game download cache; needs the tank/lancache dataset (see modules/lancache.nix)
+    nixCache.enable = true;  # ncps: local cache in front of cache.nixos.org (port 8501)
     monitoring.enable = true;  # Prometheus exporters (scraped by the cluster) + Scrutiny
     tailscale.enable = true;  # own tailnet identity — reachable without depending on the k8s cluster's Tailscale operator
     fail2ban.enable = true;
