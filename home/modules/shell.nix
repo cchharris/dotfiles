@@ -6,6 +6,12 @@ let
 in {
   options.cchharris.home.shell = {
     enable = lib.mkEnableOption "shell configuration (zsh + starship)";
+
+    onePasswordAgent = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Point SSH_AUTH_SOCK at the 1Password agent socket. Turn off on hosts without 1Password (it would also clobber a forwarded `ssh -A` agent).";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -77,7 +83,9 @@ in {
     ];
 
     # 1Password SSH agent
-    home.sessionVariables.SSH_AUTH_SOCK = "$HOME/.1password/agent.sock";
+    home.sessionVariables = lib.mkIf cfg.onePasswordAgent {
+      SSH_AUTH_SOCK = "$HOME/.1password/agent.sock";
+    };
 
     programs.eza = {
       enable = true;

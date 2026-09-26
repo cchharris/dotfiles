@@ -146,7 +146,7 @@
       ];
     };
 
-    # nas configuration (headless server — no home-manager/desktop modules)
+    # nas configuration (headless server — home-manager for shell + neovim only)
     nixosConfigurations.nas = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
@@ -163,6 +163,15 @@
         ./nixos/modules/monitoring.nix
         ./nixos/modules/lancache.nix
         ./nixos/hosts/nas.nix
+        home-manager.nixosModules.home-manager
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.backupFileExtension = "backup";
+          home-manager.users.cchharris = import ./home/nas.nix;
+          home-manager.extraSpecialArgs = { inherit inputs; };
+          home-manager.sharedModules = [ inputs.catppuccin.homeModules.catppuccin ];
+        }
       ];
     };
 

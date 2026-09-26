@@ -74,6 +74,21 @@
 {
   networking.hostName = "nas";
 
+  # The pools are created by hand, so NixOS doesn't know about them — without
+  # this they are NOT imported at boot (datasets, exports and the vault all
+  # vanish after a reboot). Add "backup" here once that pool exists.
+  boot.zfs.extraPools = [ "tank" ];
+
+  # Importing the pool makes NixOS ask for every encrypted dataset's passphrase
+  # at boot and block the boot until it is typed on the console. tank/vault must
+  # stay locked until `vault unlock`, so never prompt at boot.
+  boot.zfs.requestEncryptionCredentials = false;
+
+  # Login shell for cchharris; the shell/nvim config comes from home-manager
+  # (home/nas.nix). The `update` alias uses `nixos-rebuild boot`, `hm` uses `switch`.
+  programs.zsh.enable = true;
+  users.users.cchharris.shell = pkgs.zsh;
+
   # Randomly generated ahead of install — doesn't need to match
   # /etc/machine-id, just needs to be unique across the fleet.
   networking.hostId = "6ad40947";
@@ -154,7 +169,44 @@
   # VeraCrypt CLI: open uploaded .hc volumes on the box and copy their contents
   # straight into the ZFS vault, instead of pulling them across the network a
   # second time. Headless — use `sudo veracrypt --text --mount <file> <dir>`.
-  environment.systemPackages = with pkgs; [ veracrypt ];
+  environment.systemPackages = with pkgs; [
+    veracrypt
+
+    # 1Password CLI. The desktop app (and its SSH agent) needs a GUI, so on this
+    # headless box git access comes from either `ssh -A` (agent forwarding from
+    # a machine that has 1Password) or `git-key` below (service account).
+    _1password-cli
+
+    # `git-key git -C ~/dotfiles pull` — runs a command with the git deploy key
+    # loaded into a throwaway ssh-agent, fetched from 1Password at run time.
+    # The private key never touches disk; the agent is killed when the command
+    # ends. One-time setup (see the notes next to this block):
+    #   - create a 1Password service account with READ access to the vault
+    #   - put its token in ~/.config/op/service-account-token (chmod 600)
+    #   - store a read-only GitHub deploy key in the vault as an SSH Key item
+    (writeShellApplication {
+      name = "git-key";
+      runtimeInputs = [ openssh _1password-cli ];
+      text = ''
+        if [ "$#" -eq 0 ]; then
+          echo "usage: git-key <command...>   e.g. git-key git -C ~/dotfiles pull" >&2
+          exit 1
+        fi
+        tokenfile="''${OP_TOKEN_FILE:-$HOME/.config/op/service-account-token}"
+        ref="''${OP_GIT_KEY_REF:-op://Homelab/nas-git-deploy-key/private key?ssh-format=openssh}"
+        if [ ! -r "$tokenfile" ]; then
+          echo "git-key: no service account token at $tokenfile" >&2
+          exit 1
+        fi
+        OP_SERVICE_ACCOUNT_TOKEN="$(cat "$tokenfile")"
+        export OP_SERVICE_ACCOUNT_TOKEN
+        eval "$(ssh-agent -s)" >/dev/null
+        trap 'ssh-agent -k >/dev/null' EXIT
+        op read "$ref" | ssh-add - >/dev/null
+        "$@"
+      '';
+    })
+  ];
 
   system.stateVersion = "25.11";
 }
