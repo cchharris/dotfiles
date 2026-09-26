@@ -42,6 +42,9 @@ in {
       # Per-drive history and failure thresholds. Runs its own InfluxDB (module
       # default). Web UI is Tailscale-only (below).
       services.scrutiny.enable = true;
+      # Not the default 8080: the LanCache container (host network) needs 8080
+      # for its own nginx.
+      services.scrutiny.settings.web.listen.port = 8081;
 
       networking.firewall.interfaces.tailscale0.allowedTCPPorts =
         exporterPorts ++ [ scrutinyPort ];

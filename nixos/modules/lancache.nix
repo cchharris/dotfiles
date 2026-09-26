@@ -66,6 +66,9 @@ in {
     systemd.services.podman-lancache = {
       unitConfig.RequiresMountsFor = cfg.dataDir;
       after = [ "zfs-mount.service" ];
+      # Podman won't start if a bind-mount source directory is missing, and the
+      # dataset starts out empty.
+      preStart = "mkdir -p ${cfg.dataDir}/cache ${cfg.dataDir}/logs";
     };
 
     networking.firewall.allowedTCPPorts = [ 80 443 ];
