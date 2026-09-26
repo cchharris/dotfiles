@@ -92,6 +92,7 @@
         ./nixos/modules/cachyos-kernel.nix
         inputs.chaotic.nixosModules.default
         inputs.catppuccin.nixosModules.catppuccin
+        ./nixos/modules/nix-cache-client.nix
         ./nixos/hosts/razer-blade.nix
         home-manager.nixosModules.home-manager
         {
@@ -133,6 +134,7 @@
         ./nixos/modules/fail2ban.nix
         ./nixos/modules/cachyos.nix
         inputs.catppuccin.nixosModules.catppuccin
+        ./nixos/modules/nix-cache-client.nix
         ./nixos/hosts/hobbynix.nix
         home-manager.nixosModules.home-manager
         {

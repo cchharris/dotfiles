@@ -11,6 +11,12 @@
 
   # Enable all features for this machine
   cchharris.nixos = {
+    # Use the NAS's Nix cache (nix-cache.nix on the nas host). Falls back to
+    # cache.nixos.org if it is unreachable (e.g. away from home).
+    nixCacheClient = {
+      enable = true;
+      publicKey = "nas.home:eM8MwxmFJwDMTB47j/5R7XAf8Vgg+HceUvVFlxNqWWs=";
+    };
     nvidia = {
       enable = true;
       openDrivers = true;  # Open drivers for newer GPU
