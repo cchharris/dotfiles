@@ -1,15 +1,28 @@
 # Manually-unlocked encrypted ZFS dataset for consolidating VeraCrypt volumes.
 # Stays locked at boot (canmount=noauto on the dataset itself) and is only ever
 # unlocked deliberately, via the `vault` CLI or the Tailscale-only web service
-# below — never automatically, and never left unlocked longer than autoLockAfter.
+# below — never automatically. It auto-locks autoLockAfter after unlock; if the
+# vault is busy (open files, active transfers) the lock is retried every
+# autoLockRetryEvery instead of cutting anything off, and `vault extend <time>`
+# pushes the auto-lock out for a long transfer.
 { config, lib, pkgs, ... }:
 
 let
   cfg = config.cchharris.nixos.zfsVault;
 
+  # Units that make up a pending auto-lock: the declarative timer/service and
+  # the transient ones `vault extend` creates. Timers alone are safe to stop
+  # from inside the auto-lock service; stopping the services too is only for
+  # unlock/extend, which cancel a pending retry.
+  timerUnits = "vault-autolock.timer vault-autolock-extend.timer";
+  allUnits = "${timerUnits} vault-autolock.service vault-autolock-extend.service";
+
   vaultScript = pkgs.writeShellScriptBin "vault" ''
     set -euo pipefail
     dataset="${cfg.dataset}"
+    ctl=${pkgs.systemd}/bin/systemctl
+    run=${pkgs.systemd}/bin/systemd-run
+    analyze=${pkgs.systemd}/bin/systemd-analyze
 
     # Human callers just type `vault ...`; re-exec via sudo so the zfs commands
     # below run as root. The web service already runs as ${cfg.serviceUser},
@@ -19,26 +32,69 @@ let
       exec sudo "$0" "$@"
     fi
 
+    keystatus() { zfs get -H -o value keystatus "$dataset"; }
+    mounted() { zfs get -H -o value mounted "$dataset"; }
+    # Stops only the countdown timers — safe to call from inside the auto-lock
+    # service itself (it must not stop its own unit).
+    stop_timers() { sudo $ctl stop ${timerUnits} || true; }
+    # Also cancels a pending auto-lock retry. Only for unlock/extend.
+    cancel_autolock() { sudo $ctl stop ${allUnits} || true; }
+
     case "''${1:-}" in
       unlock)
-        zfs load-key "$dataset"
-        zfs mount "$dataset"
-        sudo systemctl restart vault-autolock.timer
+        # Idempotent: the key can already be loaded (e.g. right after
+        # `zfs create`) or the dataset already mounted.
+        if [ "$(keystatus)" != "available" ]; then
+          zfs load-key "$dataset"
+        fi
+        if [ "$(mounted)" != "yes" ]; then
+          zfs mount "$dataset"
+        fi
+        cancel_autolock
+        sudo $ctl restart vault-autolock.timer
         echo "Unlocked $dataset. Will auto-lock in ${cfg.autoLockAfter} unless relocked sooner."
         ;;
       lock)
-        sudo systemctl stop vault-autolock.timer || true
-        if [ "$(zfs get -H -o value keystatus "$dataset")" = "available" ]; then
-          zfs unmount "$dataset" || true
+        if [ "$(keystatus)" = "available" ]; then
+          if [ "$(mounted)" = "yes" ] && ! zfs unmount "$dataset"; then
+            echo "$dataset is busy (open files or connections) — still unlocked. The auto-lock keeps retrying every ${cfg.autoLockRetryEvery}." >&2
+            exit 1
+          fi
           zfs unload-key "$dataset"
         fi
+        # Only stop the countdown once the lock has actually succeeded, so a
+        # failed lock leaves the auto-lock armed.
+        stop_timers
         echo "Locked $dataset."
+        ;;
+      extend)
+        span="''${2:-}"
+        if [ -z "$span" ]; then
+          echo "usage: vault extend <time>   (e.g. 8h, 90min, 1d)" >&2
+          exit 1
+        fi
+        if [ "$(id -un)" != "root" ]; then
+          echo "vault extend must run as root (run it as a normal user; it re-execs via sudo)." >&2
+          exit 1
+        fi
+        if ! $analyze timespan "$span" >/dev/null 2>&1; then
+          echo "Invalid time span: $span (try 8h, 90min, 1d)" >&2
+          exit 1
+        fi
+        if [ "$(keystatus)" != "available" ] || [ "$(mounted)" != "yes" ]; then
+          echo "$dataset is not unlocked; nothing to extend." >&2
+          exit 1
+        fi
+        cancel_autolock
+        $run --quiet --unit=vault-autolock-extend --on-active="$span"           --timer-property=AccuracySec=1min           --service-type=oneshot           --property=Restart=on-failure           --property=RestartSec=${cfg.autoLockRetryEvery}           "$0" lock
+        echo "Auto-lock moved to $span from now (retries every ${cfg.autoLockRetryEvery} while busy)."
         ;;
       status)
         zfs get -o property,value keystatus,mounted "$dataset"
+        $ctl list-timers --no-pager 'vault-autolock*' || true
         ;;
       *)
-        echo "usage: vault {unlock|lock|status}" >&2
+        echo "usage: vault {unlock|lock|extend <time>|status}" >&2
         exit 1
         ;;
     esac
@@ -142,6 +198,12 @@ in
       description = "systemd time span after which an unlocked vault is force-relocked if not relocked sooner.";
     };
 
+    autoLockRetryEvery = lib.mkOption {
+      type = lib.types.str;
+      default = "5min";
+      description = "How often the auto-lock retries while the vault is busy (open files or active transfers). Nothing is ever force-disconnected.";
+    };
+
     webService = {
       enable = lib.mkEnableOption "Tailscale-only web unlock/lock service";
 
@@ -184,7 +246,8 @@ in
         users = [ cfg.serviceUser ];
         commands = [
           { command = "${pkgs.systemd}/bin/systemctl restart vault-autolock.timer"; options = [ "NOPASSWD" ]; }
-          { command = "${pkgs.systemd}/bin/systemctl stop vault-autolock.timer"; options = [ "NOPASSWD" ]; }
+          { command = "${pkgs.systemd}/bin/systemctl stop ${timerUnits}"; options = [ "NOPASSWD" ]; }
+          { command = "${pkgs.systemd}/bin/systemctl stop ${allUnits}"; options = [ "NOPASSWD" ]; }
         ];
       }
     ];
@@ -204,6 +267,10 @@ in
       serviceConfig = {
         Type = "oneshot";
         ExecStart = "${vaultScript}/bin/vault lock";
+        # Busy vault => `vault lock` exits non-zero; retry instead of leaving
+        # it unlocked forever. Nothing is force-disconnected.
+        Restart = "on-failure";
+        RestartSec = cfg.autoLockRetryEvery;
       };
     };
 

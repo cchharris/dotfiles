@@ -9,9 +9,11 @@
 #   mirror(4TB-existing, 4TB-existing) = 20TB usable
 # Pool "backup" — repurposed spare 2TB, single drive (no redundancy needed —
 # it's already a copy of redundant primary data), scoped to only
-# tank/k8s + tank/vault via zfs send (NOT tank/media — deliberately not
-# backed up). Cloud backup (separate, outside NixOS config) covers the same
-# two datasets offsite, for the site-disaster case a local drive can't.
+# tank/k8s + tank/vault + tank/data via zfs send (NOT tank/media — deliberately
+# not backed up). Cloud backup (separate, outside NixOS config) covers
+# tank/k8s + tank/vault offsite, for the site-disaster case a local drive can't
+# (tank/data is local-backup only unless you add it there too). Watch the size:
+# the combined datasets must fit on the single 2TB backup drive.
 # Spares held in reserve, not installed: 1x2TB, 1x1TB HDD, 1x1TB SSD.
 # Port budget: 6 (tank) + 1 (backup) = 7 of 7 SATA ports used, 0 free — any
 # further growth needs a SATA HBA card in the board's PCIe x1 slot.
@@ -25,7 +27,10 @@
 #   2. DONE: hardware/nas.nix holds the real disk UUIDs.
 #   3. Create the pools (fill in real /dev/disk/by-id paths once drives are
 #      connected — run `ls -la /dev/disk/by-id/` to get them):
-#        zpool create -o ashift=12 tank \
+#        # Compression everywhere: set on the pool root (-O) so every dataset
+#        # inherits it. If the pool already exists: `zfs set compression=zstd tank`
+#        # (only affects data written afterwards).
+#        zpool create -o ashift=12 -O compression=zstd tank \
 #          mirror /dev/disk/by-id/<8tb-new-1> /dev/disk/by-id/<8tb-new-2> \
 #          mirror /dev/disk/by-id/<8tb-existing> /dev/disk/by-id/<8tb-new-3> \
 #          mirror /dev/disk/by-id/<4tb-1> /dev/disk/by-id/<4tb-2>
@@ -34,17 +39,24 @@
 #        # Keep network-critical apps (Pi-hole, ingress, cert-manager) on
 #        # node-local storage, not here; only deferrable apps go on tank/k8s.
 #        zfs create -o mountpoint=/tank/k8s tank/k8s
+#        # tank/data: general-purpose plain storage, shared over Samba. Not
+#        # encrypted (put private material on tank/vault). Included in the
+#        # local backup pool's zfs send scope (see backup notes below).
+#        zfs create -o mountpoint=/tank/data tank/data
+#        chown cchharris:users /tank/data   # so the Samba user can write
 #        # tank/media is NOT created yet (deferred). When you want it:
 #        #   zfs create -o recordsize=1M -o mountpoint=/tank/media tank/media
 #        # then re-add the `media` Samba share below.
 #        zfs create -o encryption=aes-256-gcm -o keyformat=passphrase \
 #          -o keylocation=prompt -o canmount=noauto -o mountpoint=/tank/vault \
 #          tank/vault
-#        zpool create -o ashift=12 backup /dev/disk/by-id/<2tb-spare>
+#        zpool create -o ashift=12 -O compression=zstd backup /dev/disk/by-id/<2tb-spare>
 #      (one dataset per client concern is easier to manage than one giant
-#      dataset; only tank/k8s and tank/vault get zfs send'd to backup —
+#      dataset; tank/k8s, tank/vault and tank/data get zfs send'd to backup —
 #      set up a periodic `zfs send -R -i` cron/systemd timer for just those
-#      two once the pool exists; tank/media is intentionally excluded)
+#      three once the pool exists; tank/media is intentionally excluded.
+#      tank/vault is encrypted: send it raw (`zfs send -w`) so it lands on the
+#      backup pool still encrypted and the key isn't needed there)
 #      For tank/vault's passphrase: use a long, high-entropy one (a random
 #      25+ character password-manager string, or several random Diceware
 #      words) — see nixos/modules/zfs-vault.nix for why this matters (ZFS's
@@ -84,6 +96,13 @@
       enable = true;
       shares = {
         # media share deferred until tank/media exists (see pool notes above).
+        data = {
+          path = "/tank/data";
+          browseable = "yes";
+          "read only" = "no";
+          "guest ok" = "no";
+          "valid users" = "cchharris";
+        };
         vault = {
           path = "/tank/vault";
           browseable = "yes";
@@ -129,6 +148,11 @@
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAOfqp7e+ZAPS7GjuLF7el6JMYIHLD3eLYz+HYG+PQaF" # razer-blade
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBf0rftj3rBkAvJSi9KYpb2k2VViVhE5D1e/XtD/BhS6" # hobbynix
   ];
+
+  # VeraCrypt CLI: open uploaded .hc volumes on the box and copy their contents
+  # straight into the ZFS vault, instead of pulling them across the network a
+  # second time. Headless — use `sudo veracrypt --text --mount <file> <dir>`.
+  environment.systemPackages = with pkgs; [ veracrypt ];
 
   system.stateVersion = "25.11";
 }
