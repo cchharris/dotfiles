@@ -71,8 +71,35 @@
 #      configure this — it's firmware.
 { config, lib, pkgs, ... }:
 
+let
+  # The onboard port the LAN cable is in — the one that has 192.168.1.20 today.
+  # Find it with `ip -br link` (the one with MAC 9c:6b:00:d7:65:56).
+  lanUplink = "enp36s0f1";
+in
 {
   networking.hostName = "nas";
+
+  # LAN bridge: the NAS's own address moves onto br0 so the Talos CI VM
+  # (talos-vm.nix) can sit on the LAN beside it with its own address. Still
+  # DHCP: br0 carries the uplink's MAC, so the router's reservation keeps
+  # handing out .20 (homelab NETWORK.md: fixed addresses are reservations).
+  # NetworkManager is off: a headless box has no use for it, and it would try to
+  # take the uplink back out of the bridge.
+  # If this ever takes the box off the network: IPMI console (192.168.1.21),
+  # reboot and pick the previous generation in the boot menu.
+  assertions = [{
+    assertion = lanUplink != "CHANGEME";
+    message = "nas.nix: set lanUplink to the NIC name from `ip -br link`.";
+  }];
+  networking.networkmanager.enable = lib.mkForce false;
+  networking.useDHCP = false;
+  networking.bridges.br0.interfaces = [ lanUplink ];
+  networking.interfaces.br0 = {
+    # The uplink's MAC — keeps the DHCP reservation, and stops the bridge
+    # changing MAC when the VM's tap joins it.
+    macAddress = "9c:6b:00:d7:65:56";
+    useDHCP = true;
+  };
 
   # The pools are created by hand, so NixOS doesn't know about them — without
   # this they are NOT imported at boot (datasets, exports and the vault all
@@ -101,6 +128,14 @@
     monitoring.enable = true;  # Prometheus exporters (scraped by the cluster) + Scrutiny
     tailscale.enable = true;  # own tailnet identity — reachable without depending on the k8s cluster's Tailscale operator
     fail2ban.enable = true;
+
+    # x86_64 Talos worker for GitHub Actions runners (homelab cluster/actions-runners).
+    # 8 of the 5600G's 12 threads and 12 of 32 GB, leaving the rest to ZFS,
+    # LanCache and ncps. The MAC must match the homelab talconfig deviceSelector.
+    talosVm = {
+      enable = true;
+      macAddress = "52:54:00:c1:00:35";
+    };
 
     nfs = {
       enable = true;
@@ -154,6 +189,11 @@
       AllowUsers = [ "cchharris" ];
     };
   };
+
+  # Never ban the LAN or the tailnet — a few bad logins from a trusted client
+  # (wrong user, too many agent keys offered) otherwise lock it out of SSH.
+  # The NixOS default ignoreIP (localhost) is kept; this list is appended.
+  services.fail2ban.ignoreIP = [ "192.168.1.0/24" "100.64.0.0/10" ];
 
   # No home-manager on this host to deploy a key the way razer-blade/hobbynix
   # do, and cchharris has no password here either — without these, there is

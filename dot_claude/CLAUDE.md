@@ -32,6 +32,7 @@ that hard-codes an address.
 | Cluster admin tooling | `talosVersion` / `kubernetesVersion` in `talconfig.yaml` | `home/modules/k8s.nix` (enabled on razer-blade) |
 | Secrets | 1Password vault **Homelab**, read through ESO `ClusterSecretStore` and `bootstrap/talos/recover.sh` | Same vault: `nas.nix` deploy key (`op://Homelab/...`) |
 | Tailscale | Operator, subnet router, and service proxies in `cluster/tailscale*` | `nixos/modules/tailscale.nix`. The NAS has its own tailnet identity so it doesn't depend on the cluster |
+| CI worker VM `nas-ci` (`.35`, GitHub Actions runners) | `bootstrap/talos/talconfig.yaml` (node, VM MAC in `deviceSelector`), `cluster/actions-runners` (ARC) | `nixos/modules/talos-vm.nix` (Talos ISO version must match `talosVersion`), `nixos/hosts/nas.nix` (`br0`, VM MAC) |
 
 ## Keeping them in sync
 
