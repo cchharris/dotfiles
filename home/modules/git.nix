@@ -77,7 +77,7 @@ in {
         # Include 1Password's generated config which maps specific keys to hosts.
         # 1Password writes this file automatically; it's what routes the correct
         # key to each host (e.g. personal key for github.com vs work key).
-        includes = lib.optionals pkgs.stdenv.isDarwin [ "~/.ssh/1Password/config" ];
+        includes = lib.optionals pkgs.stdenv.hostPlatform.isDarwin [ "~/.ssh/1Password/config" ];
         settings."*" = {
           IdentityAgent = opAgentSock;
         };
@@ -110,7 +110,7 @@ in {
         # it must Include this file (as the first line) for the settings below
         # to take effect.
       ''
-      + lib.optionalString pkgs.stdenv.isDarwin ''
+      + lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
         Include ~/.ssh/1Password/config
       ''
       + ''

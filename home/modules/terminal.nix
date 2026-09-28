@@ -51,11 +51,11 @@ in {
     # integrated into a nixosSystem/darwinSystem.
     home.packages = with pkgs; [
       nerd-fonts.jetbrains-mono
-    ] ++ lib.optionals pkgs.stdenv.isDarwin [
+    ] ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
       ghostty-bin
-    ] ++ lib.optionals (pkgs.stdenv.isLinux && osConfig == null) [
+    ] ++ lib.optionals (pkgs.stdenv.hostPlatform.isLinux && osConfig == null) [
       (pkgs.writeShellScriptBin "ghostty" ''
-        exec ${inputs.nixgl.packages.${pkgs.system}.nixGLDefault}/bin/nixGL ${pkgs.ghostty}/bin/ghostty "$@"
+        exec ${inputs.nixgl.packages.${pkgs.stdenv.hostPlatform.system}.nixGLDefault}/bin/nixGL ${pkgs.ghostty}/bin/ghostty "$@"
       '')
     ];
 

@@ -78,7 +78,7 @@ in {
       tldr         # Simplified man pages
       claude-code  # Claude AI assistant CLI
       (callPackage ../../pkgs/herdr.nix {}) # Terminal workspace manager for AI coding agents
-    ] ++ lib.optionals (!pkgs.stdenv.isDarwin) [
+    ] ++ lib.optionals (!pkgs.stdenv.hostPlatform.isDarwin) [
       gcc          # C compiler (Linux only — on macOS it shadows Apple clang and breaks native module builds)
     ];
 
@@ -135,8 +135,8 @@ in {
       enableZshIntegration = true;
       defaultCommand = "rg --files --hidden --follow --glob '!.git'";
       defaultOptions = [ "--height=40%" "--layout=reverse" "--border" ];
-      changeDirWidgetOptions = [ "--preview 'eza --tree --color=always {} | head -200'" ];
-      fileWidgetOptions = [ "--preview 'bat -n --color=always {}'" ];
+      changeDirWidget.options = [ "--preview 'eza --tree --color=always {} | head -200'" ];
+      fileWidget.options = [ "--preview 'bat -n --color=always {}'" ];
     };
     catppuccin.fzf.enable = true;
 

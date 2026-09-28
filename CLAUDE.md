@@ -23,11 +23,13 @@ sudo nixos-rebuild switch --flake ~/dotfiles#hobbynix
 sudo nixos-rebuild switch --flake ~/dotfiles#nas
 ```
 
-**Home Manager only** (no sudo, faster iteration):
+**Home Manager only** (no sudo, faster iteration; on NixOS this is the `hm` alias which runs `nixos-rebuild`):
 ```bash
-home-manager switch --flake ~/dotfiles#cchharris
-# or use the shell alias:
-hm
+# On NixOS hosts (razer-blade, hobbynix) — hm alias does this:
+sudo nixos-rebuild switch --flake ~/dotfiles#$(hostname)
+
+# Standalone non-NixOS Linux — requires --impure (nixGL uses builtins.currentTime):
+home-manager switch --flake ~/dotfiles#cchharris --impure
 ```
 
 **macOS** (personal):

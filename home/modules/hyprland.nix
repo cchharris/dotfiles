@@ -3,6 +3,7 @@
 
 let
   cfg = config.cchharris.home.hyprland;
+  hyprtaskingPath = "${inputs.hyprtasking.packages.${pkgs.stdenv.hostPlatform.system}.hyprtasking}/lib/libhyprtasking.so";
 
 in {
   options.cchharris.home.hyprland = {
@@ -54,7 +55,6 @@ in {
       configType = "lua";
       package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
       portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
-      plugins = [ inputs.hyprtasking.packages.${pkgs.stdenv.hostPlatform.system}.hyprtasking ];
       systemd = {
         enable = false;
         enableXdgAutostart = true;
@@ -130,16 +130,10 @@ in {
 
       # Raw Lua: keybindings translated from hyprlang dispatcher-string syntax to
       # hl.dsp.* calls (https://wiki.hypr.land/Configuring/Basics/Binds/), autostart,
-      # and hyprtasking's plugin config (its README documents this Lua form directly:
-      # https://github.com/raybbian/hyprtasking#configuration). The plugin itself is
-      # loaded via the `plugins` option above — but for configType = "lua", Home
-      # Manager emits that as a *deferred* `hyprctl plugin load` inside an
-      # `hl.on("hyprland.start", ...)` handler (see the generated config's
-      # "startup" section), not a synchronous native `plugin = <path>` directive.
-      # So hyprtasking's own hl.config({plugin.hyprtasking = {...}}) block below
-      # must also be deferred to hyprland.start — otherwise it runs during the
-      # initial parse, before the plugin has loaded and registered its config
-      # schema, and every key in it fails as "unknown config key".
+      # and hyprtasking plugin load + config. We use hl.plugin.load (synchronous)
+      # inside a hyprland.start handler so the plugin's config schema is registered
+      # before hl.config({plugin.hyprtasking = {...}}) runs — avoiding "unknown
+      # config key" errors that occur with the async hyprctl-IPC approach.
       extraConfig = ''
         local mod = "SUPER"
         local terminal = "ghostty"
@@ -224,9 +218,10 @@ in {
         -- hyprtasking
         hl.bind(mod .. " + TAB", function() hl.plugin.hyprtasking.toggle("cursor") end)
 
-        -- Deferred to hyprland.start so this runs after the plugin-load handler
-        -- above has actually loaded hyprtasking — see the comment on extraConfig.
+        -- hl.plugin.load is synchronous, so hl.config sees the registered schema
+        -- immediately — no "unknown config key" errors from loading asynchronously.
         hl.on("hyprland.start", function()
+          hl.plugin.load("${hyprtaskingPath}")
           hl.config({
             plugin = {
               hyprtasking = {
