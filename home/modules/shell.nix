@@ -12,6 +12,12 @@ in {
       default = true;
       description = "Point SSH_AUTH_SOCK at the 1Password agent socket. Turn off on hosts without 1Password (it would also clobber a forwarded `ssh -A` agent).";
     };
+
+    claudeInstructions = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Deploy dot_claude/CLAUDE.md (personal repo map: dotfiles <-> homelab) to ~/.claude/CLAUDE.md. Off on work machines.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -81,6 +87,11 @@ in {
     ] ++ lib.optionals (!pkgs.stdenv.hostPlatform.isDarwin) [
       gcc          # C compiler (Linux only — on macOS it shadows Apple clang and breaks native module builds)
     ];
+
+    # User-level Claude Code instructions (shared with Windows via chezmoi)
+    home.file.".claude/CLAUDE.md" = lib.mkIf cfg.claudeInstructions {
+      source = ../../dot_claude/CLAUDE.md;
+    };
 
     # 1Password SSH agent
     home.sessionVariables = lib.mkIf cfg.onePasswordAgent {

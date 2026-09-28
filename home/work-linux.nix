@@ -16,7 +16,7 @@ in {
   home.stateVersion = "26.05";
 
   cchharris.home = {
-    shell.enable = true;
+    shell = { enable = true; claudeInstructions = false; };  # personal repo map not relevant at work
     editor.enable = true;
     terminal.enable = true;
     git.enable = true;

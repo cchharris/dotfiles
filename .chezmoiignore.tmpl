@@ -7,14 +7,17 @@ Documents
 OneDrive
 {{ end }}
 
-# Nix flake files — not dotfiles, managed as part of the repo itself
+# Repo files, not dotfiles (Nix flake, repo docs, helper scripts)
 flake.nix
 flake.lock
 home
 nixos
 darwin
 hardware
+pkgs
+scripts
 README.md
+CLAUDE.md
 
 {{ if ne .chezmoi.os "linux" }}
 .chezmoiscripts/linux/**
@@ -25,12 +28,14 @@ README.md
 {{ end }}
 
 {{- if eq .chezmoi.os "linux" }}
-dot_zshrc
-dot_config
+.zshrc
+.config
+.claude
 {{- end }}
 
 {{- if eq .chezmoi.os "darwin" }}
-dot_zshrc
-dot_config
-private_Library
+.zshrc
+.config
+.claude
+Library
 {{- end }}
