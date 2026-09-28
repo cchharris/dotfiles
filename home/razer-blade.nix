@@ -35,7 +35,10 @@
       monitorScale = "1.6";
       polychromaticAutostart = true;
     };
-    wayle.enable = true;
+    wayle = {
+      enable = true;
+      brightness = true;  # laptop panel backlight
+    };
     walker.enable = true;
     k8s.enable = true;
     catppuccinTheme.enable = true;

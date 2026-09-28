@@ -6,8 +6,10 @@
   networking.hostName = "razer-blade";
 
   # Force i915 native backlight (intel_backlight) instead of nvidia_wmi_ec_backlight.
-  # Without this, only the non-functional NVIDIA WMI device appears on Optimus.
-  boot.kernelParams = [ "video.use_native_backlight=1" ];
+  # Without this, only the non-functional NVIDIA WMI device appears on Optimus
+  # (i915 logs "Skipping intel_backlight registration"); the panel is on the
+  # Intel GPU. The old video.use_native_backlight=1 param no longer exists.
+  boot.kernelParams = [ "acpi_backlight=native" ];
 
   # Enable all features for this machine
   cchharris.nixos = {
