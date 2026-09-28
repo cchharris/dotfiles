@@ -5,11 +5,12 @@
   # Hostname
   networking.hostName = "razer-blade";
 
-  # Force i915 native backlight (intel_backlight) instead of nvidia_wmi_ec_backlight.
-  # Without this, only the non-functional NVIDIA WMI device appears on Optimus
-  # (i915 logs "Skipping intel_backlight registration"); the panel is on the
-  # Intel GPU. The old video.use_native_backlight=1 param no longer exists.
-  boot.kernelParams = [ "acpi_backlight=native" ];
+  # The EC drives the panel PWM: brightness is EC register PWMV (0xAD, 0-255),
+  # written by the AWMI.WMAA WMI method that nvidia_wmi_ec_backlight uses.
+  # The alternatives don't dim: intel_backlight (acpi_backlight=native) only
+  # toggles the panel on/off, acpi_video0/1 (acpi_backlight=video) do nothing,
+  # and the panel has no DPCD AUX brightness (DPCD 0x702 = 0x85).
+  boot.kernelParams = [ "acpi_backlight=nvidia_wmi_ec" ];
 
   # Enable all features for this machine
   cchharris.nixos = {

@@ -5,6 +5,17 @@ let
   cfg = config.cchharris.home.hyprland;
   hyprtaskingPath = "${inputs.hyprtasking.packages.${pkgs.stdenv.hostPlatform.system}.hyprtasking}/lib/libhyprtasking.so";
 
+  # Step brightness down 5%, never below 5%: at 0 the razer-blade panel turns
+  # off entirely. brightnessctl's -n refuses a step that would cross the
+  # minimum instead of clamping to it, so clamp here.
+  brightnessDown = pkgs.writeShellScript "brightness-down" ''
+    bc=${pkgs.brightnessctl}/bin/brightnessctl
+    max=$($bc max); cur=$($bc get)
+    floor=$(( (max * 5 + 99) / 100 ))
+    new=$(( cur - max * 5 / 100 ))
+    $bc set $(( new < floor ? floor : new ))
+  '';
+
 in {
   options.cchharris.home.hyprland = {
     enable = lib.mkEnableOption "Hyprland user configuration";
@@ -201,7 +212,7 @@ in {
 
         -- Brightness (wayle shows OSD)
         hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("brightnessctl set 5%+"))
-        hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl set 5%-"))
+        hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("${brightnessDown}"))
 
         -- Volume (wayle shows OSD)
         hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"))
