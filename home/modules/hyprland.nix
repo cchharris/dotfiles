@@ -220,7 +220,8 @@ in {
 
         -- hl.plugin.load is synchronous, so hl.config sees the registered schema
         -- immediately — no "unknown config key" errors from loading asynchronously.
-        hl.on("hyprland.start", function()
+        -- Loading an already-loaded plugin is a no-op.
+        local function setup_hyprtasking()
           hl.plugin.load("${hyprtaskingPath}")
           hl.config({
             plugin = {
@@ -244,7 +245,12 @@ in {
               },
             },
           })
-        end)
+        end
+        hl.on("hyprland.start", setup_hyprtasking)
+        -- hyprland.start only fires at login. On a config reload (e.g. after a
+        -- rebuild) the plugin stays loaded but its settings reset to defaults,
+        -- so re-apply them whenever the plugin is already present.
+        if hl.plugin.hyprtasking then setup_hyprtasking() end
       '';
     };
 
