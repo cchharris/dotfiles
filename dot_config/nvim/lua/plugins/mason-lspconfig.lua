@@ -176,7 +176,12 @@ return {
         vim.lsp.enable('omnisharp')
         if vim.fn.has('win32') == 0 then
             vim.lsp.enable('nil_ls')
-            -- JetBrains kotlin_lsp isn't in nixpkgs; nix provides the fwcd server
+            -- JetBrains kotlin_lsp isn't in nixpkgs; nix provides the fwcd server.
+            -- lspconfig only sets storagePath inside a Gradle/Maven root, otherwise
+            -- init_options encodes as [] and the server's Gson parse crashes.
+            vim.lsp.config('kotlin_language_server', {
+                init_options = { storagePath = vim.fn.stdpath('cache') .. '/kotlin-language-server' },
+            })
             vim.lsp.enable('kotlin_language_server')
         end
 
