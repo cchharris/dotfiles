@@ -28,6 +28,7 @@ return {
                 javascriptreact = prettier_config,
                 json            = prettier_config,
                 jsonc           = prettier_config,
+                kotlin          = { "ktlint" },
                 lua             = { "stylua" },
                 markdown        = prettier_config,
                 python          = { "ruff_fix", "ruff_format", "ruff_organize_imports" },

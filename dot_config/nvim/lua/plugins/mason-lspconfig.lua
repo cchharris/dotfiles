@@ -23,6 +23,7 @@ return {
             "dockerls",      -- docker
             "html",          -- html
             "jsonls",        -- json
+            "kotlin_lsp",    -- kotlin (JetBrains; nix uses kotlin_language_server instead)
             "lua_ls",        -- lua
             "omnisharp",     -- c# (unity, .NET)
             "powershell_es", -- powershell
@@ -175,6 +176,8 @@ return {
         vim.lsp.enable('omnisharp')
         if vim.fn.has('win32') == 0 then
             vim.lsp.enable('nil_ls')
+            -- JetBrains kotlin_lsp isn't in nixpkgs; nix provides the fwcd server
+            vim.lsp.enable('kotlin_language_server')
         end
 
     end

@@ -13,7 +13,7 @@ return {
         require("nvim-treesitter").install({
             "bash", "c", "c_sharp", "cmake", "cpp", "css", "elixir",
             "git_config", "git_rebase", "gitattributes", "gitcommit", "gitignore",
-            "gn", "html", "javascript", "json", "json5", "lua", "nix", "objc",
+            "gn", "html", "javascript", "json", "json5", "kotlin", "lua", "nix", "objc",
             "powershell", "printf", "python", "query", "requirements", "rust",
             "sql", "starlark", "terraform", "toml", "tsx", "typescript",
             "vim", "vimdoc", "xml", "yaml", "zsh",

@@ -63,11 +63,13 @@ in {
       zls                           # Zig
       omnisharp-roslyn              # C#
       rust-analyzer                 # Rust
+      kotlin-language-server        # Kotlin (JetBrains kotlin-lsp is not in nixpkgs)
 
       # Formatters / linters
       stylua
       shellcheck
       hadolint
+      ktlint                        # Kotlin formatter
       yamllint
       prettier
       eslint                        # JS/TS linter

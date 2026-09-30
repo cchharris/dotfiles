@@ -13,6 +13,7 @@ return {
                     "stylua",      -- lua formatter
                     "eslint_d",    -- js/ts linter
                     "hadolint",    -- dockerfile linter
+                    "ktlint",      -- kotlin formatter
                     "shellcheck",  -- bash/sh linter
                     "tflint",      -- terraform linter
                     "yamllint",    -- yaml linter
