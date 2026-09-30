@@ -33,7 +33,7 @@ return {
             "tailwindcss",   -- css
             "taplo",         -- toml
             "terraformls",   -- terraform
-            "tsgo",          -- typescript, javascript
+            "tsc",           -- typescript, javascript (TS 7 native server; replaces tsgo)
             "ty",            -- python
             "pyrefly",       -- python
             "vimls",         -- vimscript

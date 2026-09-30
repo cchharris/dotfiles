@@ -47,7 +47,7 @@ in {
       lua-language-server           # Lua
       bash-language-server          # Bash
       typescript-language-server    # TypeScript / JavaScript (tsserver)
-      typescript                    # tsgo — Microsoft's Go-based TS server
+      typescript                    # TypeScript 7 native compiler + LSP (tsc --lsp)
       vscode-langservers-extracted  # HTML, CSS, JSON, ESLint
       yaml-language-server          # YAML
       terraform-ls                  # Terraform
