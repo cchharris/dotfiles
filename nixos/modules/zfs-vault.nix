@@ -40,6 +40,66 @@ let
     # Also cancels a pending auto-lock retry. Only for unlock/extend.
     cancel_autolock() { sudo $ctl stop ${allUnits} || true; }
 
+    # Prints what is keeping the dataset mounted: local processes (open files,
+    # cwds), Samba sessions with open files, and NFS clients. knfsd holds its
+    # files in the kernel, so lsof can't see NFS users — those show up as
+    # established connections to port 2049 instead.
+    show_blockers() {
+      mp="$(zfs get -H -o value mountpoint "$dataset")"
+      echo "Blocking $dataset ($mp):"
+      procs="$(${pkgs.lsof}/bin/lsof -w "$mp" 2>/dev/null || true)"
+      if [ -n "$procs" ]; then
+        echo "  Local processes:"
+        echo "$procs" | sed 's/^/    /'
+      fi
+      smb="$(${pkgs.samba}/bin/smbstatus -L -n 2>/dev/null | grep -F "$mp" || true)"
+      if [ -n "$smb" ]; then
+        echo "  Samba open files:"
+        echo "$smb" | sed 's/^/    /'
+      fi
+      nfs="$(${pkgs.iproute2}/bin/ss -Htn state established '( sport = :2049 )' 2>/dev/null || true)"
+      if [ -n "$nfs" ]; then
+        echo "  NFS clients connected (may hold files or have it mounted):"
+        echo "$nfs" | awk '{print "    " $4}'
+      fi
+      if [ -z "$procs$smb$nfs" ]; then
+        echo "  Nothing identified (could be a nested mount or a kernel holder)."
+      fi
+    }
+
+    # `zfs unmount -f` can't evict a process that holds the directory on Linux,
+    # so force means: retry, drop the Samba share(s) pointing at the vault (the
+    # client reconnects after unlock), then SIGTERM any remaining local holders.
+    # NFS clients are not touched — they hold nothing in userspace.
+    force_unmount() {
+      zfs unmount -f "$dataset" 2>/dev/null && return 0
+      mp="$(zfs get -H -o value mountpoint "$dataset")"
+      shares="$(${pkgs.samba}/bin/testparm -s 2>/dev/null | awk -v mp="$mp" '
+        /^\[/ { sec = substr($0, 2, length($0) - 2) }
+        /^[ \t]*path[ \t]*=/ { p = $0; sub(/^[^=]*=[ \t]*/, "", p); if (p == mp) print sec }')"
+      for share in $shares; do
+        echo "Closing Samba share [$share]..." >&2
+        ${pkgs.samba}/bin/smbcontrol smbd close-share "$share" || true
+      done
+      sleep 1
+      zfs unmount -f "$dataset" 2>/dev/null && return 0
+      pids="$(${pkgs.lsof}/bin/lsof -t -w "$mp" 2>/dev/null | sort -u || true)"
+      if [ -n "$pids" ]; then
+        echo "Sending SIGTERM to: $(echo $pids)" >&2
+        kill -TERM $pids 2>/dev/null || true
+        sleep 2
+      fi
+      zfs unmount -f "$dataset"
+    }
+
+    # Only ever asks on a real terminal, so the auto-lock timer and the web
+    # service (no tty) keep retrying instead of hanging on a prompt.
+    confirm() {
+      [ -t 0 ] && [ -t 1 ] || return 1
+      read -r -p "Force lock anyway (closes Samba share, terminates local holders)? [y/N]" ans
+      case "$ans" in y|Y|yes|YES) return 0 ;; *) return 1 ;; esac
+    }
+
     case "''${1:-}" in
       unlock)
         # Idempotent: the key can already be loaded (e.g. right after
@@ -57,8 +117,18 @@ let
       lock)
         if [ "$(keystatus)" = "available" ]; then
           if [ "$(mounted)" = "yes" ] && ! zfs unmount "$dataset"; then
-            echo "$dataset is busy (open files or connections) — still unlocked. The auto-lock keeps retrying every ${cfg.autoLockRetryEvery}." >&2
-            exit 1
+            echo "$dataset is busy — still unlocked." >&2
+            show_blockers >&2
+            case "''${2:-}" in -f|--force) force=1 ;; *) force=0 ;; esac
+            if [ "$force" = 1 ] || confirm; then
+              force_unmount || {
+                echo "Forced unmount failed — still unlocked." >&2
+                exit 1
+              }
+            else
+              echo "Not forced. The auto-lock keeps retrying every ${cfg.autoLockRetryEvery}; use 'vault lock --force' to skip the prompt." >&2
+              exit 1
+            fi
           fi
           zfs unload-key "$dataset"
         fi
@@ -94,7 +164,7 @@ let
         $ctl list-timers --no-pager 'vault-autolock*' || true
         ;;
       *)
-        echo "usage: vault {unlock|lock|extend <time>|status}" >&2
+        echo "usage: vault {unlock|lock [--force]|extend <time>|status}" >&2
         exit 1
         ;;
     esac
