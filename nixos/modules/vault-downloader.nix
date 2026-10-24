@@ -65,6 +65,12 @@ let
     fi
     ${pkgs.coreutils}/bin/install -d -o ${user} -g ${user} -m 2775 ${downloadDir}
     for link in "$@"; do
+      # Shells turn a pasted '#' into '\#'; megadl needs the plain link.
+      link="''${link//\\/}"
+      case "$link" in
+        *'#'*) ;;
+        *) echo "Skipping '$link': no '#key' part. Quote the whole link: vault-mega 'https://mega.nz/file/ID#KEY'" >&2; continue ;;
+      esac
       unit="mega-dl-$(${pkgs.coreutils}/bin/date +%s)-$RANDOM"
       ${pkgs.systemd}/bin/systemd-run --quiet --collect --unit="$unit" --slice=mega-dl.slice \
         --uid=${user} --gid=${user} \
