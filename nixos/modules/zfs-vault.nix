@@ -17,6 +17,8 @@ let
   timerUnits = "vault-autolock.timer vault-autolock-extend.timer";
   allUnits = "${timerUnits} vault-autolock.service vault-autolock-extend.service";
 
+  managedUnits = lib.concatStringsSep " " cfg.managedUnits;
+
   vaultScript = pkgs.writeShellScriptBin "vault" ''
     set -euo pipefail
     dataset="${cfg.dataset}"
@@ -92,6 +94,19 @@ let
       zfs unmount -f "$dataset"
     }
 
+    # Units in cchharris.nixos.zfsVault.managedUnits: started on unlock, stopped
+    # on lock. stop_managed prints the names it actually stopped.
+    stop_managed() {
+      for u in ${managedUnits}; do
+        if $ctl is-active --quiet "$u"; then
+          sudo $ctl stop "$u" && echo "$u"
+        fi
+      done
+    }
+    start_units() {
+      for u in "$@"; do sudo $ctl start "$u" || true; done
+    }
+
     # Only ever asks on a real terminal, so the auto-lock timer and the web
     # service (no tty) keep retrying instead of hanging on a prompt.
     confirm() {
@@ -110,24 +125,33 @@ let
         if [ "$(mounted)" != "yes" ]; then
           zfs mount "$dataset"
         fi
+        start_units ${managedUnits}
         cancel_autolock
         sudo $ctl restart vault-autolock.timer
         echo "Unlocked $dataset. Will auto-lock in ${cfg.autoLockAfter} unless relocked sooner."
         ;;
       lock)
         if [ "$(keystatus)" = "available" ]; then
-          if [ "$(mounted)" = "yes" ] && ! zfs unmount "$dataset"; then
-            echo "$dataset is busy — still unlocked." >&2
-            show_blockers >&2
-            case "''${2:-}" in -f|--force) force=1 ;; *) force=0 ;; esac
-            if [ "$force" = 1 ] || confirm; then
-              force_unmount || {
-                echo "Forced unmount failed — still unlocked." >&2
+          if [ "$(mounted)" = "yes" ]; then
+            # Services that write into the vault (downloaders) go down first:
+            # left running they'd keep writing to the bare mountpoint once the
+            # dataset is gone. They come back up if the lock doesn't happen.
+            stopped="$(stop_managed)"
+            if ! zfs unmount "$dataset"; then
+              echo "$dataset is busy — still unlocked." >&2
+              show_blockers >&2
+              case "''${2:-}" in -f|--force) force=1 ;; *) force=0 ;; esac
+              if [ "$force" = 1 ] || confirm; then
+                force_unmount || {
+                  echo "Forced unmount failed — still unlocked." >&2
+                  start_units $stopped
+                  exit 1
+                }
+              else
+                echo "Not forced. The auto-lock keeps retrying every ${cfg.autoLockRetryEvery}; use 'vault lock --force' to skip the prompt." >&2
+                start_units $stopped
                 exit 1
-              }
-            else
-              echo "Not forced. The auto-lock keeps retrying every ${cfg.autoLockRetryEvery}; use 'vault lock --force' to skip the prompt." >&2
-              exit 1
+              fi
             fi
           fi
           zfs unload-key "$dataset"
@@ -274,6 +298,17 @@ in
       description = "How often the auto-lock retries while the vault is busy (open files or active transfers). Nothing is ever force-disconnected.";
     };
 
+    managedUnits = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      example = [ "aria2-vault.service" ];
+      description = ''
+        systemd services that read or write the vault. `vault unlock` starts
+        them and `vault lock` stops them before unmounting (restarting them if
+        the lock fails). They must not be wantedBy anything at boot.
+      '';
+    };
+
     webService = {
       enable = lib.mkEnableOption "Tailscale-only web unlock/lock service";
 
@@ -318,7 +353,10 @@ in
           { command = "${pkgs.systemd}/bin/systemctl restart vault-autolock.timer"; options = [ "NOPASSWD" ]; }
           { command = "${pkgs.systemd}/bin/systemctl stop ${timerUnits}"; options = [ "NOPASSWD" ]; }
           { command = "${pkgs.systemd}/bin/systemctl stop ${allUnits}"; options = [ "NOPASSWD" ]; }
-        ];
+        ] ++ lib.concatMap (u: [
+          { command = "${pkgs.systemd}/bin/systemctl start ${u}"; options = [ "NOPASSWD" ]; }
+          { command = "${pkgs.systemd}/bin/systemctl stop ${u}"; options = [ "NOPASSWD" ]; }
+        ]) cfg.managedUnits;
       }
     ];
 

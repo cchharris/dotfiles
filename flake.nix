@@ -178,6 +178,7 @@
         ./nixos/modules/samba.nix
         ./nixos/modules/smartd.nix
         ./nixos/modules/zfs-vault.nix
+        ./nixos/modules/vault-downloader.nix
         ./nixos/modules/monitoring.nix
         ./nixos/modules/lancache.nix
         ./nixos/modules/nix-cache.nix

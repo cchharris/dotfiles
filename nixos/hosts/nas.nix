@@ -170,6 +170,8 @@ in
       enable = true;
       webService.enable = true;
     };
+
+    vaultDownloader.enable = true;  # aria2 + AriaNg into tank/vault; runs only while the vault is unlocked (tailscale0 only)
   };
 
   # Force-reboot if the kernel hangs (no monitor/keyboard on this box to
