@@ -46,6 +46,36 @@ let
     enable-dht=true
     bt-save-metadata=true
   '';
+  # aria2 can't fetch Mega links (they're client-side encrypted), so
+  # `vault-mega <link>...` runs megatools' megadl as a transient unit in
+  # mega-dl.slice. The slice is in zfsVault.managedUnits, so `vault lock`
+  # stops any running Mega download before unmounting, like aria2.
+  vaultMega = pkgs.writeShellScriptBin "vault-mega" ''
+    set -euo pipefail
+    if [ $# -lt 1 ]; then
+      echo "usage: vault-mega <mega.nz link>..." >&2
+      exit 1
+    fi
+    if [ "$(id -u)" != 0 ]; then
+      exec sudo "$0" "$@"
+    fi
+    if ! ${pkgs.util-linux}/bin/mountpoint -q ${mountPoint}; then
+      echo "${mountPoint} is locked — run 'vault unlock' first." >&2
+      exit 1
+    fi
+    ${pkgs.coreutils}/bin/install -d -o ${user} -g ${user} -m 2775 ${downloadDir}
+    for link in "$@"; do
+      unit="mega-dl-$(${pkgs.coreutils}/bin/date +%s)-$RANDOM"
+      ${pkgs.systemd}/bin/systemd-run --quiet --collect --unit="$unit" --slice=mega-dl.slice \
+        --uid=${user} --gid=${user} \
+        --property=UMask=0002 --property=ProtectSystem=strict \
+        --property=ReadWritePaths=${mountPoint} --property=PrivateTmp=yes \
+        --property=NoNewPrivileges=yes \
+        --setenv=XDG_CACHE_HOME=/tmp \
+        ${pkgs.megatools}/bin/megadl --no-progress --path ${downloadDir} "$link"
+      echo "Started $unit → ${downloadDir}   (follow: journalctl -u $unit -f)"
+    done
+  '';
 in
 {
   options.cchharris.nixos.vaultDownloader = {
@@ -86,7 +116,10 @@ in
     # (and the Samba share, which runs as cchharris, can delete) them.
     users.users.cchharris.extraGroups = [ user ];
 
-    cchharris.nixos.zfsVault.managedUnits = [ "aria2-vault.service" ];
+    cchharris.nixos.zfsVault.managedUnits = [ "aria2-vault.service" "mega-dl.slice" ];
+
+    environment.systemPackages = [ vaultMega ];
+    systemd.slices.mega-dl.description = "Mega downloads into the vault (stopped by vault lock)";
 
     systemd.services.aria2-vault-secret = {
       description = "Generate the aria2 RPC secret on first use";
