@@ -67,14 +67,16 @@ in {
     # Common desktop packages
     environment.systemPackages = with pkgs; [
       (microsoft-edge.override {
-        commandLineArgs = [
-          # Force XWayland. Edge 150 on native Wayland SIGSEGVs ~4min after
-          # a VA-API "vaEndPicture failed, internal decoding error" during
-          # video playback (2 reproductions, 2026-09-13: 19:47:14->19:49:25,
-          # 19:54:42->19:58:55) — looks like delayed memory corruption from
-          # the failed hw decode, not tied to any user action in between.
-          "--ozone-platform=x11"
-        ];
+        # Force XWayland when Edge would render and decode on NVIDIA. Edge 150
+        # on native Wayland SIGSEGVs ~4min after a VA-API "vaEndPicture
+        # failed, internal decoding error" during video playback (2
+        # reproductions, 2026-09-13), and Edge 156 floods EGL_BAD_MATCH dmabuf
+        # import errors. Optimus laptops are exempt: under PRIME offload Edge
+        # runs entirely on the Intel iGPU (Mesa + iHD VA-API), which was clean
+        # on native Wayland (2026-10-26).
+        commandLineArgs = lib.optionals
+          (config.cchharris.nixos.nvidia.enable && !config.cchharris.nixos.nvidia.optimus.enable)
+          [ "--ozone-platform=x11" ];
       })
       google-chrome  # needed for the "Claude in Chrome" extension — Edge doesn't support it
       discord
