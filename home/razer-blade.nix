@@ -29,7 +29,9 @@
     };
     hyprland = {
       enable = true;
-      nvidiaEnvVars = true;  # needed for VA-API and GLX on NVIDIA Optimus
+      # Off under PRIME offload: these pushed every app onto NVIDIA while
+      # Hyprland renders on Intel. Apps opt into NVIDIA via nvidia-offload.
+      nvidiaEnvVars = false;
       # nvidiaGbmBackend intentionally off — Optimus uses Intel for display output
       gpuCount = 2;  # Intel iGPU + NVIDIA dGPU
       monitorScale = "1.6";

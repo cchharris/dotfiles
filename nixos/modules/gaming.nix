@@ -104,6 +104,14 @@ in {
       # doesn't pull in 32-bit libXtst by default — add it explicitly.
       extraPackages = [ pkgs.pkgsi686Linux.libxtst ];
       package = pkgs.steam.override {
+        # On Optimus laptops, run Steam and everything it launches (games,
+        # Proton, and the NonSteamLaunchers like Battle.net) on the NVIDIA dGPU.
+        extraEnv = lib.optionalAttrs config.cchharris.nixos.nvidia.optimus.enable {
+          __NV_PRIME_RENDER_OFFLOAD = "1";
+          __NV_PRIME_RENDER_OFFLOAD_PROVIDER = "NVIDIA-G0";
+          __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+          __VK_LAYER_NV_optimus = "NVIDIA_only";
+        };
         buildFHSEnv = pkgs.buildFHSEnv.override {
           # capsh's "--" passes remaining args to bash rather than exec'ing directly,
           # so we compile a tiny C binary that clears ambient/inheritable caps via

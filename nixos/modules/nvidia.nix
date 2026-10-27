@@ -47,14 +47,23 @@ in {
 
     hardware.nvidia = {
       powerManagement.enable = true;
-      powerManagement.finegrained = false;
+      # Lets the dGPU power down (RTD3) when nothing is using it — only valid
+      # with PRIME offload.
+      powerManagement.finegrained = cfg.optimus.enable;
       open = cfg.openDrivers;
       nvidiaSettings = true;
       modesetting.enable = true;
 
-      # Only enable Optimus if configured
+      # Only enable Optimus if configured. Offload, not sync: sync is an X11
+      # concept and Hyprland ignores it (it renders on the Intel iGPU that
+      # drives the panel regardless), so sync only kept the dGPU awake while
+      # apps defaulted to NVIDIA — every client buffer then crossed GPUs and
+      # failed dmabuf import (EGL_BAD_MATCH), which once crashed Hyprland.
+      # Apps that should use NVIDIA opt in via `nvidia-offload` / the offload
+      # env vars (Steam does this in gaming.nix).
       prime = lib.mkIf cfg.optimus.enable {
-        sync.enable = true;
+        offload.enable = true;
+        offload.enableOffloadCmd = true;
         nvidiaBusId = cfg.optimus.nvidiaBusId;
         intelBusId = cfg.optimus.intelBusId;
       };
