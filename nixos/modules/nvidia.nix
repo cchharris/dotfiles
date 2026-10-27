@@ -82,6 +82,20 @@ in {
       ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c8000", TEST=="power/control", ATTR{power/control}="auto"
     '';
 
+    # TLP's RUNTIME_PM_ON_AC="on" (its default) re-pins every PCI device not in
+    # its driver denylist to "on" after boot. nvidia is denylisted, but the
+    # dGPU's HDMI audio function (snd_hda_intel) isn't — and an awake audio
+    # function keeps the whole dGPU awake. Always allow runtime PM on every
+    # function of the dGPU. TLP wants hex "BB:DD" addresses; the bus ID
+    # option is NixOS's decimal "PCI:B:D:F" form.
+    services.tlp.settings.RUNTIME_PM_ENABLE = lib.mkIf (cfg.optimus.enable && config.services.tlp.enable) (
+      let
+        parts = lib.splitString ":" cfg.optimus.nvidiaBusId;
+        hex2 = n: lib.fixedWidthString 2 "0" (lib.toLower (lib.toHexString (lib.toInt n)));
+        busDev = "${hex2 (builtins.elemAt parts 1)}:${hex2 (builtins.elemAt parts 2)}";
+      in "${busDev}.0 ${busDev}.1"
+    );
+
     hardware.graphics = {
       enable = true;
       enable32Bit = true;
