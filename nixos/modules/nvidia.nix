@@ -69,6 +69,19 @@ in {
       };
     } // lib.optionalAttrs (cfg.package != null) { package = cfg.package; };
 
+    # finegrained's upstream udev rules set power/control=auto on ACTION=="bind",
+    # but nvidia binds in the initrd (above), before stage-2 udev has those
+    # rules — so they never fire and the dGPU stays "on" (never suspends).
+    # Stage-2 coldplug replays "add" events, so match on that instead. Covers
+    # the GPU's VGA, 3D, HDMI audio, and USB-C (xHCI/UCSI) functions.
+    services.udev.extraRules = lib.mkIf cfg.optimus.enable ''
+      ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", TEST=="power/control", ATTR{power/control}="auto"
+      ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", TEST=="power/control", ATTR{power/control}="auto"
+      ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x040300", TEST=="power/control", ATTR{power/control}="auto"
+      ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c0330", TEST=="power/control", ATTR{power/control}="auto"
+      ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c8000", TEST=="power/control", ATTR{power/control}="auto"
+    '';
+
     hardware.graphics = {
       enable = true;
       enable32Bit = true;
