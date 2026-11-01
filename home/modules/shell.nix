@@ -64,10 +64,24 @@ in {
     # pinned to the Mocha flavor to match theming everywhere else (Ghostty, wayle, SDDM).
     # `presets` pulls the actual .toml shipped inside the starship package itself,
     # so this stays in sync with upstream instead of a hand-copied config.
+    #
+    # Over SSH, a separate mauve pill with the hostname is prepended so a remote
+    # shell can't be mistaken for a local one. The preset's own `format` is read
+    # back and prefixed rather than copied, for the same keep-in-sync reason.
+    # (hostname's default ssh_only = true keeps local prompts unchanged.)
     programs.starship = {
       enable = true;
       enableZshIntegration = true;
       presets = [ "catppuccin-powerline" ];
+      settings = {
+        format = "$hostname" + (builtins.fromTOML (builtins.readFile
+          "${config.programs.starship.package}/share/starship/presets/catppuccin-powerline.toml")).format;
+        hostname = {
+          ssh_symbol = "󰣀 ";
+          style = "bg:mauve fg:crust";
+          format = "[](mauve)[ $ssh_symbol$hostname ]($style)[](mauve) ";
+        };
+      };
     };
 
     # Useful CLI tools
