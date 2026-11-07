@@ -144,6 +144,8 @@ The `nonSteamLaunchers` derivation in `gaming.nix` is a multi-layer wrapper need
 2. The whole script runs inside `steam-run` for the FHS environment Proton needs
 3. Nix deps are stored in env vars before `steam-run` overwrites PATH, then re-prepended inside
 4. `/usr/bin/python3` and `/bin/bash` are symlinked via `systemd.tmpfiles.rules`
+5. The script is patched (`nonSteamLaunchersPatched`) so its Steam restart goes through `systemd-run --user`. Starting Steam inside steam-run's sandbox would kill it when NSL exits
+6. `xrandr` must be in the deps. The launcher-picker GUI shells out to it, and without it NSL reports "No launchers selected"
 
 When updating the NSL script hash, fetch the new sha256 with:
 ```bash

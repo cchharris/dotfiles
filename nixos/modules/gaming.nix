@@ -9,6 +9,15 @@ let
     hash = "sha256-6t/8KyJShIkkALpxtD9jhkN7GDH2A3zOHIPC71wjnuQ=";
   };
 
+  # NSL restarts Steam with `nohup /usr/bin/steam &`, but that would start Steam
+  # inside steam-run's sandbox, which is torn down when NSL exits. Launch it via
+  # the systemd user manager instead so it runs outside the sandbox.
+  nonSteamLaunchersPatched = pkgs.runCommand "NonSteamLaunchers.sh" {} ''
+    substitute ${nonSteamLaunchersScript} $out \
+      --replace-fail 'nohup /usr/bin/steam -silent %U &>/dev/null &' \
+        '${pkgs.systemd}/bin/systemd-run --user --collect --quiet -- ${config.programs.steam.package}/bin/steam -silent'
+  '';
+
   # Packages whose GI typelibs are needed for the GTK3 Python GUI
   gi-deps = with pkgs; [ gtk3 glib.out pango.out gdk-pixbuf atk harfbuzz gobject-introspection ];
   gi-typelib-path = pkgs.lib.makeSearchPath "lib/girepository-1.0" gi-deps;
@@ -21,6 +30,9 @@ let
     pkgs.zenity pkgs.unzip pkgs.p7zip pkgs.rsync
     nsl-python pkgs.winetricks pkgs.cabextract
     pkgs.gnused pkgs.gawk pkgs.coreutils pkgs.findutils
+    # Launcher picker GUI sizes itself from xrandr; without it the Python crashes
+    # and NSL reports "No launchers selected"
+    pkgs.xrandr
   ];
 
   # NixOS-specific wrapping notes:
@@ -41,6 +53,9 @@ let
   #
   # 4. /usr/bin/python3: NSLGameScanner.service hardcodes this path. Handled via
   #    systemd.tmpfiles.rules below — symlinked to nsl-python.
+  #
+  # 5. Steam restart: patched to go through `systemd-run --user` (see
+  #    nonSteamLaunchersPatched above).
   nonSteamLaunchers = pkgs.stdenvNoCC.mkDerivation {
     name = "non-steam-launchers";
     dontUnpack = true;
@@ -51,7 +66,7 @@ let
       #!${pkgs.bash}/bin/bash
       export _NSL_DEPS="${deps}"
       export _NSL_GI_TYPELIB="${gi-typelib-path}"
-      exec steam-run ${pkgs.bash}/bin/bash -c 'export PATH="\$_NSL_DEPS:\$PATH"; export GI_TYPELIB_PATH="\$_NSL_GI_TYPELIB"; exec ${pkgs.bash}/bin/bash ${nonSteamLaunchersScript} "\$@"' -- "\$@"
+      exec steam-run ${pkgs.bash}/bin/bash -c 'export PATH="\$_NSL_DEPS:\$PATH"; export GI_TYPELIB_PATH="\$_NSL_GI_TYPELIB"; exec ${pkgs.bash}/bin/bash ${nonSteamLaunchersPatched} "\$@"' -- "\$@"
       EOF
       chmod +x $out/bin/non-steam-launchers
 
