@@ -6,7 +6,7 @@ let
 
   nonSteamLaunchersScript = pkgs.fetchurl {
     url = "https://raw.githubusercontent.com/moraroy/NonSteamLaunchers-On-Steam-Deck/main/NonSteamLaunchers.sh";
-    hash = "sha256-6t/8KyJShIkkALpxtD9jhkN7GDH2A3zOHIPC71wjnuQ=";
+    hash = "sha256-mI0LQ1RTKA30UlFJawkqSaGY9v6rGCFpwVl3WLK579o=";
   };
 
   # NSL restarts Steam with `nohup /usr/bin/steam &`, but that would start Steam
@@ -101,9 +101,11 @@ in {
   config = lib.mkIf cfg.enable {
     # Steam/Proton scripts use #!/bin/bash shebangs; NixOS only provides /bin/sh
     systemd.tmpfiles.rules = [
-      "L /bin/bash - - - - ${pkgs.bash}/bin/bash"
+      # L+ replaces an existing link, so these follow store path changes. Plain L
+      # leaves the old link, which dangles once that store path is garbage-collected
+      "L+ /bin/bash - - - - ${pkgs.bash}/bin/bash"
       # NSLGameScanner.service hardcodes /usr/bin/python3 which doesn't exist on NixOS
-      "L /usr/bin/python3 - - - - ${nsl-python}/bin/python3"
+      "L+ /usr/bin/python3 - - - - ${nsl-python}/bin/python3"
     ];
 
     # bwrap 0.11.x refuses to run when it inherits ambient capabilities from
