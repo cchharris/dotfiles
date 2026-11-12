@@ -7,6 +7,7 @@
     ./modules/shell.nix
     ./modules/editor.nix
     ./modules/catppuccin.nix
+    ./modules/git.nix
   ];
 
   home.username = "cchharris";
@@ -19,6 +20,13 @@
       onePasswordAgent = false;
     };
     editor.enable = true;
+    # Signs with the agent forwarded by `ssh -A` (ForwardAgent is on for nas
+    # in the clients' git.nix SSH config).
+    git = {
+      enable = true;
+      onePasswordAgent = false;
+      signing.enable = true;
+    };
     catppuccinTheme.enable = true;
   };
 

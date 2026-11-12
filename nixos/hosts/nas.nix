@@ -101,6 +101,15 @@ in
     useDHCP = true;
   };
 
+  # No ARP conflict detection on br0: dhcpcd sees the host's own ARP traffic
+  # (from br0's MAC, and the tap's) as another machine claiming the address,
+  # declines every lease and retries forever. Each retry drops the default
+  # route and DNS. The router's reservation already keeps .20 unique.
+  networking.dhcpcd.extraConfig = ''
+    interface br0
+    noarp
+  '';
+
   # The pools are created by hand, so NixOS doesn't know about them — without
   # this they are NOT imported at boot (datasets, exports and the vault all
   # vanish after a reboot). Add "backup" here once that pool exists.
@@ -219,6 +228,17 @@ in
     # headless box git access comes from either `ssh -A` (agent forwarding from
     # a machine that has 1Password) or `git-key` below (service account).
     _1password-cli
+
+    # Ghostty terminfo, so SSH from a Ghostty terminal (TERM=xterm-ghostty) gets
+    # working line editing instead of autosuggestions printed as literal text.
+    ghostty.terminfo
+
+    # Admin tools installed on the box, not fetched with nix shell when needed:
+    # when the network is what broke, nix shell cannot download anything.
+    tmux python3 jq sqlite file unzip
+    tcpdump ethtool mtr iperf3 lsof   # network debugging
+    ncdu iotop-c pv mbuffer nvme-cli  # storage, zfs send/recv
+    ipmitool lm_sensors               # BMC and board sensors
 
     # `git-key git -C ~/dotfiles pull` — runs a command with the git deploy key
     # loaded into a throwaway ssh-agent, fetched from 1Password at run time.

@@ -66,10 +66,34 @@ in {
         need nas access.
       '';
     };
+
+    onePasswordAgent = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = ''
+        Route SSH through the local 1Password agent (IdentityAgent, the GitHub
+        alias, the nas key pinning). Turn off on hosts without 1Password, like
+        the NAS: IdentityAgent would override a forwarded `ssh -A` agent.
+      '';
+    };
+
+    signing = {
+      enable = lib.mkEnableOption "SSH-signed commits and tags";
+
+      key = lib.mkOption {
+        type = lib.types.str;
+        default = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM6yvSqvsS3toe0EMx3/kFuIgxWazRYtBNLfdShJVZpb";
+        description = ''
+          Public half of the signing key (the "GitHub" key in 1Password). Plain
+          ssh-keygen signs with it through whatever agent SSH_AUTH_SOCK points at:
+          1Password on desktops, the forwarded agent over `ssh -A` on the NAS.
+        '';
+      };
+    };
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
-    (lib.mkIf cfg.manageSshConfig {
+    (lib.mkIf (cfg.onePasswordAgent && cfg.manageSshConfig) {
       # SSH configuration for 1Password agent
       programs.ssh = {
         enable = true;
@@ -91,19 +115,24 @@ in {
         # Covers plain "nas" (Tailscale MagicDNS or /etc/hosts) and "nas.local"
         # (avahi/mDNS) — add the tailnet's full nas.<tailnet>.ts.net form here
         # too if you end up SSHing by that name instead.
-        settings."nas nas.local" = lib.mkIf (cfg.nasIdentity != null) {
+        # "nas.home" is the Pi-hole record (homelab common-values.yaml).
+        settings."nas nas.local nas.home" = lib.mkIf (cfg.nasIdentity != null) {
           # IdentityFile can point at a public key (OpenSSH 8.9+): ssh uses it
           # to select the matching private key from the agent, so only this
           # machine's own key is ever offered for nas — no private key needed
           # locally, this file is just the public half.
           IdentityFile = nasPubkeyPath;
           IdentitiesOnly = true;
+          # The NAS has no 1Password: git there signs commits and reaches
+          # GitHub through this forwarded agent. 1Password still asks you to
+          # approve it.
+          ForwardAgent = true;
         };
       };
       home.file.".ssh/id_cchharris_personal.pub".text = personalGithubPubkey + "\n";
     })
 
-    (lib.mkIf (!cfg.manageSshConfig) {
+    (lib.mkIf (cfg.onePasswordAgent && !cfg.manageSshConfig) {
       home.file.".ssh/conf.d/nix-managed.conf".text = ''
         # Managed by home-manager (cchharris.home.git.manageSshConfig = false).
         # ~/.ssh/config itself is intentionally left mutable on this machine, so
@@ -126,7 +155,8 @@ in {
       ''
       + lib.optionalString (cfg.nasIdentity != null) ''
 
-        Host nas nas.local
+        Host nas nas.local nas.home
+            ForwardAgent yes
             IdentityAgent ${opAgentSock}
             IdentitiesOnly yes
             IdentityFile ${nasPubkeyPath}
@@ -169,6 +199,12 @@ in {
             last = "log -1 HEAD";
             amend = "commit --amend --no-edit";
           };
+        };
+
+        signing = lib.mkIf cfg.signing.enable {
+          format = "ssh";
+          key = "key::${cfg.signing.key}";
+          signByDefault = true;
         };
 
         ignores = [
