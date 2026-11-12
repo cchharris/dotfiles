@@ -89,6 +89,12 @@ in {
           1Password on desktops, the forwarded agent over `ssh -A` on the NAS.
         '';
       };
+
+      principals = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [ cfg.userEmail "cchharris@outlook.com" ];
+        description = "Committer emails trusted with the signing key, for `git log --show-signature`.";
+      };
     };
   };
 
@@ -206,6 +212,8 @@ in {
           key = "key::${cfg.signing.key}";
           signByDefault = true;
         };
+        settings.gpg.ssh.allowedSignersFile = lib.mkIf cfg.signing.enable
+          "${config.xdg.configHome}/git/allowed_signers";
 
         ignores = [
           ".DS_Store"
@@ -240,6 +248,12 @@ in {
 
       programs.lazygit = {
         enable = true;
+      };
+
+      xdg.configFile."git/allowed_signers" = lib.mkIf cfg.signing.enable {
+        text = ''
+          ${lib.concatStringsSep "," cfg.signing.principals} namespaces="git" ${cfg.signing.key}
+        '';
       };
 
       home.packages = with pkgs; [
