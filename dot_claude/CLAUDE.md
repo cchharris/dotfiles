@@ -9,7 +9,7 @@ Two repos describe one system. Changes to one often need a matching change in th
 
 | Repo | GitHub | Windows | Linux / macOS | What it owns |
 |---|---|---|---|---|
-| dotfiles | `cchharris/dotfiles` (`main`) | `~/.local/share/chezmoi` | `~/dotfiles` | Every machine's OS and user config: real NixOS hosts razer-blade, hobbynix and nas (mainrig and aibox are speculative configs for machines that don't exist), nix-darwin, home-manager, chezmoi for Windows |
+| dotfiles | `cchharris/dotfiles` (`main`) | `~/.local/share/chezmoi` | `~/dotfiles` | Every machine's OS and user config: real NixOS hosts razer-blade, hobbynix and nas (mainrig is a real machine that still runs Windows, with a NixOS scaffold ready for install; aibox is a speculative config for a machine that doesn't exist), nix-darwin, home-manager, chezmoi for Windows |
 | homelab | `cchharris/homelab` (`master`) | `~/homelab` | `~/Repos/homelab` | The Turing Pi 2 Talos cluster, managed by Flux from `cluster/flux`: ingress, Pi-hole, Home Assistant, monitoring, Tailscale operator |
 
 From NixOS-WSL, the Windows checkouts are under `/mnt/c/Users/Christopher Harris/`.
