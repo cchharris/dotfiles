@@ -6,7 +6,7 @@ let
 
   nonSteamLaunchersScript = pkgs.fetchurl {
     url = "https://raw.githubusercontent.com/moraroy/NonSteamLaunchers-On-Steam-Deck/main/NonSteamLaunchers.sh";
-    hash = "sha256-mI0LQ1RTKA30UlFJawkqSaGY9v6rGCFpwVl3WLK579o=";
+    hash = "sha256-SBoOJU4EfVz73z8lvIvM2sHGgqfetcQB5bO7Oz/9uHQ=";
   };
 
   # NSL restarts Steam with `nohup /usr/bin/steam &`, but that would start Steam
