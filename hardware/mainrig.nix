@@ -1,24 +1,35 @@
 # Hardware configuration for mainrig
 #
+# Platform: ASUS TUF GAMING X870-PLUS WIFI (AM5, four M.2 slots) + Ryzen 9 9950X
+# + 64GB DDR5 + RTX 5080. This is the Windows PC today; NixOS is not installed yet.
+#
 # TEMPLATE — this is not machine-generated yet. Real UUIDs get filled in after
 # installation (run `nixos-generate-config` or read them off `blkid`/`lsblk -f`
-# post-partition) and replace the REPLACE-ME placeholders below. See the
-# migration plan for the partition layout this maps to:
-#   - Disk 0 (Force MP510, 1.79TB):    shared ESP + Windows (400G) + LUKS "root"
+# post-partition) and replace the REPLACE-ME placeholders below. Layout:
+#   - Disk 3 (Samsung 9100 Pro, 1TB, PCIe 5.0, NEW): own ESP + LUKS "root" (Linux).
+#       Linux gets the fastest drive because it is the most-used OS.
+#   - Disk 0 (Force MP510, 1.92TB):     Windows, left exactly as it is today (its
+#       own ESP). No reinstall; Windows games live here.
 #   - Disk 1 (Samsung 990 Pro, 3.73TB): LUKS "games-primary"
 #   - Disk 2 (FireCuda 510, 1.86TB):    LUKS "games-secondary"
 #
+# Each OS has its own ESP on its own drive, so Linux updates can't touch the
+# Windows boot files. systemd-boot cannot chainload an ESP on another disk: boot
+# Windows from the firmware boot menu (ASUS: F8) instead.
+#
 # Disk 1 and 2 are wiped and reformatted native (not kept as NTFS) — the ~3.85TB
 # of existing Steam installs on them gets redownloaded post-install in exchange
-# for all three volumes being LUKS2+TPM2 encrypted and btrfs throughout.
+# for all three volumes being LUKS2+TPM2 encrypted and btrfs throughout. Windows
+# can't read btrfs, so any Windows game has to be installed on the MP510.
+#
+# The 9100 Pro is a Gen5 drive and throttles without cooling: put it under an M.2
+# heatsink, in a PCIe 5.0 slot (check the manual for lane sharing).
 { config, lib, pkgs, modulesPath, ... }:
 
 {
   imports =
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
-
-  boot.initrd.systemd.enable = true;
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "nvme" "usb_storage" "usbhid" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
@@ -61,7 +72,7 @@
       options = [ "subvol=/@tmp" "compress=zstd" "noatime" "ssd" "space_cache=v2" ];
     };
 
-  # Shared ESP — Windows Boot Manager and systemd-boot both live here.
+  # Linux's own ESP, on the 9100 Pro. Windows keeps its separate ESP on the MP510.
   fileSystems."/boot" =
     { device = "/dev/disk/by-uuid/REPLACE-ME-ESP-UUID";
       fsType = "vfat";

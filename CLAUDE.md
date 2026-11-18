@@ -81,7 +81,7 @@ This is a multi-platform dotfiles repo using Nix (NixOS + nix-darwin + Home Mana
 - `nixosConfigurations.razer-blade` — Razer Blade laptop (Hyprland + NVIDIA Optimus)
 - `nixosConfigurations.hobbynix` — desktop PC (Hyprland + GTX 1080, xrdp, fail2ban)
 - `nixosConfigurations.nas`: headless NAS at 192.168.1.20 (ZFS, NFS/Samba, LanCache, ncps Nix cache, exporters + Scrutiny). Home-manager gives it shell and nvim only. It supports the homelab cluster (see "Homelab coupling")
-- `nixosConfigurations.mainrig`: **speculative, not a real machine.** A planned dev and gaming desktop (Hyprland, RTX 5080). Nothing runs this config
+- `nixosConfigurations.mainrig`: a real machine (ASUS TUF X870-PLUS WIFI, Ryzen 9 9950X, RTX 5080, 64GB) that runs Windows today. NixOS is not installed yet, so this is a scaffold with placeholder UUIDs. Plan: Linux root on a new Samsung 9100 Pro 1TB, Windows stays on the Force MP510, both game drives become LUKS+btrfs (see `hardware/mainrig.nix`)
 - `nixosConfigurations.aibox`: **speculative, not a real machine.** A planned headless dual-GPU inference box (RTX 5080 + RX 7900 XTX). Nothing runs this config
 - `darwinConfigurations.mac` — macOS system config via nix-darwin
 - `homeConfigurations.cchharris` — standalone Home Manager (non-NixOS Linux)
@@ -128,12 +128,12 @@ Each module defines a `cchharris.home.<name>.enable` option:
 - `hyprland.nix` — Hyprland user config (keybindings, NVIDIA env vars, wofi, screenshot tools)
 - `ashell.nix` / `wayle.nix` / `walker.nix` — status bar / shell (wayle replaces ashell + swaync + swayosd) / app launcher
 - `catppuccin.nix` — Catppuccin theming toggle
-- `k8s.nix` — talosctl, kubectl, flux, talhelper, helm, k9s + aliases for the homelab cluster (razer-blade; mainrig is speculative)
+- `k8s.nix` — talosctl, kubectl, flux, talhelper, helm, k9s + aliases for the homelab cluster (razer-blade; mainrig once NixOS is installed)
 - `npm-cli.nix` — npm-installed global CLIs not in nixpkgs
 - `gnome.nix` — GNOME dconf settings (used by `base.nix` / standalone HM only)
 - `cosmic.nix` — COSMIC user settings: copies `home/cosmic/config` into `~/.config/cosmic` (writable copies, only keys changed in the repo); `cosmic-capture` copies non-default live settings back into the repo
 
-Host home configs: `home/razer-blade.nix`, `home/hobbynix.nix` (Hyprland), `home/mainrig.nix` (speculative host, not a real machine), `home/nas.nix` (headless), `home/base.nix` (standalone, GNOME settings), `home/base-darwin.nix` (personal macOS), `home/work-mac.nix`, `home/work-linux.nix`.
+Host home configs: `home/razer-blade.nix`, `home/hobbynix.nix` (Hyprland), `home/mainrig.nix` (real machine, NixOS not installed yet), `home/nas.nix` (headless), `home/base.nix` (standalone, GNOME settings), `home/base-darwin.nix` (personal macOS), `home/work-mac.nix`, `home/work-linux.nix`.
 
 ### Neovim config (`dot_config/nvim/`)
 
@@ -146,6 +146,8 @@ The `nonSteamLaunchers` derivation in `gaming.nix` is a multi-layer wrapper need
 2. The whole script runs inside `steam-run` for the FHS environment Proton needs
 3. Nix deps are stored in env vars before `steam-run` overwrites PATH, then re-prepended inside
 4. `/usr/bin/python3` and `/bin/bash` are symlinked via `systemd.tmpfiles.rules`
+5. The script is patched (`nonSteamLaunchersPatched`) so its Steam restart goes through `systemd-run --user`. Starting Steam inside steam-run's sandbox would kill it when NSL exits
+6. `xrandr` must be in the deps. The launcher-picker GUI shells out to it, and without it NSL reports "No launchers selected"
 
 When updating the NSL script hash, fetch the new sha256 with:
 ```bash

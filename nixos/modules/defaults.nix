@@ -101,6 +101,12 @@
     smartmontools  # S.M.A.R.T. drive health (smartctl)
   ];
 
+  # Disable MPTCP: CVE-2026-98432 (IPv4 TCP setup use-after-free) is reachable only
+  # through MPTCP listeners, which Go >= 1.24 servers open by default (ncps, Scrutiny,
+  # exporters, tailscaled). Fixed in 6.18.56 / 7.2.10; drop this once every host runs
+  # a fixed kernel. With it off, MPTCP sockets fall back to plain TCP.
+  boot.kernel.sysctl."net.mptcp.enabled" = 0;
+
   # Trust homelab local CA so .home services work with HTTPS
   security.pki.certificates = [
     (builtins.readFile ../certs/homelab-ca.crt)
