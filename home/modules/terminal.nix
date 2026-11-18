@@ -51,6 +51,7 @@ in {
     # integrated into a nixosSystem/darwinSystem.
     home.packages = with pkgs; [
       nerd-fonts.jetbrains-mono
+      nerd-fonts.sauce-code-pro  # Source Code Pro + Nerd icons: coding font (COSMIC monospace, walker)
     ] ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
       ghostty-bin
     ] ++ lib.optionals (pkgs.stdenv.hostPlatform.isLinux && osConfig == null) [
