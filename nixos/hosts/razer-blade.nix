@@ -84,6 +84,13 @@
     };
   };
 
+  # Java 25 on PATH + JAVA_HOME (Minecraft modding: NeoForge 26.x targets Java 25;
+  # gradlew needs a java to start before gradle.properties picks the toolchain)
+  programs.java = {
+    enable = true;
+    package = pkgs.jdk25;
+  };
+
   # ExpressVPN (host-specific service)
   services.expressvpn.enable = true;
   systemd.tmpfiles.rules = [
@@ -122,6 +129,7 @@
     remmina    # Remote Desktop client (RDP/VNC)
     unityhub   # Unity Game Engine version manager
     dotnet-sdk # .NET SDK (required for OmniSharp/C# LSP)
+    firedragon-catppuccin-bin # Garuda's Floorp-based Firefox fork (chaotic-nyx)
     (pkgs.callPackage ../../pkgs/nvimunity.nix {})
   ];
 
