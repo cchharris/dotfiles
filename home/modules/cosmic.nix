@@ -52,6 +52,25 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = [ cosmicCapture ];
 
+    # Hyprland starts these from its own config (hl.exec_cmd), so only COSMIC
+    # gets XDG autostart entries; OnlyShowIn keeps Hyprland's XDG autostart
+    # from launching them a second time. 1Password is also the SSH agent, so
+    # without it git push and commit signing fail.
+    xdg.configFile = lib.mapAttrs' (name: exec: lib.nameValuePair "autostart/${name}.desktop" {
+      text = ''
+        [Desktop Entry]
+        Type=Application
+        Name=${name}
+        Exec=${exec}
+        OnlyShowIn=COSMIC;
+        X-GNOME-Autostart-enabled=true
+      '';
+    }) {
+      "1password" = "1password --silent";
+      trayscale = "trayscale --hide-window";
+      expressvpn-client = "expressvpn-client";
+    };
+
     home.activation.cosmicConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       src=${repoConfig}
       live="${config.xdg.configHome}/cosmic"
