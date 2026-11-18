@@ -96,6 +96,7 @@ Each module defines a `cchharris.nixos.<name>.enable` option (mkEnableOption pat
 - `gaming.nix` — Steam + Proton; includes the `nonSteamLaunchers` custom derivation (see below)
 - `hyprland.nix` — Hyprland WM, SDDM login (Catlogin theme, fetched pinned from GitHub), xdg-portal, hyprlock PAM
 - `gnome.nix` — GNOME (kept for reference; not used by any active host)
+- `cosmic.nix` — COSMIC desktop as a second session next to Hyprland, and the SDDM default (razer-blade); turns off system76-power (conflicts with TLP) and system76-scheduler (conflicts with ananicy + scx)
 - `desktop-common.nix` — PipeWire, printing, Firefox, Edge, blueman, KDE Connect, 1Password
 - `razer.nix` — Razer-specific hardware config (openrazer, polychromatic)
 - `howdy.nix` — facial recognition (IR camera); configurable PAM services, certainty threshold, video device

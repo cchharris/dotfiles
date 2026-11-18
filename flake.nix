@@ -101,6 +101,7 @@
         ./nixos/modules/nvidia.nix
         ./nixos/modules/gaming.nix
         ./nixos/modules/hyprland.nix
+        ./nixos/modules/cosmic.nix
         ./nixos/modules/razer.nix
         ./nixos/modules/howdy.nix
         ./nixos/modules/tailscale.nix

@@ -27,6 +27,7 @@
     };
     gaming.enable = true;
     hyprland.enable = true;
+    cosmic.enable = true;  # trial: second session next to Hyprland
     razer.enable = true;
     tailscale.enable = true;
     howdy.enable = true;
