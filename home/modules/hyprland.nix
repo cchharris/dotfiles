@@ -141,10 +141,8 @@ in {
 
       # Raw Lua: keybindings translated from hyprlang dispatcher-string syntax to
       # hl.dsp.* calls (https://wiki.hypr.land/Configuring/Basics/Binds/), autostart,
-      # and hyprtasking plugin load + config. We use hl.plugin.load (synchronous)
-      # inside a hyprland.start handler so the plugin's config schema is registered
-      # before hl.config({plugin.hyprtasking = {...}}) runs — avoiding "unknown
-      # config key" errors that occur with the async hyprctl-IPC approach.
+      # and hyprtasking plugin load + config (see the comment on hl.plugin.load
+      # below for why it must be top level).
       extraConfig = ''
         local mod = "SUPER"
         local terminal = "ghostty"
@@ -229,33 +227,34 @@ in {
         -- hyprtasking
         hl.bind(mod .. " + TAB", function() hl.plugin.hyprtasking.toggle("cursor") end)
 
-        -- hl.plugin.load is synchronous, so hl.config sees the registered schema
-        -- immediately — no "unknown config key" errors from loading asynchronously.
-        hl.on("hyprland.start", function()
-          hl.plugin.load("${hyprtaskingPath}")
-          hl.config({
-            plugin = {
-              hyprtasking = {
-                layout = "grid",
-                gap_size = 20,
-                border_size = 4,
-                bg_color = 0xff000000,
-                exit_on_hovered = false,
-                grid = {
-                  rows = 1,
-                  cols = 9,
-                  loop = false,
-                },
-                gestures = {
-                  enabled = true,
-                  open_fingers = 4,
-                  open_positive = true,
-                  move_fingers = 3,
-                },
+        -- Must be top level: hl.plugin.load only queues the path, and the queue is
+        -- drained after the config file finishes parsing (then the config is
+        -- re-evaluated with the plugin's schema registered). Inside a
+        -- hyprland.start handler the queue is never drained — the plugin silently
+        -- never loads and every plugin.hyprtasking key errors as unknown.
+        hl.plugin.load("${hyprtaskingPath}")
+        hl.config({
+          plugin = {
+            hyprtasking = {
+              layout = "grid",
+              gap_size = 20,
+              border_size = 4,
+              bg_color = 0xff000000,
+              exit_on_hovered = false,
+              grid = {
+                rows = 1,
+                cols = 9,
+                loop = false,
+              },
+              gestures = {
+                enabled = true,
+                open_fingers = 4,
+                open_positive = true,
+                move_fingers = 3,
               },
             },
-          })
-        end)
+          },
+        })
       '';
     };
 
