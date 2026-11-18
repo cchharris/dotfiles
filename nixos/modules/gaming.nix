@@ -128,6 +128,9 @@ in {
           __NV_PRIME_RENDER_OFFLOAD_PROVIDER = "NVIDIA-G0";
           __GLX_VENDOR_LIBRARY_NAME = "nvidia";
           __VK_LAYER_NV_optimus = "NVIDIA_only";
+          # COSMIC's session exports VK_LOADER_DRIVERS_SELECT=*intel* to pin apps
+          # to the iGPU, which hides the NVIDIA Vulkan driver from every game
+          VK_LOADER_DRIVERS_SELECT = "*nvidia*,*intel*";
         };
         # Under COSMIC, the bootstrapper's update-progress window (a child
         # started with -child-update-ui) never finishes setting up its X window,
