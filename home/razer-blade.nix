@@ -12,6 +12,7 @@
     ./modules/walker.nix
     ./modules/k8s.nix
     ./modules/catppuccin.nix
+    ./modules/cosmic.nix
   ];
 
   home.username = "cchharris";
@@ -23,6 +24,7 @@
     shell.enable = true;
     editor.enable = true;
     terminal.enable = true;
+    cosmic.enable = true;
     git = {
       enable = true;
       nasIdentity = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAOfqp7e+ZAPS7GjuLF7el6JMYIHLD3eLYz+HYG+PQaF";

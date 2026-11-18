@@ -131,6 +131,7 @@ Each module defines a `cchharris.home.<name>.enable` option:
 - `k8s.nix` — talosctl, kubectl, flux, talhelper, helm, k9s + aliases for the homelab cluster (razer-blade; mainrig is speculative)
 - `npm-cli.nix` — npm-installed global CLIs not in nixpkgs
 - `gnome.nix` — GNOME dconf settings (used by `base.nix` / standalone HM only)
+- `cosmic.nix` — COSMIC user settings: copies `home/cosmic/config` into `~/.config/cosmic` (writable copies, only keys changed in the repo); `cosmic-capture` copies non-default live settings back into the repo
 
 Host home configs: `home/razer-blade.nix`, `home/hobbynix.nix` (Hyprland), `home/mainrig.nix` (speculative host, not a real machine), `home/nas.nix` (headless), `home/base.nix` (standalone, GNOME settings), `home/base-darwin.nix` (personal macOS), `home/work-mac.nix`, `home/work-linux.nix`.
 
