@@ -129,6 +129,31 @@ in {
           __GLX_VENDOR_LIBRARY_NAME = "nvidia";
           __VK_LAYER_NV_optimus = "NVIDIA_only";
         };
+        # Under COSMIC, the bootstrapper's update-progress window (a child
+        # started with -child-update-ui) never finishes setting up its X window,
+        # so it ignores the bootstrapper's shutdown and stays alive holding
+        # ~/.steam/steam.pipe open. The real client then sees that pipe, logs
+        # "Steam is already running", and exits, so Steam never opens.
+        # Sourced on every launch: kill that child once its parent bootstrapper
+        # has re-exec'd into the client launcher. On a healthy launch the child
+        # has already exited by then, so this does nothing.
+        extraProfile = lib.optionalString config.services.desktopManager.cosmic.enable ''
+          (
+            for ((i = 0; i < 600; i++)); do
+              for d in /proc/[0-9]*; do
+                mapfile -d "" -t args < "$d/cmdline" 2>/dev/null || continue
+                [[ " ''${args[*]} " == *" -child-update-ui-socket "* ]] || continue
+                ppid=""
+                while read -r k v; do [[ $k == PPid: ]] && ppid=$v && break; done < "$d/status"
+                if [[ $(readlink "/proc/$ppid/exe" 2>/dev/null) != */steamrt64/steam ]]; then
+                  kill -9 "''${d#/proc/}" 2>/dev/null
+                  exit 0
+                fi
+              done
+              sleep 0.1
+            done
+          ) &
+        '';
         buildFHSEnv = pkgs.buildFHSEnv.override {
           # capsh's "--" passes remaining args to bash rather than exec'ing directly,
           # so we compile a tiny C binary that clears ambient/inheritable caps via
