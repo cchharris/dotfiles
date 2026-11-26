@@ -3,6 +3,7 @@
 
 let
   cfg = config.cchharris.home.shell;
+  herdr-core = pkgs.callPackage ../../pkgs/herdr-core.nix {};
 in {
   options.cchharris.home.shell = {
     enable = lib.mkEnableOption "shell configuration (zsh + starship)";
@@ -17,6 +18,14 @@ in {
       type = lib.types.bool;
       default = true;
       description = "Deploy dot_claude/CLAUDE.md (personal repo map: dotfiles <-> homelab) to ~/.claude/CLAUDE.md. Off on work machines.";
+    };
+
+    herdrMachines = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      # The NAS is the only other host that runs herdr-core and takes SSH
+      # logins; hosts with a NAS identity (git.nix) are the ones that reach it.
+      default = lib.optional (((config.cchharris.home.git or {}).nasIdentity or null) != null) "nas";
+      description = "SSH targets (Host names from ~/.ssh/config) to add to the Herdr app as machines. Added at login when missing; machines added by hand are left alone.";
     };
   };
 
@@ -98,7 +107,7 @@ in {
       tldr         # Simplified man pages
       claude-code  # Claude AI assistant CLI
       (callPackage ../../pkgs/herdr.nix {}) # Terminal workspace manager for AI coding agents
-      (callPackage ../../pkgs/herdr-core.nix {}) # herdr-core/hc: runs the Herdr app's terminals (also on remote machines it attaches)
+      herdr-core   # herdr-core/hc: runs the Herdr app's terminals (also on remote machines it attaches)
     ] ++ lib.optionals (!pkgs.stdenv.hostPlatform.isDarwin) [
       gcc          # C compiler (Linux only — on macOS it shadows Apple clang and breaks native module builds)
     ];
@@ -118,6 +127,31 @@ in {
     # GUI apps fall back to whatever agent the session started.
     systemd.user.sessionVariables = lib.mkIf (cfg.onePasswordAgent && pkgs.stdenv.hostPlatform.isLinux) {
       SSH_AUTH_SOCK = "${config.home.homeDirectory}/.1password/agent.sock";
+    };
+
+    # Add herdrMachines to herdr-core's machine list (the computers the Herdr
+    # app shows). `hc machine add` connects over SSH, so it runs as a user
+    # service at login rather than blocking activation, and only for machines
+    # not there yet: once added, this is a local lookup.
+    systemd.user.services.herdr-machines = lib.mkIf (pkgs.stdenv.hostPlatform.isLinux && cfg.herdrMachines != []) {
+      Unit.Description = "Add the dotfiles' machines to Herdr";
+      Service = {
+        Type = "oneshot";
+        TimeoutStartSec = 120;
+        ExecStart = lib.getExe (pkgs.writeShellApplication {
+          name = "herdr-machines";
+          runtimeInputs = [ herdr-core pkgs.openssh pkgs.jq ];
+          text = ''
+            known="$(hc machine ls --json | jq -r '.machines[] | .name, .target')"
+            for m in ${lib.escapeShellArgs cfg.herdrMachines}; do
+              if ! grep -qxF "$m" <<<"$known"; then
+                hc machine add "$m" --json || echo "herdr-machines: could not add $m" >&2
+              fi
+            done
+          '';
+        });
+      };
+      Install.WantedBy = [ "default.target" ];
     };
 
     # Keep 1Password's SSH agent and its developer Watchtower (scans disk and
