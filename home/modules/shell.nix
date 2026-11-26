@@ -143,7 +143,8 @@ in {
           runtimeInputs = [ herdr-core pkgs.openssh pkgs.jq ];
           text = ''
             known="$(hc machine ls --json | jq -r '.machines[] | .name, .target')"
-            for m in ${lib.escapeShellArgs cfg.herdrMachines}; do
+            machines=(${lib.escapeShellArgs cfg.herdrMachines})
+            for m in "''${machines[@]}"; do
               if ! grep -qxF "$m" <<<"$known"; then
                 hc machine add "$m" --json || echo "herdr-machines: could not add $m" >&2
               fi
