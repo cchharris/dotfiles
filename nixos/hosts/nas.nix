@@ -125,6 +125,11 @@ in
   programs.zsh.enable = true;
   users.users.cchharris.shell = pkgs.zsh;
 
+  # Keep the user manager running with nobody logged in, so herdr-core's
+  # `hc serve` (a transient user unit) and its terminals survive SSH logouts.
+  # The Herdr app's remote setup asks for this with `loginctl enable-linger`.
+  users.users.cchharris.linger = true;
+
   # Randomly generated ahead of install — doesn't need to match
   # /etc/machine-id, just needs to be unique across the fleet.
   networking.hostId = "6ad40947";
