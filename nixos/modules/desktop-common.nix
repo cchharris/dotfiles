@@ -82,6 +82,7 @@ in {
           [ "--ozone-platform=x11" ];
       })
       (callPackage ../../pkgs/claude-desktop.nix {})  # Claude Desktop GUI (official .deb, repackaged)
+      (callPackage ../../pkgs/herdr-app.nix {})  # Herdr desktop app; its herdr-core comes from home/modules/shell.nix
       google-chrome  # needed for the "Claude in Chrome" extension — Edge doesn't support it
       discord
       bluez-tools  # bt-device/bt-adapter required by HyprPanel bluetooth menu

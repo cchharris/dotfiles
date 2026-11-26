@@ -98,6 +98,7 @@ in {
       tldr         # Simplified man pages
       claude-code  # Claude AI assistant CLI
       (callPackage ../../pkgs/herdr.nix {}) # Terminal workspace manager for AI coding agents
+      (callPackage ../../pkgs/herdr-core.nix {}) # herdr-core/hc: runs the Herdr app's terminals (also on remote machines it attaches)
     ] ++ lib.optionals (!pkgs.stdenv.hostPlatform.isDarwin) [
       gcc          # C compiler (Linux only — on macOS it shadows Apple clang and breaks native module builds)
     ];
