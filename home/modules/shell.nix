@@ -112,6 +112,35 @@ in {
       SSH_AUTH_SOCK = "$HOME/.1password/agent.sock";
     };
 
+    # The same for apps started by the desktop session rather than a shell
+    # (COSMIC reads environment.d; Hyprland sets it itself). Without this,
+    # GUI apps fall back to whatever agent the session started.
+    systemd.user.sessionVariables = lib.mkIf (cfg.onePasswordAgent && pkgs.stdenv.hostPlatform.isLinux) {
+      SSH_AUTH_SOCK = "${config.home.homeDirectory}/.1password/agent.sock";
+    };
+
+    # Keep 1Password's SSH agent and its developer Watchtower (scans disk and
+    # .env files for plaintext secrets and SSH keys) switched on. The app owns
+    # settings.json and rewrites it, so only these keys are merged in, and only
+    # once the app has created the file. The regular Watchtower checks aren't
+    # in this file: they're on by default and kept with the account.
+    home.activation.onePasswordSettings = lib.mkIf (cfg.onePasswordAgent && pkgs.stdenv.hostPlatform.isLinux)
+      (lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        settings="${config.xdg.configHome}/1Password/settings/settings.json"
+        want='${builtins.toJSON {
+          "sshAgent.enabled" = true;
+          "devWatchtower.localDiskScanning" = true;
+          "devWatchtower.envSubScanning" = true;
+        }}'
+        if [ -f "$settings" ]; then
+          merged=$(${pkgs.jq}/bin/jq --argjson want "$want" '. + $want' "$settings")
+          if [ "$merged" != "$(${pkgs.jq}/bin/jq . "$settings")" ]; then
+            run ${pkgs.coreutils}/bin/install -m 600 /dev/stdin "$settings" <<< "$merged"
+            echo "1Password: enforced SSH agent / developer Watchtower settings; restart 1Password to apply" >&2
+          fi
+        fi
+      '');
+
     programs.eza = {
       enable = true;
       enableZshIntegration = true;

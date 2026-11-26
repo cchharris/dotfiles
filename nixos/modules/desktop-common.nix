@@ -54,6 +54,9 @@ in {
       enable = true;
       polkitPolicyOwners = [ "cchharris" ];
     };
+    # 1Password is the SSH agent. gnome-keyring (pulled in by COSMIC) would
+    # otherwise start gcr's agent and point the session's SSH_AUTH_SOCK at it.
+    services.gnome.gcr-ssh-agent.enable = false;
 
     # KDE Connect (phone integration: notifications, clipboard sync, file transfer)
     programs.kdeconnect.enable = true;
