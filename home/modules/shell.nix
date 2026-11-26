@@ -177,6 +177,24 @@ in {
         fi
       '');
 
+    # Open Herdr's panes in zsh. Empty default_shell means $SHELL, and the
+    # login shell is bash. Herdr rewrites config.toml itself (settings screen,
+    # `herdr channel set`), so only this key is merged in, keeping its comments.
+    home.activation.herdrShell = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      run ${pkgs.python3.withPackages (ps: [ ps.tomlkit ])}/bin/python3 - \
+        "${config.xdg.configHome}/herdr/config.toml" "${config.home.profileDirectory}/bin/zsh" <<'EOF'
+      import pathlib, sys, tomlkit
+      path, shell = pathlib.Path(sys.argv[1]), sys.argv[2]
+      doc = tomlkit.parse(path.read_text()) if path.exists() else tomlkit.document()
+      terminal = doc.setdefault("terminal", tomlkit.table())
+      if terminal.get("default_shell") != shell:
+          terminal["default_shell"] = shell
+          path.parent.mkdir(parents=True, exist_ok=True)
+          path.write_text(tomlkit.dumps(doc))
+          print(f"herdr: default_shell = {shell}; run `herdr server reload-config` to apply", file=sys.stderr)
+      EOF
+    '';
+
     programs.eza = {
       enable = true;
       enableZshIntegration = true;
