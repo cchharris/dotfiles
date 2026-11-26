@@ -6,19 +6,19 @@
 { lib, stdenv, fetchurl, autoPatchelfHook }:
 
 let
-  version = "0.8.2";
+  version = "0.9.5";
   platforms = {
     aarch64-darwin = {
       url = "https://github.com/herdrdev/herdr/releases/download/v${version}/herdr-macos-aarch64";
-      hash = "sha256-pdT01QTYswnJH4EQUFWTAPq6MSWEJfU8UIUvyW9q5XQ=";
+      hash = "sha256-+3fCIyoFqANUITgsiUOS9BdOTjihjkivPdApAVfDp+I=";
     };
     x86_64-linux = {
       url = "https://github.com/herdrdev/herdr/releases/download/v${version}/herdr-linux-x86_64";
-      hash = "sha256-l2FQoU1JDJSyQ+ouGn6y37Z/EuNrGC25CTb2co5q7PQ=";
+      hash = "sha256-FNnovItKngEY13wyJm921GHwm0A0LrI3UpYL2J9Zkp0=";
     };
     aarch64-linux = {
       url = "https://github.com/herdrdev/herdr/releases/download/v${version}/herdr-linux-aarch64";
-      hash = "sha256-9VYQZY4cLg0qrvcwtLKriF9/i6AChas3K/sU8uPVtA0=";
+      hash = "sha256-F9dTby2lCFlSNoDvJ53/ysjkojX05G/o2mwuxEFBiXw=";
     };
   };
   plat = platforms.${stdenv.hostPlatform.system}
